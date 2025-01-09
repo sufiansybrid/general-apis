@@ -1,5 +1,6 @@
 from flask import Flask, request
 import json
+import re
 
 app = Flask(__name__)
 
@@ -37,7 +38,9 @@ def number_to_words_with_formatting():
     try:
         # Get the 'num' parameter from the URL query string, defaulting to 1000000 if not present
         num = request.args.get('num', default=1000000, type=int)
-
+        
+        num = ''.join(re.findall(r'\d', num))  # Extract only the digits from the input
+        
         # Import the 'inflect' library to convert numbers to words
         import inflect
         p = inflect.engine()  # Create an inflect engine instance
