@@ -37,7 +37,7 @@ def number_to_words_with_formatting():
     """
     try:
         # Get the 'num' parameter from the URL query string, defaulting to 1000000 if not present
-        num = request.args.get('num', default=1000000)
+        num = request.args.get('num', default=1000000, type=str)
         
         num = ''.join(re.findall(r'\d', num))  # Extract only the digits from the input
         
