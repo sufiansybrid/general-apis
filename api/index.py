@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, jsonify
 import json
 import re
 
@@ -67,6 +67,23 @@ def number_to_words_with_formatting():
         # Return the result as a formatted JSON string (pretty-printed)
         return json.dumps(result, indent=2)
 
+    except Exception as e:
+        # If an error occurs, return the exception message as a JSON string
+        return json.dumps(e)
+
+@app.route('/chat', methods=['POST'])
+def chat():
+    # Predefined responses
+    responses = {
+        "hello": "Hi there! How can I help you?",
+        "how are you": "I'm just a bot, but I'm here to help!",
+        "what is your name": "I'm a chatbot created to assist you.",
+        "bye": "Goodbye! Have a great day!"
+    }
+    try:
+        user_message = request.json.get('question', '').lower()
+        response = responses.get(user_message, "Sorry, I don't understand that.")
+        return jsonify({"answer": response})
     except Exception as e:
         # If an error occurs, return the exception message as a JSON string
         return json.dumps(e)
