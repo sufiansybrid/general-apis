@@ -88,13 +88,13 @@ def chat():
         "how are you": "I'm just a bot, but I'm here to help!",
         "what is your name": "I'm a chatbot created to assist you.",
         "why subscription fees was expired": """
-            Your subscription fee may have expired due to the following reasons:
+            Your subscription fee may have expired due to the following reasons:\n
 
-                1. Tenure Duration: The PSW User Subscription is valid for a period of two years. If you have not renewed your subscription within this timeframe, it will expire.
+                1. Tenure Duration: The PSW User Subscription is valid for a period of two years. If you have not renewed your subscription within this timeframe, it will expire.\n
 
-                2. Notification: The PSW system prompts users one month prior to the renewal date. If you did not take action during this notification period, your subscription would have expired.
+                2. Notification: The PSW system prompts users one month prior to the renewal date. If you did not take action during this notification period, your subscription would have expired.\n
 
-                3. Failure to Renew: If you did not complete the renewal process, which includes making the renewal subscription fee payment and undergoing biometric verification, your subscription would not remain active.
+                3. Failure to Renew: If you did not complete the renewal process, which includes making the renewal subscription fee payment and undergoing biometric verification, your subscription would not remain active.\n
 
                 If you need to renew your subscription, please follow the steps outlined in the context provided.
                 """,
