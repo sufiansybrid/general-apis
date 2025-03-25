@@ -1,9 +1,13 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 import json
 import re
 from flask_cors import CORS
+import os
 
-app = Flask(__name__)
+# app = Flask(__name__, template_folder='templates')
+# Initialize Flask app with custom template folder path
+app = Flask(__name__, template_folder=os.path.join(
+    os.path.dirname(__file__), '..', 'templates'))
 
 CORS(app)  # Enable CORS for all route
 
@@ -108,3 +112,9 @@ def chat():
     except Exception as e:
         # If an error occurs, return the exception message as a JSON string
         return json.dumps(e)
+
+
+@app.route('/psw')
+def psw():
+    return render_template('index_stream.html')
+

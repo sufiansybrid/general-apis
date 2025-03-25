@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <title>Chatbot Widget Demo</title>
+    <style>
+        /* Chat Widget Styles */
+        #chat-widget-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            font-family: Arial, sans-serif;
+            font-size: 15px;
+        }
+
+        #chat-widget-button {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: #4a90e2;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        #chat-widget-button:hover {
+            background-color: #3a7bd5;
+        }
+
+        #chat-widget {
+            display: none;
+            width: 450px;
+            height: 600px;
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+            flex-direction: column;
+            margin-bottom: 15px;
+        }
+
+        #chat-header {
+            background-color: #4a90e2;
+            color: white;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            /* cursor: pointer; */
+        }
+
+        #chat-title {
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        #close-chat {
+            cursor: pointer;
+            font-size: 27px;
+        }
+
+        #chat-messages {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            height: 460px;
+            scroll-behavior: smooth;
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 10px 15px;
+            border-radius: 18px;
+            margin-bottom: 5px;
+            word-wrap: break-word;
+        }
+
+        .user-message {
+            background-color: #e6f2ff;
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+        }
+
+        .bot-message {
+            background-color: #f1f1f1;
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+        }
+
+        /* Rich text formatting for bot messages */
+        .bot-message h1,
+        .bot-message h2,
+        .bot-message h3,
+        .bot-message h4,
+        .bot-message h5,
+        .bot-message h6 {
+            margin: 10px 0 5px 0;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .bot-message h1 {
+            font-size: 1.4em;
+        }
+
+        .bot-message h2 {
+            font-size: 1.3em;
+        }
+
+        .bot-message h3 {
+            font-size: 1.2em;
+        }
+
+        .bot-message h4,
+        .bot-message h5,
+        .bot-message h6 {
+            font-size: 1.1em;
+        }
+
+        .bot-message p {
+            margin: 0 0 10px 0;
+            line-height: 1.4;
+        }
+
+        .bot-message ul,
+        .bot-message ol {
+            margin: 5px 0;
+            padding-left: 20px;
+        }
+
+        .bot-message li {
+            margin-bottom: 3px;
+        }
+
+        .bot-message a {
+            color: #4a90e2;
+            text-decoration: none;
+        }
+
+        .bot-message a:hover {
+            text-decoration: underline;
+        }
+
+        .bot-message code {
+            background-color: #f7f7f7;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-family: monospace;
+            font-size: 0.9em;
+        }
+
+        .bot-message pre {
+            background-color: #f7f7f7;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin: 10px 0;
+        }
+
+        .bot-message blockquote {
+            border-left: 3px solid #ccc;
+            margin: 10px 0;
+            padding-left: 10px;
+            color: #666;
+        }
+
+        .bot-message table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 10px 0;
+        }
+
+        .bot-message th,
+        .bot-message td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        .bot-message th {
+            background-color: #f2f2f2;
+        }
+
+        #chat-input-container {
+            padding: 15px;
+            border-top: 1px solid #e6e6e6;
+            display: flex;
+            align-items: center;
+        }
+
+        #chat-input {
+            flex: 1;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            outline: none;
+            resize: none;
+            max-height: 100px;
+            overflow-y: auto;
+        }
+
+        #send-button {
+            background-color: #4a90e2;
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-left: 10px;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #send-button:hover {
+            background-color: #3a7bd5;
+        }
+
+        /* Loading indicator */
+        .typing-indicator {
+            display: flex;
+            padding: 10px 15px;
+            background-color: #f1f1f1;
+            border-radius: 18px;
+            border-bottom-left-radius: 4px;
+            align-self: flex-start;
+            margin-bottom: 5px;
+            width: fit-content;
+        }
+
+        .typing-indicator span {
+            height: 8px;
+            width: 8px;
+            background-color: #666;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 5px;
+            animation: pulse 1.4s infinite ease-in-out;
+        }
+
+        .typing-indicator span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-indicator span:nth-child(3) {
+            animation-delay: 0.4s;
+            margin-right: 0;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            50%,
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+            25%,
+            75% {
+                transform: scale(0.8);
+                opacity: 0.7;
+            }
+        }
+
+        /* Cursor for streaming effect */
+        .cursor {
+            display: inline-block;
+            width: 8px;
+            height: 16px;
+            background-color: #333;
+            animation: blink 1s infinite;
+            margin-left: 2px;
+            vertical-align: middle;
+        }
+
+        @keyframes blink {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0;
+            }
+        }
+
+        /* Make widget responsive */
+        @media (max-width: 480px) {
+            #chat-widget {
+                width: 100%;
+                height: 100%;
+                border-radius: 0;
+                bottom: 0;
+                right: 0;
+            }
+
+            #chat-widget-button {
+                bottom: 10px;
+                right: 10px;
+            }
+
+            #chat-header {
+                padding: 10px;
+            }
+
+            #chat-title {
+                font-size: 14px;
+            }
+
+            #close-chat {
+                font-size: 18px;
+            }
+
+            #chat-messages {
+                padding: 10px;
+                height: calc(100% - 120px);
+            }
+
+            .message {
+                padding: 8px 12px;
+                font-size: 14px;
+            }
+
+            #chat-input-container {
+                padding: 10px;
+            }
+
+            #chat-input {
+                padding: 8px 12px;
+                font-size: 14px;
+            }
+
+            #send-button {
+                width: 35px;
+                height: 35px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="chat-widget-container">
+        <div id="chat-widget">
+            <div id="chat-header">
+                <div id="chat-title">Chat Support</div>
+                <div id="close-chat">&times;</div>
+            </div>
+            <div id="chat-messages">
+                <div class="message bot-message">Hi there! How can I help you today?</div>
+            </div>
+            <div id="chat-input-container">
+                <textarea id="chat-input" rows="1" placeholder="Type your question..."></textarea>
+                <button id="send-button" title="Send Message">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M22 2L11 13" stroke="white" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round" />
+                        <path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="white" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <div id="chat-widget-button">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path
+                    d="M21 11.5C21.0034 12.8199 20.6951 14.1219 20.1 15.3C19.3944 16.7118 18.3098 17.8992 16.9674 18.7293C15.6251 19.5594 14.0782 19.9994 12.5 20C11.1801 20.0035 9.87812 19.6951 8.7 19.1L3 21L4.9 15.3C4.30493 14.1219 3.99656 12.8199 4 11.5C4.00061 9.92176 4.44061 8.37488 5.27072 7.03258C6.10083 5.69028 7.28825 4.6056 8.7 3.90003C9.87812 3.30496 11.1801 2.99659 12.5 3.00003H13C15.0843 3.11502 17.053 3.99479 18.5291 5.47089C20.0052 6.94699 20.885 8.91568 21 11V11.5Z"
+                    stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const chatWidget = document.getElementById('chat-widget');
+            const chatButton = document.getElementById('chat-widget-button');
+            const closeChat = document.getElementById('close-chat');
+            const chatHeader = document.getElementById('chat-header');
+            const chatMessages = document.getElementById('chat-messages');
+            const chatInput = document.getElementById('chat-input');
+            const sendButton = document.getElementById('send-button');
+
+            // API Configuration
+            const apiUrl = 'http://127.0.0.1:8000/api/process_question';
+            const streamingUrl = 'http://127.0.0.1:8000/api/answer_streaming';
+            const apiKey = 'fc26c20f2e4f49d2ba3c8c2bbc2cce53';
+            const streamInterval = 300; // Polling interval for streaming in milliseconds
+
+            function scrollToBottom() {
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            };
+
+            // Toggle chat widget visibility
+            chatButton.addEventListener('click', function () {
+                chatWidget.style.display = 'flex';
+                chatButton.style.display = 'none';
+                chatInput.focus();
+                scrollToBottom();
+            });
+
+            closeChat.addEventListener('click', function () {
+                chatWidget.style.display = 'none';
+                chatButton.style.display = 'flex';
+            });
+
+            // Make header also close the chat
+            // chatHeader.addEventListener('click', function (e) {
+            //     // Prevent closing when clicking the title
+            //     if (e.target.id === 'chat-title') return;
+            //     chatWidget.style.display = 'none';
+            //     chatButton.style.display = 'flex';
+            // });
+
+            // Function to sanitize HTML
+            function sanitizeHTML(html) {
+                const tempContainer = document.createElement('div');
+                tempContainer.innerHTML = html;
+
+                // Remove script tags
+                const scriptTags = tempContainer.querySelectorAll('script');
+                scriptTags.forEach(script => script.remove());
+
+                // Remove unsafe attributes
+                const allElements = tempContainer.querySelectorAll('*');
+                const unsafeAttributes = ['onerror', 'onload', 'onclick', 'onmouseover', 'onmouseout', 'onkeydown', 'onkeypress', 'onkeyup'];
+
+                allElements.forEach(el => {
+                    unsafeAttributes.forEach(attr => {
+                        if (el.hasAttribute(attr)) {
+                            el.removeAttribute(attr);
+                        }
+                    });
+
+                    // Clean href attributes
+                    if (el.hasAttribute('href')) {
+                        const href = el.getAttribute('href');
+                        if (href.startsWith('javascript:')) {
+                            el.setAttribute('href', '#');
+                        }
+                    }
+                });
+
+                return tempContainer.innerHTML;
+            }
+
+            // Function to convert markdown to HTML
+            function markdownToHTML(text) {
+                if (!text) return '';
+                return marked.parse(text);
+            }
+
+            // Function to add a user message
+            function addUserMessage(message) {
+                const messageElement = document.createElement('div');
+                messageElement.classList.add('message', 'user-message');
+                messageElement.textContent = message;
+                chatMessages.appendChild(messageElement);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+
+            // Function to create and return a bot message container
+            function createBotMessageContainer() {
+                const messageElement = document.createElement('div');
+                messageElement.classList.add('message', 'bot-message');
+
+                // Add a cursor element for typing effect
+                const cursor = document.createElement('span');
+                cursor.classList.add('cursor');
+
+                chatMessages.appendChild(messageElement);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+                return messageElement;
+            }
+
+            // Function to update bot message content
+            function updateBotMessage(container, content, isComplete = false) {
+                // Convert markdown to HTML and sanitize
+                let htmlContent = markdownToHTML(content);
+                htmlContent = sanitizeHTML(htmlContent);
+
+                // Set the HTML content
+                container.innerHTML = htmlContent;
+
+                // Add cursor if message is not complete
+                if (!isComplete) {
+                    const cursor = document.createElement('span');
+                    cursor.classList.add('cursor');
+                    container.appendChild(cursor);
+                }
+
+                // Make links open in new tab
+                const links = container.querySelectorAll('a');
+                links.forEach(link => {
+                    link.setAttribute('target', '_blank');
+                    link.setAttribute('rel', 'noopener noreferrer');
+                });
+
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+
+            // Function to show typing indicator
+            function showTypingIndicator() {
+                const indicator = document.createElement('div');
+                indicator.classList.add('typing-indicator');
+                indicator.id = 'typing-indicator';
+                indicator.innerHTML = '<span></span><span></span><span></span>';
+                chatMessages.appendChild(indicator);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+
+            // Function to remove typing indicator
+            function removeTypingIndicator() {
+                const indicator = document.getElementById('typing-indicator');
+                if (indicator) {
+                    indicator.remove();
+                }
+            }
+
+            // Function to stream the response using polling
+            async function streamResponse(taskId) {
+                let responseText = '';
+                let messageContainer = null;
+                let isFirstUpdate = true;
+                let streamingActive = true;
+                let streamingTimeout;
+
+                const checkStream = async () => {
+                    if (!streamingActive) return;
+
+                    try {
+                        const response = await fetch(streamingUrl, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Accept': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                api_key: apiKey,
+                                task_id: taskId
+                            })
+                        });
+
+                        if (response.ok) {
+                            const data = await response.json();
+
+                            console.log("Stream response:", data); // Debug log
+
+                            // Keep typing indicator while task is processing
+                            if (data.status === 'Task is still processing') {
+                                // Ensure typing indicator is shown
+                                if (!document.getElementById('typing-indicator')) {
+                                    showTypingIndicator();
+                                }
+                            }
+                            // Create message container and remove typing indicator when receiving text
+                            else if (data.status === 'receiving text') {
+                                // Create message container only when receiving text
+                                if (!messageContainer) {
+                                    messageContainer = createBotMessageContainer();
+                                }
+                                removeTypingIndicator();
+                            }
+
+                            // Handle task completion
+                            if (data.status === 'Task completed') {
+                                // Final update with complete answer
+                                responseText = data.answer || responseText;
+
+                                // Create message container if not already created
+                                if (!messageContainer) {
+                                    messageContainer = createBotMessageContainer();
+                                }
+
+                                updateBotMessage(messageContainer, responseText, true);
+                                streamingActive = false;
+                                clearTimeout(streamingTimeout);
+                                removeTypingIndicator(); // Ensure typing indicator is removed
+                                saveChatToStorage();
+                                return;
+                            }
+                            // Update with partial answer if available
+                            else if (data.answer && data.answer !== responseText) {
+                                // Ensure message container exists before updating
+                                if (!messageContainer) {
+                                    messageContainer = createBotMessageContainer();
+                                }
+
+                                responseText = data.answer;
+                                updateBotMessage(messageContainer, responseText, false);
+                            }
+
+                            // Continue polling if still active
+                            if (streamingActive) {
+                                streamingTimeout = setTimeout(checkStream, streamInterval);
+                            }
+                        } else {
+                            console.error('Stream error:', response.statusText);
+                            removeTypingIndicator();
+
+                            // Create message container for error message
+                            if (!messageContainer) {
+                                messageContainer = createBotMessageContainer();
+                            }
+
+                            updateBotMessage(messageContainer, responseText || "Sorry, there was an error processing your message.", true);
+                            streamingActive = false;
+                            saveChatToStorage();
+                        }
+                    } catch (error) {
+                        console.error('Stream error:', error);
+                        removeTypingIndicator();
+
+                        // Create message container for error message
+                        if (!messageContainer) {
+                            messageContainer = createBotMessageContainer();
+                        }
+
+                        updateBotMessage(messageContainer, responseText || "Sorry, there was an error processing your message.", true);
+                        streamingActive = false;
+                        saveChatToStorage();
+                    }
+                };
+
+                // Set a maximum streaming time (30 seconds)
+                setTimeout(() => {
+                    if (streamingActive) {
+                        streamingActive = false;
+                        removeTypingIndicator();
+
+                        // Create message container for timeout message
+                        if (!messageContainer) {
+                            messageContainer = createBotMessageContainer();
+                        }
+
+                        updateBotMessage(messageContainer, responseText || "Sorry, the response timed out.", true);
+                        saveChatToStorage();
+                    }
+                }, 30000);
+
+                // Start the streaming process
+                checkStream();
+            }
+
+            // Function to send message to API
+            async function sendMessage(message) {
+                try {
+                    showTypingIndicator();
+
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify({ api_key: apiKey, question: message })
+                    });
+
+                    if (response.ok) {
+                        const responseJson = await response.json();
+                        console.log("Initial response:", responseJson); // Debug log
+
+                        if (responseJson.task_id) {
+                            const taskId = responseJson.task_id;
+                            console.log("Task ID:", taskId);
+
+                            // Start streaming the response
+                            streamResponse(taskId);
+                        } else {
+                            console.error("No task ID in response:", responseJson);
+                            removeTypingIndicator();
+                            const messageElement = createBotMessageContainer();
+                            updateBotMessage(messageElement, "Sorry, there was an error processing your message.", true);
+                            saveChatToStorage();
+                        }
+                    } else {
+                        console.error("API Error:", response.status, response.statusText);
+                        removeTypingIndicator();
+                        const messageElement = createBotMessageContainer();
+                        updateBotMessage(messageElement, "Sorry, there was an error processing your message.", true);
+                        saveChatToStorage();
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    removeTypingIndicator();
+                    const messageElement = createBotMessageContainer();
+                    updateBotMessage(messageElement, "Sorry, there was an error connecting to the server.", true);
+                    saveChatToStorage();
+                }
+            }
+
+            // Function to save chat history to local storage
+            function saveChatToStorage() {
+                const chatHistory = [];
+                const messageElements = document.querySelectorAll('.message');
+
+                messageElements.forEach(element => {
+                    chatHistory.push({
+                        content: element.classList.contains('user-message') ? element.textContent : element.innerHTML,
+                        isUser: element.classList.contains('user-message'),
+                        timestamp: new Date().getTime()
+                    });
+                });
+
+                // Set expiration time to 1 hour from now
+                const expirationTime = new Date().getTime() + (60 * 60 * 1000);
+
+                const chatData = {
+                    messages: chatHistory,
+                    expiration: expirationTime
+                };
+
+                localStorage.setItem('chatWidgetHistory', JSON.stringify(chatData));
+            }
+
+            // Function to load chat history from local storage
+            function loadChatFromStorage() {
+                const storedChat = localStorage.getItem('chatWidgetHistory');
+
+                if (storedChat) {
+                    const chatData = JSON.parse(storedChat);
+
+                    // Check if chat has expired
+                    if (chatData.expiration && chatData.expiration > new Date().getTime()) {
+                        // Clear existing welcome message
+                        chatMessages.innerHTML = '';
+
+                        // Restore messages
+                        chatData.messages.forEach(message => {
+                            const messageElement = document.createElement('div');
+                            messageElement.classList.add('message');
+                            messageElement.classList.add(message.isUser ? 'user-message' : 'bot-message');
+
+                            if (message.isUser) {
+                                messageElement.textContent = message.content;
+                            } else {
+                                // For bot messages, use the stored HTML content
+                                messageElement.innerHTML = sanitizeHTML(message.content);
+                            }
+
+                            chatMessages.appendChild(messageElement);
+                        });
+
+                        chatMessages.scrollTop = chatMessages.scrollHeight;
+                    } else {
+                        // Chat expired, remove from storage
+                        localStorage.removeItem('chatWidgetHistory');
+                    }
+                }
+            }
+
+            // Add the clearChatHistory function inside the script (if not already added)
+            function clearChatHistory() {
+                localStorage.removeItem('chatWidgetHistory');
+                chatMessages.innerHTML = '<div class="message bot-message">Hi there! How can I help you today?</div>';
+            }
+
+            // Optional: Add a clear chat button to the header
+            const clearChatButton = document.createElement('div');
+            clearChatButton.innerHTML = '🧹'; // Trash can emoji
+            clearChatButton.style.cursor = 'pointer';
+            clearChatButton.style.marginLeft = '10px';
+            clearChatButton.style.fontSize = '20px';
+            clearChatButton.title = 'Clear Chat';
+            clearChatButton.addEventListener('click', function () {
+                // Confirm before clearing chat
+                const confirmClear = confirm('Are you sure you want to clear the chat history?');
+                if (confirmClear) {
+                    clearChatHistory();
+                }
+            });
+
+            // Insert the clear button next to the send button
+            const chatHeaderContainer = document.getElementById('chat-input-container');
+            chatHeaderContainer.insertBefore(clearChatButton, document.getElementById('send-button'));
+
+            // Make textarea auto-resize
+            chatInput.addEventListener('input', function () {
+                // Reset height to auto to get the correct scrollHeight
+                this.style.height = 'auto';
+
+                // Set new height based on scrollHeight (clamped between min and max)
+                const newHeight = Math.min(Math.max(this.scrollHeight, 40), 100);
+                this.style.height = newHeight + 'px';
+            });
+
+            // Event listener for send button
+            sendButton.addEventListener('click', function () {
+                const message = chatInput.value.trim();
+                if (message) {
+                    addUserMessage(message);
+                    chatInput.value = '';
+                    chatInput.style.height = 'auto';
+                    sendMessage(message);
+                }
+            });
+
+            // Event listener for Enter key
+            chatInput.addEventListener('keypress', function (e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    const message = chatInput.value.trim();
+                    if (message) {
+                        addUserMessage(message);
+                        chatInput.value = '';
+                        chatInput.style.height = 'auto';
+                        sendMessage(message);
+                    }
+                }
+            });
+
+            // Load chat history when the page loads
+            loadChatFromStorage();
+        });
+    </script>
+</body>
+
+</html>
