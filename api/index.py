@@ -115,14 +115,14 @@ def chat():
 
 
 @app.route('/psw_stream')
-def psw():
+def psw_stream():
     return render_template('index_stream.html')
 
 @app.route('/psw')
 def psw():
     return render_template('psw.html')
 
-@app.route('/psw')
-def psw():
+@app.route('/psw_home')
+def psw_home():
     return render_template('psw_home.html')
 
