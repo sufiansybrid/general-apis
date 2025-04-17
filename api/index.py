@@ -114,7 +114,15 @@ def chat():
         return json.dumps(e)
 
 
-@app.route('/psw')
+@app.route('/psw_stream')
 def psw():
     return render_template('index_stream.html')
+
+@app.route('/psw')
+def psw():
+    return render_template('psw.html')
+
+@app.route('/psw')
+def psw():
+    return render_template('psw_home.html')
 

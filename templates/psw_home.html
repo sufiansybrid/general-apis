@@ -1,0 +1,3925 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="6BSHUPZ6Vkvn13epshDbnGD4J8u8hDGYkQpcM3Tw">
+
+    <title>Pakistan Single Window</title>
+    <link rel="icon" type="image/x-icon" href="https://psw.gov.pk/psw/fav_icon.png">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+        integrity="sha384-5e2ESR8Ycmos6g3gAKr1Jvwye8sW4U1u/cAKulfVJnkakCcMqhOudbtPnvJ+nbv7" crossorigin="anonymous">
+    <!-- Fonts -->
+
+
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="preconnect"
+        integrity="sha384-IpJOq8aVFwHkKyfESG0nPpWsVgl7U4NNHio0AkW+eTLN6rY8wN7NPyTa293gFWd5" crossorigin="anonymous">
+
+    <link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="preconnect"
+        integrity="sha384-PcJqeR0rexdN8yZuv2S+el9DN224H7D8SxlZ2/wmbeQzrSywpv+DrOJLiIaTEMDG" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+        integrity="sha384-Gu3KVV2H9d+yA4QDpVB7VcOyhJlAVrcXd0thEjr4KznfaFPLe0xQJyonVxONa4ZC" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://psw.gov.pk/css/global_styles.css">
+    <link rel="stylesheet" href="https://psw.gov.pk/css/particles/style.css">
+
+    <!-- Scripts -->
+    <link rel="preload" as="style" href="https://psw.gov.pk/build/assets/app.d4912570.css" />
+    <link rel="modulepreload" href="https://psw.gov.pk/build/assets/app.d225c007.js" />
+    <link rel="stylesheet" href="https://psw.gov.pk/build/assets/app.d4912570.css" />
+    <script type="module" src="https://psw.gov.pk/build/assets/app.d225c007.js"></script>
+    <style>
+        [wire\:loading],
+        [wire\:loading\.delay],
+        [wire\:loading\.inline-block],
+        [wire\:loading\.inline],
+        [wire\:loading\.block],
+        [wire\:loading\.flex],
+        [wire\:loading\.table],
+        [wire\:loading\.grid],
+        [wire\:loading\.inline-flex] {
+            display: none;
+        }
+
+        [wire\:loading\.delay\.shortest],
+        [wire\:loading\.delay\.shorter],
+        [wire\:loading\.delay\.short],
+        [wire\:loading\.delay\.long],
+        [wire\:loading\.delay\.longer],
+        [wire\:loading\.delay\.longest] {
+            display: none;
+        }
+
+        [wire\:offline] {
+            display: none;
+        }
+
+        [wire\:dirty]:not(textarea):not(input):not(select) {
+            display: none;
+        }
+
+        input:-webkit-autofill,
+        select:-webkit-autofill,
+        textarea:-webkit-autofill {
+            animation-duration: 50000s;
+            animation-name: livewireautofill;
+        }
+
+        @keyframes livewireautofill {
+            from {}
+        }
+    </style>
+
+</head>
+
+<body class="isLoading">
+    <div class="loader-wrapper">
+        <div class="loader">
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+        </div>
+    </div>
+    <main id="main">
+
+        <head>
+            <!-- <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script> -->
+            <style>
+                .alert {
+                    position: fixed;
+                    z-index: 1;
+                    background-color: rgb(29, 33, 62);
+                    color: #fff;
+                    font-size: 0.8125rem;
+                    width: 90%;
+                    left: 0;
+                    right: 0;
+                    margin: auto;
+                    margin-top: 20px;
+                    box-shadow: 0 0.5rem 1rem rgb(0 0 0 / 15%);
+                    border-radius: 0.85rem !important;
+                    bottom: 0;
+                    padding: 20px 15px !important;
+                }
+
+                .alert .btn-close {
+                    color: #fff;
+                    font-size: 22px;
+                    top: -2rem;
+                    margin-top: -39px;
+                    margin-right: -9px;
+                }
+
+                .alert a {
+                    color: #45edb2;
+                }
+
+                .alert p {
+                    margin-left: 15px;
+                    margin-top: 5px;
+                    font-size: 18px;
+                    animation: fadeInAnimation 13s forwards;
+
+                }
+
+                .title-div {
+                    margin-top: 8px;
+                    margin-left: 15px;
+                    margin-right: 15px;
+                    animation: fadeInAnimation 7s forwards;
+                }
+
+                .text-alert-section {
+                    margin-top: -20px;
+                    margin-bottom: -15px;
+                }
+
+                .bell {
+                    display: flex;
+                    align-items: center;
+                    margin-top: 5px;
+                    vertical-align: middle;
+                    margin-left: -8px;
+                    margin-bottom: 5px;
+                }
+
+                .bell h3 {
+                    margin-left: 5px;
+                    margin-top: auto;
+                    animation-duration: 5s;
+                    animation-name: slidein;
+
+                }
+
+                @keyframes fadeInAnimation {
+                    0% {
+                        opacity: 0;
+                    }
+
+                    100% {
+                        opacity: 1;
+                    }
+                }
+
+                @keyframes slidein {
+                    from {
+                        margin-left: 100%;
+                        width: 300%;
+                    }
+
+                    to {
+                        margin-left: 5px;
+                        width: 100%;
+                    }
+                }
+
+                @media (max-width: 1440px) {
+                    .alert.show {
+                        display: block !important;
+                    }
+                }
+            </style>
+        </head>
+
+
+
+
+
+        <head>
+            <style>
+                /* header css */
+                @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+                /* Theming */
+                /* @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap"); */
+                /* import font */
+
+                :root {
+                    --white: #f9f9f9;
+                    --black: #36383f;
+                    --gray: #85888c;
+                }
+
+                /* variables*/
+
+                /* Reset */
+                * {
+                    margin: 0;
+                    padding: 0;
+                    box-sizing: border-box;
+                }
+
+                body {
+                    background-color: var(--white);
+                    font-family: "Roboto", sans-serif;
+                }
+
+                a {
+                    text-decoration: none;
+                }
+
+                ul {
+                    list-style: none;
+                }
+
+                .btn.btn-blue {
+                    background: #0F407C;
+                    color: #fff;
+                    margin-right: 1rem;
+                    margin-left: 2rem;
+                }
+
+                /* Header */
+                .header {
+                    background-color: transparent;
+                    position: fixed;
+                    top: 20px;
+                    width: 100%;
+                    z-index: 1;
+                    padding: 0 20px;
+                }
+
+                /* Logo */
+                .logo {
+                    display: inline-block;
+                    color: var(--black);
+                    font-size: 60px;
+                }
+
+                .logo img {
+                    width: 170px;
+                }
+
+                .header-right-content {
+                    margin-top: 1rem;
+                }
+
+                /* Nav menu */
+                .nav {
+                    max-height: 100%;
+                    position: fixed;
+                    z-index: 1;
+                    top: 0;
+                    right: 0;
+                    overflow-x: hidden;
+                    width: 100%;
+                    opacity: 0;
+                    /*display: none;*/
+                    transition: all .3s linear;
+                    -webkit-transition: all .3s linear;
+                    -moz-transition: all .3s linear;
+                    -o-transition: all .3s linear;
+                    -ms-transition: all .3s linear;
+                }
+
+                .menu a {
+                    display: block;
+                    padding: 20px;
+                    color: var(--white);
+                }
+
+                .menu a:hover {
+                    background-color: var(--gray);
+                }
+
+                /* Menu Icon */
+                .hamb {
+                    cursor: pointer;
+                }
+
+                /* Style label tag */
+
+                .hamb-line {
+                    background: var(--white);
+                    display: block;
+                    height: 2px;
+                    position: relative;
+                    width: 24px;
+                }
+
+                /* Style span tag */
+
+                .hamb-line::before,
+                .hamb-line::after {
+                    background: var(--white);
+                    content: "";
+                    display: block;
+                    height: 100%;
+                    position: absolute;
+                    transition: all 0.2s ease-out;
+                    width: 100%;
+                }
+
+                .hamb-line::before {
+                    top: 5px;
+                }
+
+                .hamb-line::after {
+                    top: -5px;
+                }
+
+                .side-menu {
+                    display: none;
+                }
+
+                /* Hide checkbox */
+
+                /* Toggle menu icon */
+                .side-menu:checked~nav {
+                    max-height: 100%;
+                }
+
+                .side-menu:checked~.hamb .hamb-line {
+                    background: transparent;
+                }
+
+                .side-menu:checked~.hamb .hamb-line::before {
+                    transform: rotate(-45deg);
+                    top: 0;
+                }
+
+                .side-menu:checked~.hamb .hamb-line::after {
+                    transform: rotate(45deg);
+                    top: 0;
+                }
+
+                .btn {
+                    margin-top: 0 !important;
+                }
+
+                a.btn {
+                    line-height: 22px !important;
+                }
+
+                #menu-toggle {
+                    background-image: url(https://psw.gov.pk/media/menu/bg.png);
+                    background-size: cover;
+                    transform: translateX(100%);
+                    transition: transform .5s ease-in-out;
+                    -webkit-transition: all .3s linear;
+                    -moz-transition: all .3s linear;
+                    -o-transition: all .3s linear;
+                    -ms-transition: all .3s linear;
+                    opacity: 0;
+                }
+
+                #menu-toggle.open {
+                    max-height: 100%;
+                    position: fixed;
+                    z-index: 1;
+                    top: 0;
+                    right: 0;
+                    overflow-x: hidden;
+                    transition: 0.5s;
+                    width: 100%;
+                    height: 100%;
+                    opacity: 1;
+                    transform: translateX(0);
+                    -webkit-transition: all .3s linear;
+                    -moz-transition: all .3s linear;
+                    -o-transition: all .3s linear;
+                    -ms-transition: all .3s linear;
+                }
+
+                #menu-toggle.open .closebtn {
+                    position: absolute;
+                    top: 0;
+                    right: 25px;
+                    font-size: 42px;
+                    color: #fff;
+                    z-index: 1;
+                    text-decoration: none;
+                }
+
+                #menu-toggle .mega-menu-wrap .mega-menu .nav-link.dropdown-toggle:hover {
+                    text-decoration: none;
+                }
+
+                .hover-content__menu h2 {
+                    /*margin-top: 11.4rem;*/
+                    -webkit-transition: .5s ease-in-out;
+                    -o-transition: .5s ease-in-out;
+                    transition: .5s ease-in-out;
+                }
+
+                .hover-content__menu:hover h2 {
+                    margin-top: 0 !important;
+                }
+
+                .hover-content__menu ul {
+                    opacity: 0;
+                    -webkit-transition: .5s ease-in-out;
+                    -o-transition: .5s ease-in-out;
+                    transition: .5s ease-in-out;
+                }
+
+                .dropdown-toggle::after {
+                    content: none;
+                }
+
+                .dropdown-menu {
+                    background-color: transparent !important;
+                    border: 0 !important;
+                    box-shadow: none !important;
+                    padding: 0 !important;
+                }
+
+                .dropdown-menu li a:hover {
+                    background: transparent !important;
+                }
+
+                #menu-toggle .mega-menu-wrap .mega-menu ul li a {
+                    padding: 0 12px;
+                    display: block;
+                }
+
+                .hover-content__menu:hover .dropdown-menu {
+                    opacity: 1 !important;
+                    display: block;
+                }
+
+                .tp-menu-tabs {
+                    opacity: 1;
+                    position: relative !important;
+                    background: transparent !important;
+                    border: 0 !important;
+                    display: inline-block;
+                    text-align: left;
+                    height: auto !important;
+                    width: auto !important;
+                    float: left;
+                    padding-left: 20px !important;
+                }
+
+                .tp-menu-tabs li.nav-item {
+                    width: 100%;
+                    font-size: 3rem;
+                    color: #fff;
+                    display: contents;
+                }
+
+                .tp-menu-tabs li.nav-item button {
+                    background: transparent !important;
+                    border: 0;
+                    border-top: 1px solid #fff;
+                    border-radius: 0;
+                    padding: 0;
+                    color: #fff !important;
+                    padding-top: 1.5rem;
+                    padding-right: 3rem;
+                    width: 100%;
+                    text-align: left;
+                }
+
+                .tp-menu-tabs li.nav-item button span {
+                    display: block;
+                }
+
+                .tp-menu-tabs li.nav-item i {
+                    border: 3px solid rgba(255, 255, 255, .2);
+                    border-radius: 50%;
+                    padding: 5px 8px;
+                    font-size: 16px;
+                    margin-top: 15px;
+                }
+
+                .tp-menu-tabs li.nav-item:nth-child(2) .nav-link,
+                .tp-menu-tabs li.nav-item:nth-child(3) .nav-link {
+                    margin-top: 2rem;
+                }
+
+                .tp-menu-tab-content {
+                    display: inline-block;
+                    width: 65%;
+                }
+
+                .tp-menu-tab-content .tab-pane {
+                    padding-left: 5rem;
+                }
+
+                .tp-menu-tab-content .tab-pane li {
+                    color: #fff;
+                    font-size: 18px;
+                    line-height: 28px;
+                }
+
+                .tp-menu-tab-content .tab-pane li.heading {
+                    font-size: 22px;
+                    font-weight: 600;
+                    margin-bottom: 10px;
+                }
+
+                .tp-menu-tab-content .tab-pane li a {
+                    color: #fff;
+                    text-decoration: none;
+                }
+
+                .tp-menu-tab-content .tab-pane li a:hover {
+                    color: #dddd;
+                }
+
+                .mega-menu-wrap {
+                    display: none !important;
+                }
+
+                .tp-menu-tab-content .tab-pane li.latest-news {
+                    margin-bottom: 2rem;
+                }
+
+                .tp-menu-tab-content .tab-pane li.latest-news:last-child {
+                    margin: 0;
+                }
+
+                .tp-menu-tab-content .tab-pane li.latest-news .head {
+                    background-color: #fff;
+                    color: #555;
+                    border-radius: 16px;
+                    font-size: 1.2rem;
+                    font-weight: 600;
+                    padding-left: 15px;
+                }
+
+                .tp-menu-tab-content .tab-pane li.latest-news .date {
+                    font-size: 1.2rem;
+                    margin-top: 0.1rem;
+                    margin-bottom: 0;
+                }
+
+                .tp-menu-tab-content .tab-pane li.latest-news .title {
+                    line-height: 1.4;
+                }
+
+                /* Responsiveness */
+                @media (min-width: 768px) {
+                    .nav {
+                        width: 100%;
+                        height: 100%;
+                        position: fixed;
+                        background-color: var(--black);
+                        overflow: hidden;
+                        justify-content: center;
+                        align-items: center;
+                    }
+
+                    .menu li {
+                        top: 500px;
+                        float: left;
+                    }
+
+                    .menu a:hover {
+                        background-color: transparent;
+                        color: var(--gray);
+                    }
+                }
+
+                @media (max-width: 768px) {
+                    .tp-menu-tabs {
+                        display: none;
+                    }
+
+                    .tp-menu-tab-content {
+                        display: none;
+                    }
+
+                    .mega-menu-wrap {
+                        display: block !important;
+                    }
+
+                    .hover-content__menu ul {
+                        opacity: 1;
+                    }
+
+                    .ct-footer-meta .inner-left {
+                        text-align: center;
+                    }
+
+                    .ct-footer-meta .inner-left ul li:last-child {
+                        padding-top: 1rem;
+                    }
+
+                    .ct-footer-meta .ct-socials li:first-child {
+                        /*padding-top: 0.5rem !important;*/
+                        line-height: 1;
+                    }
+
+                    .dropdown-menu {
+                        background-color: #fff !important;
+                        padding: 10px 5px !important;
+                    }
+
+                    .dropdown-menu li a {
+                        color: #333 !important;
+                    }
+
+                    #menu-toggle .mega-menu-wrap .mega-menu h2 a {
+                        padding-left: 10px;
+                    }
+                }
+
+                @media (max-width: 380px) {
+                    #menu-toggle .mega-menu-wrap {
+                        padding-left: 15px;
+                    }
+
+                    #menu-toggle .menu-bottom .col-md-6:first-child {
+                        position: absolute;
+                        top: -2rem;
+                    }
+
+                    #menu-toggle .menu-bottom li a {
+                        padding: 0 5px;
+                    }
+
+                    #menu-toggle .menu-bottom li:first-child a {
+                        padding-left: 0;
+                    }
+
+                    #menu-toggle .social-menu li:first-child {
+                        padding-left: 0;
+                    }
+                }
+            </style>
+        </head>
+        <div>
+            <!-- Floating Bar -->
+            <style>
+                .right-content {
+                    display: flex;
+                    /* Use flexbox to control the positioning of the icon and text */
+                    align-items: center;
+                    /* Center items vertically */
+                }
+
+                .right-content a {
+                    display: flex;
+                    /* Use flexbox to align the icon and text horizontally */
+                    align-items: center;
+                    /* Center items horizontally */
+                    text-decoration: none;
+                    /* Remove underline from the link */
+                }
+
+                .right-content img {
+                    width: 20px;
+                    /* Set the desired width for the SVG icon */
+                    height: 20px;
+                    /* Set the desired height for the SVG icon */
+                    margin-right: 4px;
+                    /* Adjust the right margin to create space between icon and text */
+                }
+
+                .right-content2 {
+                    width: 18px;
+                    /* Set the desired width for the SVG icon */
+                    height: 18px;
+                    /* Set the desired height for the SVG icon */
+                    margin-right: 4px;
+                    /* Adjust the right margin to create space between icon and text */
+                }
+
+
+                .anchor-font-en {
+                    font-size: 1.2rem !important;
+                }
+
+                .anchor-font-ur {
+                    font-size: 10.6px !important;
+                }
+
+
+                .stacked-text {
+                    display: block;
+                    margin-left: 1px;
+                    line-height: 1.0;
+                }
+
+                /* Media query for mobile view (adjust max-width as needed) */
+                @media (max-width: 768px) {
+                    .right-content img {
+                        display: none;
+                        /* Hide the SVG icon on mobile view */
+                    }
+                }
+            </style>
+            <div class="floating-nav">
+                <div class="content-wrapper bg-green">
+                    <div class="right-content img">
+                        <p><a class="anchor-font-en" href="https://app.psw.gov.pk/" rel="noopener noreferrer"><img
+                                    alt="Subscriber" src="https://psw.gov.pk/psw/footer_icons/Subscriber.svg">PSW
+                                Portal</a></p>
+                    </div>
+                </div>
+                <div class="content-wrapper bg-blue">
+                    <div class="right-content img">
+                        <p>
+                            <a href="https://psw.gov.pk/view-service-catalouge">
+                                <img alt="service" src="https://psw.gov.pk/psw/footer_icons/service_catalogue.png">
+                                <span class="stacked-text">Service Catalogue</span>
+                            </a>
+                        </p>
+                    </div>
+                </div>
+                <div class="content-wrapper bg-green">
+                    <div class="right-content img">
+                        <p><a href="tel:+9221111111779" rel="noopener noreferrer"><img alt="phone"
+                                    src="https://psw.gov.pk/psw/footer_icons/phone.svg">Support Center</a></p>
+                    </div>
+                </div>
+                <div class="content-wrapper bg-blue">
+                    <div class="right-content img">
+                        <p><a href="/user-manuals" rel="noopener noreferrer"><img alt="phone"
+                                    src="https://psw.gov.pk/psw/footer_icons/user_manual.png">User Manuals</a></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navigation bar -->
+            <header class="header">
+                <!-- Logo -->
+                <a href="https://psw.gov.pk" class="logo mt-4" rel="noopener noreferrer"><img
+                        src="https://psw.gov.pk/psw/logo.png" alt="" srcset=""></a>
+
+                <div class="header-right-content float-right">
+                    <i class="fa-solid fa-magnifying-glass" id="search-icon" onclick="showBar()"></i>
+                    <div class="button-group">
+                        <input class="form-input" id="search-input" placeholder="what we can help you find?"
+                            onblur="hideResults()" onkeyup="search($(this).val());" />
+                        <ul class="search-result">
+                        </ul>
+                        <a href="https://psw.gov.pk/ticket-desk" style="font-size:14px !important;"
+                            class="btn btn-blue">
+                            Ticket Desk
+                        </a>
+
+                        <a href="tel:+9221111111779" rel="noopener noreferrer" style="font-size:14px !important;"
+                            class="btn btn-blue">
+                            Women Dedicated Helpline
+                        </a>
+
+
+                        <a class="btn btn-blue" rel="ur" onclick="changeLang(this.rel)"
+                            rel="noopener noreferrer">اردو</a>
+                        <label class="hamb" for="side-menu">
+                            <a href="javascript:void(0)" onclick="OpenOrClose()" rel="noopener noreferrer">
+                                <img src="https://psw.gov.pk/psw/menu-icon.png">
+                                <span>Menu</span>
+                            </a>
+                        </label>
+                    </div>
+
+                    <nav class="nav" id="menu-toggle">
+                        <div class="header">
+                            <a href="https://psw.gov.pk" class="logo mt-4" rel="noopener noreferrer"><img
+                                    src="https://psw.gov.pk/psw/logo.png" alt="" srcset=""></a>
+                            <a href="javascript:void(0)" class="closebtn" onclick="OpenOrClose()"
+                                rel="noopener noreferrer">×</a>
+                        </div>
+
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <ul class="nav nav-tabs tp-menu-tabs" id="myTab" role="tablist">
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link active" id="home-tab" data-bs-toggle="tab"
+                                                data-bs-target="#home-tab-pane" type="button" role="tab"
+                                                aria-controls="home-tab-pane" aria-selected="true">
+                                                <span>Who We Are</span>
+                                                <i class="fa-solid fa-chevron-right"></i>
+                                            </button>
+                                        </li>
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link" id="profile-tab" data-bs-toggle="tab"
+                                                data-bs-target="#profile-tab-pane" type="button" role="tab"
+                                                aria-controls="profile-tab-pane" aria-selected="false">
+                                                <span>Innovations</span>
+                                                <i class="fa-solid fa-chevron-right"></i>
+                                            </button>
+                                        </li>
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link" id="contact-tab" data-bs-toggle="tab"
+                                                data-bs-target="#contact-tab-pane" type="button" role="tab"
+                                                aria-controls="contact-tab-pane" aria-selected="false">
+                                                <span>News Room</span>
+                                                <i class="fa-solid fa-chevron-right"></i>
+                                            </button>
+                                        </li>
+                                    </ul>
+
+                                    <div class="tab-content tp-menu-tab-content" id="myTabContent">
+                                        <div class="tab-pane show active" id="home-tab-pane" role="tabpanel"
+                                            aria-labelledby="home-tab" tabindex="0">
+                                            <div class="row">
+                                                <div class="col-md-3">
+                                                    <li class="heading">
+                                                        <a href="https://psw.gov.pk/about-psw"
+                                                            rel="noopener noreferrer">About PSW</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="https://psw.gov.pk/our-history"
+                                                            rel="noopener noreferrer">Our History</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="https://psw.gov.pk/governance"
+                                                            rel="noopener noreferrer">Governance</a>
+                                                    </li>
+
+                                                    <li>
+                                                        <a href="https://psw.gov.pk/leadership"
+                                                            rel="noopener noreferrer">Leadership</a>
+                                                    </li>
+
+
+                                                    <!-- <li>
+                                                <a href="https://psw.gov.pk/policy-design">PSW Policies</a>
+                                            </li> -->
+                                                    <li class="heading mt-5">
+                                                        <a href="https://psw.gov.pk/social-innovative"
+                                                            rel="noopener noreferrer">Social Innovate</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="https://psw.gov.pk/our-partners"
+                                                            rel="noopener noreferrer">Our Partners</a>
+                                                    </li>
+                                                    <li> <a href="https://psw.gov.pk/change-management">Change
+                                                            Management</a></li>
+                                                    <!-- 11132023 -->
+                                                    <li>
+                                                        <a href="https://psw.gov.pk/khadijah-program"
+                                                            rel="noopener noreferrer">Khadijah - Women Entrepreneurship
+                                                            Program</a>
+                                                    </li>
+
+                                                    <!-- 11132023 -->
+                                                    <!--                                                <!--Khadija WEP-->
+                                                </div>
+                                                -->
+                                                <!--13112023-->
+
+                                                <div class="col-md-4">
+                                                    <li class="heading">
+                                                        <a href="https://psw.gov.pk/trade-suite"
+                                                            rel="noopener noreferrer">Trade Suite</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="https://psw.gov.pk/trading-insights"
+                                                            rel="noopener noreferrer">Trading Insights</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="https://psw.gov.pk/user-manuals">User Manuals</a>
+                                                    </li>
+                                                    <li>&nbsp;</li>
+                                                    <!--13112023-->
+                                                    <!--13112023-->
+
+
+
+
+
+
+
+                                                    <li class="heading mt-5">
+                                                        <a href="https://psw.gov.pk/psw-excellence"
+                                                            rel="noopener noreferrer">PSW Excellence</a>
+                                                        <!--	<a href="#">PSW Excellence</a> -->
+                                                    </li>
+
+
+
+
+                                                    <li>
+                                                        <a href="https://psw.gov.pk/initiatives"
+                                                            rel="noopener noreferrer">Initiatives</a>
+                                                        <!--	<a href="#">Initiatives</a>-->
+                                                    </li>
+
+                                                    <li>
+                                                        <a href="https://psw.gov.pk/testimonials"
+                                                            rel="noopener noreferrer">Testimonials</a>
+                                                    </li>
+
+
+
+                                                    <!--	<li>
+                           <a href="https://psw.gov.pk/pan-asian-e-commerce-alliance">Pan Asian E-Commerce Alliance (PAA)</a>
+			</li>
+		-->
+
+
+
+                                                    <!--	<li>
+			<a href="https://psw.gov.pk/testimonials">Testimonials</a>
+	</li>
+-->
+                                                    <!--13112023-->
+                                                </div>
+                                                <!--13112023-->
+                                                <div class="col-md-3">
+                                                    <li class="heading">
+                                                        <a href="https://psw.gov.pk/careers-and-culture"
+                                                            rel="noopener noreferrer">Careers &amp; Culture</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="https://psw.gov.pk/hr-policies-guidelines"
+                                                            rel="noopener noreferrer">HR Policies &amp; Guidelines</a>
+                                                    </li>
+                                                    <li>&nbsp;</li>
+                                                    <li>&nbsp;</li>
+                                                    <!--PSW - Global Heading-->
+                                                    <li class="heading mt-5">
+                                                        <a href="#" rel="noopener noreferrer"> PSW Global</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="https://psw.gov.pk/pan-asian-e-commerce-alliance?id=271"
+                                                            rel="noopener noreferrer">Pan Asian E-Commerce Alliance
+                                                            (PAA)</a>
+                                                    </li>
+                                                </div>
+                                                <!--13112023-->
+
+
+
+
+
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane" id="profile-tab-pane" role="tabpanel"
+                                            aria-labelledby="profile-tab" tabindex="0">
+                                            <li>
+                                                <a href="https://psw.gov.pk/subscription" rel="noopener noreferrer">PSW
+                                                    Subscription</a>
+                                            </li>
+                                            <li>
+                                                <a href="https://psw.gov.pk/psw-renewal-subscription"
+                                                    rel="noopener noreferrer">PSW Renewal Subscription</a>
+                                            </li>
+                                            <li>
+                                                <a href="https://psw.gov.pk/ministry-narcotics-control"
+                                                    rel="noopener noreferrer">Ministry of Narcotics Control</a>
+                                            </li>
+                                            <li>
+                                                <a href="https://psw.gov.pk/elimination-of-eif-efe"
+                                                    rel="noopener noreferrer">Elimination of EIF and EFE</a>
+                                            </li>
+                                            <li>
+                                                <a href="https://psw.gov.pk/single-declaration-export"
+                                                    rel="noopener noreferrer">Single Declaration - Export</a>
+                                            </li>
+                                            <li>
+                                                <a href="https://psw.gov.pk/single-declaration-import"
+                                                    rel="noopener noreferrer">Single Declaration - Import</a>
+                                            </li>
+                                            <li>
+                                                <a href="https://psw.gov.pk/dpp" rel="noopener noreferrer">Department of
+                                                    Plant Protection</a>
+                                            </li>
+                                            <li>
+                                                <a href="https://psw.gov.pk/drap" rel="noopener noreferrer">Drug
+                                                    Regulatory Authority of Pakistan</a>
+                                            </li>
+
+                                            <li>
+                                                <a href="https://psw.gov.pk/aqd" rel="noopener noreferrer">Animal
+                                                    Quarantine Department</a>
+                                            </li>
+                                            <li>
+                                                <a href="https://psw.gov.pk/fscrd" rel="noopener noreferrer">FSCRD</a>
+                                            </li>
+                                            <li>
+                                                <a href="https://psw.gov.pk/psqca" rel="noopener noreferrer">PSQCA</a>
+                                            </li>
+                                            <li>
+                                                <a href="https://psw.gov.pk/trade-information-portal"
+                                                    rel="noopener noreferrer">Tradeverse (TIPP)</a>
+                                            </li>
+                                            <li>
+                                                <a href="https://psw.gov.pk/tdap" rel="noopener noreferrer">Trade
+                                                    Development Authority of Pakistan</a>
+                                            </li>
+                                            <li>
+                                                <a href="https://psw.gov.pk/bra" rel="noopener noreferrer">Balochistan
+                                                    Revenue Authority</a>
+                                            </li>
+
+                                            <!-- <li>
+                                        <a href="https://psw.gov.pk/trade-suite">Trade Suite</a>
+                                    </li>
+                                    <li>
+                                        <a href="https://psw.gov.pk/trading-insights">Trading Insights</a>
+                                    </li>-->
+                                        </div>
+                                        <div class="tab-pane" id="contact-tab-pane" role="tabpanel"
+                                            aria-labelledby="contact-tab" tabindex="0">
+                                            <div class="row">
+                                                <div class="col-md-3">
+                                                    <li class="heading">
+                                                        <a href="https://psw.gov.pk/news-updates"
+                                                            rel="noopener noreferrer">News &amp; Updates</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="https://psw.gov.pk/press-releases">Press Releases</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="https://psw.gov.pk/media-appearance">Media
+                                                            Appearances</a>
+                                                    </li>
+
+                                                    <li>
+                                                        <a href="https://psw.gov.pk/psw-podcast"
+                                                            rel="noopener noreferrer">Trade Talks – The PSW Podcast</a>
+                                                    </li>
+                                                    <!--  <li>
+                                                <a href="https://psw.gov.pk/testimonials">Testimonials</a>
+                                            </li>-->
+                                                    <li>
+                                                        <a href="https://psw.gov.pk/psw-newsletter"
+                                                            rel="noopener noreferrer">Newsletter</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="https://psw.gov.pk/media-gallery"
+                                                            rel="noopener noreferrer">Media Gallery</a>
+                                                    </li>
+
+                                                    <!-- <li>
+                                                <a href="https://psw.gov.pk/knowledge-base">Knowledge Base</a>
+                                            </li>
+                                           -->
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <!-- <li class="heading">
+                                                <a href="https://psw.gov.pk/trade-suite">Trade Suite</a>
+					    </li>-->
+                                                    <li class="heading">
+                                                        <a href="#">Knowledge Base</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="https://psw.gov.pk/articles">Articles</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="https://psw.gov.pk/blogs">Blogs</a>
+                                                    </li>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <li class="latest-news">
+                                                        <div class="head">NEWS RELEASE</div>
+                                                        <p class="date">Mar-13-2025</p>
+                                                        <p class="title">
+                                                            <a href="https://www.psw.gov.pk/media/Press%20Release/Psw%20and%20Maqta%20-%20PR%20-%2013-03-2025.pdf"
+                                                                rel="noopener noreferrer">Pakistan Single Window Signs
+                                                                Strategic Partnership Agreement with Maqta
+                                                                Technologies</a>
+                                                        </p>
+                                                    </li>
+                                                    <li class="latest-news">
+                                                        <div class="head">NEWS RELEASE</div>
+                                                        <p class="date">Mar-03-2025</p>
+                                                        <p class="title">
+                                                            <a href="https://www.phoneworld.com.pk/psw-launches-national-workshop-on-airport-community-system-acs-to-enhance-air-cargo-operations/"
+                                                                rel="noopener noreferrer">PSW Launches National Workshop
+                                                                on Airport Community System (ACS) to Enhance Air Cargo
+                                                                Operations</a>
+                                                        </p>
+                                                    </li>
+                                                    <li class="latest-news">
+                                                        <div class="head">NEWS RELEASE</div>
+                                                        <p class="date">Feb-25-2025</p>
+                                                        <p class="title">
+                                                            <a href="https://www.brecorder.com/news/40350057/drap-clearance-gateway-officially-launched"
+                                                                rel="noopener noreferrer">PSW, DRAP Launch Digital
+                                                                Clearance Gateway to Transform Pharmaceutical Trade in
+                                                                Pakistan</a>
+                                                        </p>
+                                                    </li>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="mega-menu-wrap">
+                                        <div class="mega-menu">
+                                            <li class="nav-item dropdown">
+                                                <a class="nav-link dropdown-toggle" role="button"
+                                                    data-bs-toggle="dropdown" aria-expanded="false"
+                                                    rel="noopener noreferrer">
+                                                    <h2>Who We Are</h2>
+                                                </a>
+
+                                                <ul class="dropdown-menu">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <li>
+                                                                <a href="https://psw.gov.pk/about-psw"
+                                                                    rel="noopener noreferrer">About PSW</a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="https://psw.gov.pk/leadership"
+                                                                    rel="noopener noreferrer">Leadership</a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="https://psw.gov.pk/our-history"
+                                                                    rel="noopener noreferrer">Our History</a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="https://psw.gov.pk/governance"
+                                                                    rel="noopener noreferrer">Governance</a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="https://psw.gov.pk/policy-design"
+                                                                    rel="noopener noreferrer">PSW Policies</a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="https://psw.gov.pk/social-innovative"
+                                                                    rel="noopener noreferrer">Social Innovate</a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="https://psw.gov.pk/our-partners"
+                                                                    rel="noopener noreferrer">Our Partners</a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="https://psw.gov.pk/careers-and-culture"
+                                                                    rel="noopener noreferrer">Careers &amp; Culture</a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="https://psw.gov.pk/our-employees"
+                                                                    rel="noopener noreferrer">Our Employees</a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="https://psw.gov.pk/hr-policies-guidelines"
+                                                                    rel="noopener noreferrer">HR Policies &amp;
+                                                                    Guidelines</a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="https://psw.gov.pk/khadijah-program"
+                                                                    rel="noopener noreferrer">Khadijah - Women
+                                                                    Entrepreneurship Program</a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="https://psw.gov.pk/psw-excellence"
+                                                                    rel="noopener noreferrer">PSW Excellence</a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="https://psw.gov.pk/initiatives"
+                                                                    rel="noopener noreferrer">Initiatives</a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="https://psw.gov.pk/pan-asian-e-commerce-alliance"
+                                                                    rel="noopener noreferrer">Pan Asian E-Commerce
+                                                                    Alliance (PAA)</a>
+                                                            </li>
+                                                        </div>
+                                                    </div>
+                                                </ul>
+                                            </li>
+                                        </div>
+
+                                        <div class="mega-menu">
+                                            <li class="nav-item dropdown">
+                                                <a class="nav-link dropdown-toggle" role="button"
+                                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                                    <h2>Innovations</h2>
+                                                </a>
+                                                <ul class="dropdown-menu">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <li>
+                                                                <a href="https://psw.gov.pk/subscription"
+                                                                    rel="noopener noreferrer">PSW Subscription</a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="https://psw.gov.pk/psw-renewal-subscription"
+                                                                    rel="noopener noreferrer">PSW Renewal
+                                                                    Subscription</a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="https://psw.gov.pk/ministry-narcotics-control"
+                                                                    rel="noopener noreferrer">Ministry of Narcotics
+                                                                    Control</a>
+                                                            </li>
+
+                                                            <li>
+                                                                <a href="https://psw.gov.pk/elimination-of-eif-efe"
+                                                                    rel="noopener noreferrer">Elimination of EIF and
+                                                                    EFE</a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="https://psw.gov.pk/single-declaration-export"
+                                                                    rel="noopener noreferrer">Single Declaration -
+                                                                    Export</a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="https://psw.gov.pk/single-declaration-import"
+                                                                    rel="noopener noreferrer">Single Declaration -
+                                                                    Import</a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="https://psw.gov.pk/dpp"
+                                                                    rel="noopener noreferrer">Department of Plant
+                                                                    Protection</a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="https://psw.gov.pk/drap"
+                                                                    rel="noopener noreferrer">Drug Regulatory Authority
+                                                                    of Pakistan</a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="https://psw.gov.pk/aqd"
+                                                                    rel="noopener noreferrer">Animal Quarantine
+                                                                    Department</a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="https://psw.gov.pk/fscrd"
+                                                                    rel="noopener noreferrer">FSCRD</a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="https://psw.gov.pk/psqca"
+                                                                    rel="noopener noreferrer">PSQCA</a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="https://psw.gov.pk/trade-information-portal"
+                                                                    rel="noopener noreferrer">Tradeverse (TIPP)</a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="https://psw.gov.pk/trading-insights"
+                                                                    rel="noopener noreferrer">Trading Insights</a>
+                                                            </li>
+                                                        </div>
+                                                    </div>
+                                                </ul>
+                                            </li>
+                                        </div>
+
+                                        <div class="mega-menu">
+                                            <li class="nav-item dropdown">
+                                                <a class="nav-link dropdown-toggle" role="button"
+                                                    data-bs-toggle="dropdown" aria-expanded="false"
+                                                    rel="noopener noreferrer">
+                                                    <h2>News Room</h2>
+                                                </a>
+                                                <ul class="dropdown-menu">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <li>
+                                                                <a href="https://psw.gov.pk/news-updates"
+                                                                    rel="noopener noreferrer">News &amp; Updates</a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="https://psw.gov.pk/press-releases">Press
+                                                                    Releases</a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="https://psw.gov.pk/media-appearance">Media
+                                                                    Appearances</a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="https://psw.gov.pk/psw-podcast"
+                                                                    rel="noopener noreferrer">Trade Talks – The PSW
+                                                                    Podcast</a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="https://psw.gov.pk/testimonials"
+                                                                    rel="noopener noreferrer">Testimonials</a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="https://psw.gov.pk/psw-newsletter"
+                                                                    rel="noopener noreferrer">Newsletter</a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="https://psw.gov.pk/media-gallery"
+                                                                    rel="noopener noreferrer">Media Gallery</a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="https://psw.gov.pk/trade-suite"
+                                                                    rel="noopener noreferrer">Trade Suite</a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="https://psw.gov.pk/knowledge-base">Knowledge
+                                                                    Base</a>
+                                                            </li>
+
+                                                        </div>
+                                                    </div>
+                                                </ul>
+                                            </li>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row menu-bottom">
+                                <div class="col-md-6">
+                                    <ul class="menu">
+                                        <li><a href="https://psw.gov.pk/contact-us" rel="noopener noreferrer">Contact
+                                                Us</a> </li>
+                                        <li><a href="https://psw.gov.pk/career-opportunities"
+                                                rel="noopener noreferrer">Career Opportunities</a> </li>
+                                        <li><a href="https://psw.gov.pk/documents/legal"
+                                                rel="noopener noreferrer">Legal</a> </li>
+                                        <li><a href="https://psw.gov.pk/documents/tenders"
+                                                rel="noopener noreferrer">Tenders</a> </li>
+                                        <li>
+                                            <a href="https://psw.gov.pk/privacy-policy"
+                                                rel="noopener noreferrer">Privacy Policy</a>
+                                        </li>
+                                        <li>
+                                            <a href="https://psw.gov.pk/feedback" rel="noopener noreferrer">Feedback</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <!-- <div class="col-md-6">
+		       <ul class="social-menu">
+			<li>
+                                    Follow us
+                                </li>
+			    </ul>
+			</div>
+			-->
+                                <div class="col-md-6">
+                                    <ul class="social-menu">
+                                        <li>
+                                            Follow us
+                                        </li>
+                                        <li>
+                                            <a href="https://facebook.com/pakistansinglewindow/" target="_blank"
+                                                rel="noopener noreferrer">
+                                                <img alt="facebook"
+                                                    src="https://psw.gov.pk/psw/footer_icons/facebook.svg">
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="https://twitter.com/PakSingleWindow?t=V_k_ovogQHdTCWBeDf9g_A&s=09"
+                                                target="_blank" rel="noopener noreferrer">
+                                                <img alt="twitter"
+                                                    src="https://psw.gov.pk/psw/footer_icons/twitter.svg">
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="https://youtube.com/c/PakistanSingleWindowOfficial" target="_blank"
+                                                rel="noopener noreferrer">
+                                                <img alt="youtube"
+                                                    src="https://psw.gov.pk/psw/footer_icons/youtube.svg">
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="https://instagram.com/pakistansinglewindow?igshid=YmMyMTA2M2Y="
+                                                target="_blank" rel="noopener noreferrer">
+                                                <img alt="instagram"
+                                                    src="https://psw.gov.pk/psw/footer_icons/insta.svg">
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="https://www.linkedin.com/company/pakistan-single-window/"
+                                                target="_blank" rel="noopener noreferrer">
+                                                <img alt="linkedin"
+                                                    src="https://psw.gov.pk/psw/footer_icons/linkedin.svg"></a>
+                                        </li>
+                                    </ul>
+                                    <p>© 2025 Pakistan Single Window. All rights reserved.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </nav>
+                </div>
+            </header>
+        </div>
+
+        <script>
+            function OpenOrClose() {
+                document.getElementById("menu-toggle").classList.toggle('open');
+            }
+        </script>
+
+        <style>
+            .hero {
+                margin-top: -20px;
+                height: auto;
+                width: 100%;
+                background-repeat: no-repeat;
+                background-size: cover;
+                align-items: center;
+                z-index: 0;
+                overflow: hidden;
+            }
+
+            .text {
+                text-align: center;
+                color: white;
+                width: 799px;
+                height: 118px;
+                top: 315px;
+                position: absolute;
+                left: 0;
+                right: 0;
+                margin: auto;
+            }
+
+            .text h1 {
+                font-family: 'Lato', sans-serif !important;
+                font-size: 42px !important;
+                line-height: 59px !important;
+                margin-top: 0 !important;
+                margin-bottom: 22px !important;
+                text-transform: uppercase !important;
+            }
+
+            .text p {
+                font-weight: 300;
+                font-size: 30px;
+                line-height: 28px;
+            }
+
+            .hero .text .btn {
+                line-height: 28px !important;
+            }
+
+            /* Responsiveness */
+            @media (max-width: 768px) AND (max-width: 860px) {
+                .hero .text {
+                    top: 20rem;
+                }
+
+                #home-slider .carousel-indicators {
+                    bottom: 0;
+                }
+            }
+
+            @media (max-width: 768px) {
+                .hero {
+                    position: relative;
+                }
+
+                .hero .text {
+                    padding: 0 4rem;
+                    width: auto;
+                    top: 10rem;
+                }
+
+                .hero .text .carousel-inner.desktop {
+                    display: block;
+                }
+
+                .text h1 {
+                    font-size: 2rem !important;
+                    line-height: 3rem !important;
+                }
+
+                .hero .text .btn {
+                    display: none;
+                }
+
+                #home-slider .carousel-indicators {
+                    bottom: 1rem;
+                }
+            }
+        </style>
+        <div>
+            <div class="hero">
+                <div class="bg-video-container">
+                    <video autoplay muted loop id="video-bg">
+                        <source src="https://psw.gov.pk/media//Home Page Banner 2023.mp4" type="video/mp4">
+                    </video>
+                </div>
+                <div class="text">
+                    <div class="carousel slide media-carousel" id="home-slider" data-ride="carousel">
+                        <div class="carousel-inner desktop">
+                            <div class="item  active">
+                                <div class="carousel-caption">
+                                    <h1>Transforming Cross-Border Trade in Pakistan</h1>
+                                    <a href="https://app.psw.gov.pk" class="btn btn-blue" style="margin-right: 1rem"
+                                        rel="noopener noreferrer">Login</a>
+                                    <a href="https://www.app.psw.gov.pk/app/subscription" class="btn btn-transparent"
+                                        rel="noopener noreferrer">Register</a>
+                                </div>
+                            </div>
+                            <div class="item">
+                                <div class="carousel-caption">
+                                    <h1>Single Access Point for Cross Border Trade</h1>
+                                    <a href="https://app.psw.gov.pk" class="btn btn-blue" style="margin-right: 1rem"
+                                        rel="noopener noreferrer">Login</a>
+                                    <a href="https://www.app.psw.gov.pk/app/subscription" class="btn btn-transparent"
+                                        rel="noopener noreferrer">Register</a>
+                                </div>
+                            </div>
+                            <div class="item">
+                                <div class="carousel-caption">
+                                    <h1>Integrated Electronic Platform for Trade Facilitation</h1>
+                                    <a href="https://app.psw.gov.pk" class="btn btn-blue" style="margin-right: 1rem"
+                                        rel="noopener noreferrer">Login</a>
+                                    <a href="https://www.app.psw.gov.pk/app/subscription" class="btn btn-transparent"
+                                        rel="noopener noreferrer">Register</a>
+                                </div>
+                            </div>
+                        </div>
+                        <ol class="carousel-indicators">
+                            <li data-target="#home-slider" data-slide-to="0" class="active"></li>
+                            <li data-target="#home-slider" data-slide-to="1"></li>
+                            <li data-target="#home-slider" data-slide-to="2"></li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <style>
+            .tick-news {
+                width: 160px;
+                height: 35px;
+                direction: left;
+            }
+
+            .lang-urdu .marquee-rtl {
+                direction: rtl;
+
+            }
+        </style>
+
+        <div class="marquee-rtl d-flex justify-content-between align-items-center breaking-news"
+            style="background-color:#f0f4f6;">
+            <div
+                class="d-flex flex-row flex-grow-1 flex-fill justify-content-center bg-success py-2 text-white px-1 tick-news">
+                <span class="d-flex align-items-center">&nbsp;Trending News</span>
+            </div>
+            <marquee direction=left class="news-scroll" behavior="scroll" onmouseover="this.stop();"
+                onmouseout="this.start();">
+                <a href="#" class="link-success" rel="noopener noreferrer">
+                    <p style="text-align: left;"><a
+                            href="https://www.phoneworld.com.pk/psw-launches-national-workshop-on-airport-community-system-acs-to-enhance-air-cargo-operations/">PSW
+                            Launches National Workshop on Airport Community System (ACS) to Enhance Air Cargo
+                            Operations</a> | <a
+                            href="https://www.brecorder.com/news/40350057/drap-clearance-gateway-officially-launched">PSW,
+                            DRAP Launch Digital Clearance Gateway to Transform Pharmaceutical Trade in Pakistan</a> | <a
+                            href="https://www.brecorder.com/news/40349449">SMEDA Signs MOU with PSW and Hosts Panel on
+                            ‘Digital Trade Facilitation for SMEs’</a> | <a
+                            href="https://thepublicpurview.com/psws-khadijah-women-entrepreneurship-program/">PSW’s
+                            Khadijah Women Entrepreneurship Program in Peshawar</a> | <a
+                            href="https://www.psw.gov.pk/knowledge-base/psw-and-edf-sign-mou-strengthen-export-support-and-boost-growth">PSW
+                            and EDF Sign MoU to Strengthen Export Support and Boost Growth</a></p>
+                </a>
+            </marquee>
+        </div>
+        <style>
+            .about-section {
+                position: relative;
+                background: #FBFBFB;
+                padding: 60px 0 50px 0;
+                text-align: center;
+
+                background-position: bottom;
+                background-size: contain;
+                background-repeat: no-repeat;
+                /*height: 255vh;*/
+            }
+
+            .about-section h1 {
+                margin-top: 0;
+                margin-bottom: 3rem;
+            }
+
+            .about-section .description {
+                margin-bottom: 3rem;
+            }
+
+            .about-section p {
+                font-size: 16px;
+                line-height: 24px;
+                text-align: left;
+                color: #6B6B6B;
+            }
+
+            .about-section .second-heading {
+                margin-top: 6rem;
+            }
+
+            .about-section .card-wrapper {
+                margin-top: 2rem;
+            }
+
+            .about-section .card {
+                position: relative;
+                text-align: -webkit-center;
+                background: #FFFFFF;
+                box-shadow: 0px 4px 18px 4px rgb(0 0 0 / 7%);
+                border-radius: 5px;
+                margin-bottom: 7rem;
+                height: 360px;
+                /*transition: transform .8s cubic-bezier(.24,.26,.2,1);*/
+                -ms-transition: -ms-transform .8s cubic-bezier(.22, .61, .36, 1);
+                -webkit-transition: -webkit-transform .8s cubic-bezier(.22, .61, .36, 1);
+                transition: transform .8s cubic-bezier(.22, .61, .36, 1);
+                -webkit-backface-visibility: hidden;
+                backface-visibility: hidden;
+            }
+
+            .about-section .card:before {
+                content: "";
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                top: 0;
+                left: 0;
+                z-index: 0;
+                opacity: 1;
+                background-repeat: no-repeat;
+                background-size: cover;
+                /*-ms-transition: -ms-transform .5s cubic-bezier(.22,.61,.36,1);*/
+                /*-webkit-transition: -webkit-transform .5s cubic-bezier(.22,.61,.36,1);*/
+                /*transition: transform .5s cubic-bezier(.22,.61,.36,1);*/
+                /*-webkit-backface-visibility: hidden;*/
+                /*backface-visibility: hidden;*/
+            }
+
+            .about-section .card_1:before {
+                background-image: url(https://psw.gov.pk/psw/about_bg_1.png);
+            }
+
+            .about-section .card-title,
+            .about-section .card-text,
+            .about-section .card a {
+                position: relative;
+                width: 100%;
+                opacity: 2;
+                z-index: 0;
+                color: #ffffff;
+            }
+
+            .about-section .card_2:before {
+                background-image: url(https://psw.gov.pk/psw/about_bg_2.png);
+            }
+
+            .about-section .card_3:before {
+                background-image: url(https://psw.gov.pk/psw/about_bg_3.png);
+            }
+
+            .about-section .card_4:before {
+                background-image: url(https://psw.gov.pk/psw/about_bg_4.png);
+            }
+
+            .about-section .card_5:before {
+                background-image: url(https://psw.gov.pk/psw/about_bg_5.png);
+            }
+
+            .about-section .card_6:before {
+                background-image: url(https://psw.gov.pk/psw/about_bg_6.png);
+            }
+
+            .about-section .card:hover {
+                z-index: 1;
+                /*-webkit-transform: rotateY(180deg);*/
+                /*transform: rotateY(180deg);*/
+            }
+
+            .about-section .card:hover .card-body {
+                padding-top: 5.5rem;
+                background: #008959;
+                -webkit-transform: rotateY(180deg);
+                transform: rotateY(180deg);
+            }
+
+            .about-section .card-body {
+                padding-top: 7rem;
+                padding-left: 16px;
+                padding-right: 16px;
+                -ms-transition: -ms-transform .9s cubic-bezier(.22, .61, .36, 1);
+                -webkit-transition: -webkit-transform .9s cubic-bezier(.22, .61, .36, 1);
+                transition: transform .9s cubic-bezier(.22, .61, .36, 1);
+            }
+
+            .about-section .card img {
+                position: absolute;
+                left: 0;
+                right: 0;
+                margin: auto;
+                top: 4rem;
+                width: 107px;
+            }
+
+            .about-section .card:hover img {
+                opacity: 0;
+            }
+
+            .about-section .card-title {
+                padding-top: 7rem;
+                font-size: 18px !important;
+                font-weight: bold;
+            }
+
+            .about-section .card:hover .card-title {
+                padding: 0;
+                -webkit-transform: rotateY(180deg);
+                transform: rotateY(180deg);
+            }
+
+            .about-section .card p {
+                margin-bottom: 20px;
+                opacity: 0;
+                -webkit-transform: rotateY(180deg);
+                transform: rotateY(180deg);
+            }
+
+            .about-section .card:hover p {
+                opacity: 1;
+            }
+
+            .about-section .card a {
+                font-weight: 600;
+            }
+
+            .about-section .btn {
+                margin: auto;
+                display: block;
+                margin-top: 7rem !important;
+                margin-bottom: 2rem;
+            }
+
+            .about-section .video-container {
+                overflow: hidden;
+                position: relative;
+                /*width:80%;*/
+                margin: auto;
+            }
+
+            .video-container::after {
+                padding-top: 56.25%;
+                display: block;
+                content: '';
+            }
+
+            .video-container iframe {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+            }
+
+            .about-section .reveal {
+                position: relative;
+                transform: translateY(150px);
+                opacity: 0;
+                transition: all 1s ease;
+            }
+
+            .about-section .reveal.active {
+                transform: translateY(0);
+                opacity: 1;
+            }
+
+            #particles-js {
+                position: absolute;
+                height: 95%;
+            }
+
+            #video-popup {
+                top: 10rem;
+            }
+
+            #video-popup .modal-dialog {
+                width: 780px;
+                max-width: 100%;
+            }
+
+            #video-popup .modal-dialog #home-video {
+                height: 300px;
+            }
+
+            .lang-urdu .about-section h1,
+            .lang-urdu .about-section .description,
+            .lang-urdu .testimonial-section h1,
+            .lang-urdu .testimonial-section p,
+            .lang-urdu .news-section .description {
+                text-align: right;
+            }
+
+            @media (max-width: 720px) {
+                .about-section {
+                    background-size: auto;
+                    padding: 30px 0;
+                }
+
+                .about-section .video-container {
+                    width: 90%;
+                }
+
+                .about-section h1 {
+                    margin-top: 5rem;
+                }
+
+                .about-section .card {
+                    margin-top: 0;
+                }
+
+                .about-section .card:last-child {
+                    margin-bottom: 5rem;
+                }
+
+                #video-popup .modal-dialog {
+                    width: auto;
+                }
+
+                #video-popup .modal-dialog #home-video {
+                    height: auto;
+                }
+            }
+
+            @media (max-width: 860px) {
+                .card {
+                    height: auto;
+                }
+
+                .about-section {
+                    height: 100%;
+                }
+
+                #particles-js {
+                    display: none;
+                }
+
+                .about-section .container {
+                    position: relative;
+                    top: 0;
+                }
+            }
+        </style>
+
+        <section class="about-section">
+
+            <!-- particles.js container -->
+            <div id="particles-js"></div>
+
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="video-container video reveal">
+                            <iframe src="https://www.youtube.com/embed/uhUbf4Dke-w?rel=0" id="home-video" width="100%"
+                                height="100%">
+                            </iframe>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <h1 class="text-green text-left">What is Pakistan Single Window?</h1>
+                        <p class="description">
+                            PSW is an Integrated Digital Platform that allows parties involved in trade to lodge
+                            standardized information and documents with a single-entry point to fulfill all import,
+                            export, and transit-related regulatory requirements. It aims at reducing the time and cost
+                            of doing business by digitalizing Pakistan’s cross-border trade and eliminating paper-based
+                            manual processes.
+                        </p>
+                        <button class="btn btn-green" id="watch_video">WATCH VIDEO</button>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <h1 class="text-green second-heading reveal">What do we do?</h1>
+                    </div>
+                </div>
+
+                <div class="row card-wrapper">
+                    <div class="col-md-4">
+                        <div class="card card_1">
+                            <div class="card-body">
+                                <div class="front-side">
+                                    <img src="https://psw.gov.pk/media//about_1.png">
+                                    <h3 class="card-title">Integration of Commercial Banks</h3>
+                                    <p class="card-text">Bringing all Pakistani Commercial Banks onto a single digital
+                                        platform to allow traders to perform all financial transactions with one click.
+                                    </p>
+                                </div>
+
+
+
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card card_2">
+                            <div class="card-body">
+                                <div class="front-side">
+                                    <img src="https://psw.gov.pk/media//about_2.png">
+                                    <h3 class="card-title">Integration of Customs &amp; OGAs</h3>
+                                    <p class="card-text">Integrating all Customs and Other Government Agencies (OGAs)
+                                        procedures on a single digital platform to minimize the need for physical
+                                        visits.</p>
+                                </div>
+
+
+
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card card_3">
+                            <div class="card-body">
+                                <div class="front-side">
+                                    <img src="https://psw.gov.pk/media//about_3.png">
+                                    <h3 class="card-title">E-Trade/Online Processing of LPCOs</h3>
+                                    <p class="card-text">Electronic, paperless processing of licenses, permits,
+                                        certificates, release orders and other documents to save time and lower cost of
+                                        doing business.</p>
+                                </div>
+
+
+
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card card_4">
+                            <div class="card-body">
+                                <div class="front-side">
+                                    <img src="https://psw.gov.pk/media//about_4.png">
+                                    <h3 class="card-title">Tradeverse - Trade Information Portal of Pakistan (TIPP)</h3>
+                                    <p class="card-text">The Tradeverse provides a single access point for all
+                                        information related to imports, exports, and transit.</p>
+                                </div>
+
+
+
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card card_5">
+                            <div class="card-body">
+                                <div class="front-side">
+                                    <img src="https://psw.gov.pk/media//about_5.png">
+                                    <h3 class="card-title">Single Declaration</h3>
+                                    <p class="card-text">Allowing the electronic submission of information for the
+                                        clearance of import, export, and transit-related goods, Single Declaration
+                                        eliminates the need for multiple submissions of the same data to different
+                                        agencies.</p>
+                                </div>
+
+
+
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card card_6">
+                            <div class="card-body">
+                                <div class="front-side">
+                                    <img src="https://psw.gov.pk/media//about_6.png">
+                                    <h3 class="card-title">Customer Support Centres</h3>
+                                    <p class="card-text">Offering 24/7 assistance to traders via phone, email, and our
+                                        official social media platforms.</p>
+                                </div>
+
+
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Modal -->
+        <div class="modal" id="video-popup" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <iframe src="https://www.youtube.com/embed/uhUbf4Dke-w?rel=0" id="home-video" width="100%"
+                            height="100%">
+                        </iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+
+        </script>
+
+        <style>
+            #newsletter {
+                /* background: rgba(51,51,51, 0.5); */
+                padding-top: 8rem;
+            }
+
+            #newsletter .modal-content {
+                padding: 30px 20px;
+                border-radius: 5px;
+                border: none;
+            }
+
+            #newsletter .modal-content .logo {
+                width: 145px;
+            }
+
+            #newsletter .modal-header {
+                border-bottom: none;
+                position: relative;
+                border-radius: 0;
+                padding: 3rem 0 0;
+                display: block;
+            }
+
+            #newsletter .modal-header h4 {
+                font-size: 22px;
+                margin: 0;
+                font-weight: bold;
+                text-transform: uppercase;
+                margin-bottom: 0.5rem;
+            }
+
+            #newsletter .modal-header .close {
+                position: absolute;
+                top: -6rem;
+                right: 0;
+                text-shadow: none;
+                opacity: 0.3;
+                font-size: 30px;
+                font-weight: 300;
+            }
+
+            #newsletter .modal-body {
+                padding: 0;
+            }
+
+            #newsletter p {
+                font-size: 16px;
+            }
+
+            #newsletter .input-group {
+                margin-top: 30px;
+                display: flex;
+                -ms-flex-wrap: wrap;
+                flex-wrap: wrap;
+                -ms-flex-align: stretch;
+                align-items: stretch;
+                width: 100%;
+            }
+
+            #newsletter .form-control {
+                box-shadow: none;
+                border: 0;
+                border-bottom: 1px solid #6D6D6D;
+                margin-right: 3rem;
+                min-height: 46px;
+                border-radius: 0;
+                position: relative;
+                -ms-flex: 1 1 auto;
+                flex: 1 1 auto;
+                width: 1%;
+                min-width: 0;
+                margin-bottom: 0;
+                padding-left: 0;
+            }
+
+            #newsletter .input-group-append {
+                display: flex;
+            }
+
+            #newsletter .btn {
+                color: #fff;
+                background: #182F4C;
+                text-decoration: none;
+                transition: all 0.4s;
+                line-height: normal;
+                padding: 6px 20px;
+                min-width: 150px;
+                margin-left: 6px !important;
+                border: none;
+                min-height: 46px;
+                border-radius: 0 !important;
+            }
+
+            .modal-news {
+                position: fixed;
+                top: 30%;
+                left: auto;
+                right: 0;
+                bottom: 0;
+                z-index: 1;
+                display: none;
+                overflow: hidden;
+            }
+
+            .modal-news.show {
+                display: block;
+                /* Show modal when 'show' is added */
+            }
+
+            .modal-dialog {
+                width: 540px !important;
+                margin-right: 5px !important;
+            }
+
+            @media (max-width: 720px) {
+                #newsletter .modal-header .close {
+                    top: -4rem;
+                }
+
+                #newsletter .btn {
+                    min-width: 120px;
+                    padding: 15px !important;
+                    width: 120px;
+                    font-size: 16px !important;
+                }
+            }
+        </style>
+
+        <!-- Modal -->
+        <div class="modal-news" id="newsletter" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form>
+                        <div class="logo">
+                            <img src="https://psw.gov.pk/psw/logo_black.png" alt="" srcset="">
+                        </div>
+                        <div class="modal-header">
+                            <h4 class="text-green">Subscribe to our newsletter</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                                onclick="openCloseModal()"><span>×</span></button>
+                        </div>
+                        <div class="modal-body">
+                            <p>
+                                Subscribe now to receive all the alerts and to be up to date with
+                                the latest news of the (PSW) Pakistan Single Window.
+                            </p>
+                            <div class="input-group">
+                                <input type="email" class="form-control" name="email" placeholder="Email*" required>
+                                <div class="input-group-append">
+                                    <button class="btn btn-primary" id="newsletter-submit">Subscribe</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            function openCloseModal() {
+                let element = document.getElementById("newsletter")
+                if (sessionStorage.getItem('#newsletter') !== 'true') {
+                    element.classList.toggle('show');
+                    sessionStorage.setItem('#newsletter', 'true');
+                }
+                else if (element.classList.contains('show')) {
+                    element.classList.toggle('show');
+                }
+            }
+            setTimeout("openCloseModal()", 2000);
+        </script>
+
+
+        <style>
+            .trade-network {
+                background-image: url(https://psw.gov.pk/psw/tradenetworkbg.jpg);
+                background-size: cover;
+                background-position: top center;
+                padding: 50px 0;
+                background-attachment: fixed;
+            }
+
+            .trade-network .heading-section {
+                color: #fff;
+                margin-bottom: 8rem;
+            }
+
+            .trade-network h1 {
+                margin-bottom: 3rem;
+            }
+
+            .trade-network .heading-section p {
+                font-size: 18px;
+                line-height: 28px;
+            }
+
+            .stats-section .stats {
+                color: #fff;
+                font-size: 16px;
+                text-align: center;
+            }
+
+            .stats-section .stats .icon-wrapper img {
+                margin: auto;
+            }
+
+            .stats-section .stats .icon-wrapper .love_counter .love_count {
+                margin-bottom: 0.5rem;
+                margin-top: 1.5rem;
+                font-size: 30px;
+            }
+
+            .stats-section .stats .icon-wrapper p {
+                font-size: 18px;
+            }
+
+            @media (max-width: 720px) {
+                .about-section {
+                    background-size: auto;
+                }
+
+                .stats-section .stats {
+                    width: 50%;
+                    float: left;
+                }
+            }
+        </style>
+
+        <section class="trade-network">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+
+
+
+
+                        <div class="stats-section">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-md-2 stats">
+                                        <div class="icon-wrapper">
+                                            <img src="https://psw.gov.pk/media//stats_counter/subscribers.png">
+                                            <div class="love_counter">
+                                                <div class="love_count">
+                                                    88417
+                                                </div>
+                                            </div>
+                                            <p>Subscribers</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 stats">
+                                        <div class="icon-wrapper">
+                                            <img src="https://psw.gov.pk/media//stats_counter/male_subscriber.png">
+                                            <div class="love_counter">
+                                                <div class="love_count">
+                                                    78412
+                                                </div>
+                                            </div>
+                                            <p>Male Subscribers</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-2 stats">
+                                        <div class="icon-wrapper">
+                                            <img src="https://psw.gov.pk/media//stats_counter/female_subscriber.png">
+                                            <div class="love_counter">
+                                                <div class="love_count">
+                                                    4219
+                                                </div>
+                                            </div>
+                                            <p>Female Subscribers</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 stats">
+                                        <div class="icon-wrapper">
+                                            <img src="https://psw.gov.pk/media//stats_counter/declarations.png">
+                                            <div class="love_counter">
+                                                <div class="love_count">
+                                                    1009301
+                                                </div>
+                                            </div>
+                                            <p>Declarations</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 stats">
+                                        <div class="icon-wrapper">
+                                            <img src="https://psw.gov.pk/media//stats_counter/banks.png">
+                                            <div class="love_counter">
+                                                <div class="love_count">
+                                                    29
+                                                </div>
+                                            </div>
+                                            <p>Banks</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 stats">
+                                        <div class="icon-wrapper">
+                                            <img src="https://psw.gov.pk/media//stats_counter/processed_LPCOs.png">
+                                            <div class="love_counter">
+                                                <div class="love_count">
+                                                    634045
+                                                </div>
+                                            </div>
+                                            <p>Processed LPCOs</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <style>
+            .testimonial-section {
+                background: #F5F5F5;
+                padding: 50px 0 50px 0;
+                text-align: center;
+                /* background-image: url(https://psw.gov.pk/psw/testimonial-bg.png);*/
+                background-repeat: no-repeat;
+                background-position: right;
+            }
+
+            .testimonial-section h1 {
+                margin-bottom: 3rem;
+            }
+
+            .testimonial-section p {
+                font-size: 16px;
+                line-height: 24px;
+                text-align: center;
+                color: #6B6B6B;
+                margin-bottom: 5rem;
+            }
+
+            .carousel-inner.mobile {
+                display: none;
+            }
+
+            .video-container {
+                overflow: hidden;
+                position: relative;
+                width: 100%;
+            }
+
+            .video-container::after {
+                padding-top: 56.25%;
+                display: block;
+                content: '';
+            }
+
+            .video-container iframe {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+            }
+
+            .slide-content {
+                padding: 15px;
+                font-size: 24px;
+                line-height: 29px;
+                text-align: center;
+                color: #333333;
+                background: #eaeaea;
+                height: 102px;
+            }
+
+            .slide-content p {
+                font-size: 18px;
+                margin: 0;
+            }
+
+            .carousel-control {
+                bottom: 50% !important;
+                top: auto !important;
+            }
+
+            .carousel-control {
+                background-image: none !important;
+            }
+
+            .carousel-control.right {
+                right: -1.5rem !important;
+                opacity: 1 !important;
+                width: auto;
+            }
+
+            .carousel-control.left {
+                left: -1.5rem;
+                opacity: 1 !important;
+            }
+
+            .reveal {
+                transform: translateY(150px);
+                opacity: 0;
+                transition: all .3s linear;
+                -webkit-transition: all .3s linear;
+                -moz-transition: all .3s linear;
+                -o-transition: all .3s linear;
+                -ms-transition: all .3s linear;
+            }
+
+            .reveal.active {
+                transform: translateY(0);
+                opacity: 1;
+            }
+
+            #particles1-js {
+                position: absolute;
+                height: 95%;
+            }
+
+            /* Responsiveness */
+            @media (min-width: 1200px) {
+                .testimonial-section .container {
+                    width: 1300px;
+                }
+
+                .mobile-indicators {
+                    display: none;
+                }
+            }
+
+            @media (max-width: 768px) {
+                #particles1-js {
+                    display: none;
+                }
+
+                .carousel-inner.desktop {
+                    display: none;
+                }
+
+                .carousel-inner.mobile {
+                    display: block;
+                }
+
+                .carousel-inner>.active .col-md-6 {
+                    margin-bottom: 1rem;
+                }
+
+                .carousel-control {
+                    bottom: 48% !important;
+                }
+
+                .carousel-control.right {
+                    right: -2rem !important;
+                }
+
+                .desktop-indicators {
+                    display: none;
+                }
+
+                .carousel-indicators {
+                    bottom: -4.5rem;
+                }
+
+                .testimonial-section .carousel-indicators {
+                    position: absolute;
+                    right: 0;
+                    bottom: -3rem;
+                    left: 0;
+                    z-index: 0;
+                    display: -webkit-box;
+                    display: -ms-flexbox;
+                    display: flex;
+                    -webkit-box-pack: center;
+                    -ms-flex-pack: center;
+                    justify-content: center;
+                    padding-left: 0;
+                    margin: auto;
+                    list-style: none;
+                }
+
+                .testimonial-section .carousel-indicators li {
+                    position: relative;
+                    -webkit-box-flex: 0;
+                    -ms-flex: 0 1 auto;
+                    flex: 0 1 auto;
+                    width: 30px;
+                    height: 4px;
+                    margin-right: 3px;
+                    margin-left: 3px;
+                    text-indent: -999px;
+                    background-color: rgba(51, 51, 51, 0.5);
+                    border: 0;
+                    border-radius: 0;
+                }
+
+                .testimonial-section .carousel-indicators li.active {
+                    background: #333;
+                    margin-top: 1px;
+                }
+            }
+        </style>
+
+        <section class="testimonial-section">
+            <div class="container">
+                <div id="particles1-js"></div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <h1 class="text-green">Endorsements</h1>
+                        <p>Meet some of our users and see how the PSW system has brought efficiency to their trade
+                            business.</p>
+                    </div>
+                </div>
+                <!--card-wrapper-->
+                <div class="row">
+                    <div class='col-md-12'>
+                        <div class="carousel slide media-carousel" id="media">
+                            <div class="carousel-inner desktop">
+                                <div class="item active">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="video-container video">
+                                                <iframe width="865" height="483"
+                                                    src="https://www.youtube.com/embed/NXCuKFzKwfo?si=l9chsWAjzGftutdZ">
+                                                </iframe>
+                                            </div>
+                                            <div class="slide-content">
+                                                <p>PSW - Making Trade a Breeze for Businesses ft. Muhammad Noman</p>
+                                                <p class="text-green">Muhammad Noman</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="video-container video">
+                                                <iframe width="865" height="483"
+                                                    src="https://www.youtube.com/embed/IcfPmg6C3xo?si=SBIgYzr4Xvuhfsj2">
+                                                </iframe>
+                                            </div>
+                                            <div class="slide-content">
+                                                <p>PSW - Driving Business Growth Through Electronic Innovation by PSW
+                                                    Platform ft. Faisal Anees</p>
+                                                <p class="text-green">Faisal Anees</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="item">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="video-container video">
+                                                <iframe width="865" height="483"
+                                                    src="https://www.youtube.com/embed/6_vGU84d1i4?si=FiyV0XGiJ2NyYito">
+                                                </iframe>
+                                            </div>
+                                            <div class="slide-content">
+                                                <p>PSW - Boosting Rice Exports of Pakistan via PSW ft. Chela Ram Kewlani
+                                                </p>
+                                                <p class="text-green">Mr. Chela Ram Kewlani</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="video-container video">
+                                                <iframe width="865" height="483"
+                                                    src="https://www.youtube.com/embed/9XLqgBMrZs0?si=zs1mo2faUsEIMNtq">
+                                                </iframe>
+                                            </div>
+                                            <div class="slide-content">
+                                                <p>PSW - Benefits of the Platform for the Printing Industry ft. Ihsan
+                                                    Ullah Bhatti</p>
+                                                <p class="text-green">Ihsan Ullah Bhatti</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="item">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="video-container video">
+                                                <iframe width="865" height="483"
+                                                    src="https://www.youtube.com/embed/q5tjzhK2vAU?si=MGpixMfxM75JFUGC">
+                                                </iframe>
+                                            </div>
+                                            <div class="slide-content">
+                                                <p>PSW - Transfiguring imports/exports of solar solutions ft. Mazhar
+                                                    Maqbool</p>
+                                                <p class="text-green">Mazhar Maqbool</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="video-container video">
+                                                <iframe width="865" height="483"
+                                                    src="https://www.youtube.com/embed/O1MceXTdZ8E?si=Eptrtfgy5JCrBx0w">
+                                                </iframe>
+                                            </div>
+                                            <div class="slide-content">
+                                                <p>PSW - Transforming Clearance Processes of Perishable Goods ft. Ghulam
+                                                    Raza</p>
+                                                <p class="text-green">Ghulam Raza</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="desktop-indicators">
+                                <a data-slide="prev" href="#media" class="left carousel-control" onclick="onClick()">
+                                    <img src="https://psw.gov.pk/psw/slider-left.svg">
+                                </a>
+                                <a data-slide="next" href="#media" class="right carousel-control">
+                                    <img src="https://psw.gov.pk/psw/slider-right.svg">
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="carousel slide media-carousel" id="mobile-slider">
+                            <div class="carousel-inner mobile">
+                                <div class="item  active">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="video-container video">
+                                                <iframe width="865" height="483"
+                                                    src="https://www.youtube.com/embed/NXCuKFzKwfo?si=l9chsWAjzGftutdZ">
+                                                </iframe>
+                                            </div>
+                                            <div class="slide-content">
+                                                <p>PSW - Making Trade a Breeze for Businesses ft. Muhammad Noman</p>
+                                                <p class="text-green">Muhammad Noman</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="item">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="video-container video">
+                                                <iframe width="865" height="483"
+                                                    src="https://www.youtube.com/embed/IcfPmg6C3xo?si=SBIgYzr4Xvuhfsj2">
+                                                </iframe>
+                                            </div>
+                                            <div class="slide-content">
+                                                <p>PSW - Driving Business Growth Through Electronic Innovation by PSW
+                                                    Platform ft. Faisal Anees</p>
+                                                <p class="text-green">Faisal Anees</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="item">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="video-container video">
+                                                <iframe width="865" height="483"
+                                                    src="https://www.youtube.com/embed/6_vGU84d1i4?si=FiyV0XGiJ2NyYito">
+                                                </iframe>
+                                            </div>
+                                            <div class="slide-content">
+                                                <p>PSW - Boosting Rice Exports of Pakistan via PSW ft. Chela Ram Kewlani
+                                                </p>
+                                                <p class="text-green">Mr. Chela Ram Kewlani</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="item">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="video-container video">
+                                                <iframe width="865" height="483"
+                                                    src="https://www.youtube.com/embed/9XLqgBMrZs0?si=zs1mo2faUsEIMNtq">
+                                                </iframe>
+                                            </div>
+                                            <div class="slide-content">
+                                                <p>PSW - Benefits of the Platform for the Printing Industry ft. Ihsan
+                                                    Ullah Bhatti</p>
+                                                <p class="text-green">Ihsan Ullah Bhatti</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="item">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="video-container video">
+                                                <iframe width="865" height="483"
+                                                    src="https://www.youtube.com/embed/q5tjzhK2vAU?si=MGpixMfxM75JFUGC">
+                                                </iframe>
+                                            </div>
+                                            <div class="slide-content">
+                                                <p>PSW - Transfiguring imports/exports of solar solutions ft. Mazhar
+                                                    Maqbool</p>
+                                                <p class="text-green">Mazhar Maqbool</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="item">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="video-container video">
+                                                <iframe width="865" height="483"
+                                                    src="https://www.youtube.com/embed/O1MceXTdZ8E?si=Eptrtfgy5JCrBx0w">
+                                                </iframe>
+                                            </div>
+                                            <div class="slide-content">
+                                                <p>PSW - Transforming Clearance Processes of Perishable Goods ft. Ghulam
+                                                    Raza</p>
+                                                <p class="text-green">Ghulam Raza</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <ol class="carousel-indicators mobile-indicators">
+                                <li data-target="#mobile-slider" data-slide-to="0" class="active"></li>
+                                <li data-target="#mobile-slider" data-slide-to="1"></li>
+                                <li data-target="#mobile-slider" data-slide-to="2"></li>
+                                <li data-target="#mobile-slider" data-slide-to="3"></li>
+                                <li data-target="#mobile-slider" data-slide-to="4"></li>
+                                <li data-target="#mobile-slider" data-slide-to="5"></li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <style>
+            .news-section {
+                background: #FBFBFB;
+                padding: 50px 0 30px 0;
+                position: relative;
+            }
+
+            .news-section .overlay-bg {
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                top: 0;
+                background-image: url("/media/uploaded-files/footer_bg.png");
+                background-position: center;
+                background-repeat: no-repeat;
+                background-size: cover;
+                background-attachment: fixed;
+            }
+
+            .news-section .thumbnail-wrap img {
+                height: 250px;
+                margin-bottom: 1rem;
+            }
+
+            .news-section h1 {
+                margin: 0 0 40px 0;
+                color: #008959;
+                margin-bottom: 5rem;
+                text-align: center;
+            }
+
+            .news-section .news .date {
+                margin: 0;
+                font-size: 16px;
+                line-height: 28px;
+                color: #bbbbbb;
+                text-align: right;
+            }
+
+            .news-section .news .description a {
+                font-size: 20px;
+                line-height: 24px;
+                color: #ffffff;
+                margin-top: 15px;
+            }
+
+            .news-section .btn {
+                margin: auto;
+                display: block;
+                margin-top: 5rem !important;
+                margin-bottom: 4rem;
+                line-height: 28px !important;
+                width: fit-content;
+                position: relative;
+            }
+
+            @media (max-width: 720px) {
+                /*.news-section .overlay-bg {*/
+                /*    top: -50rem;*/
+                /*}*/
+            }
+        </style>
+        <section class="news-section">
+            <div class="overlay-bg"></div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h1 class="text-white">Latest News &amp; Updates</h1>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4 news">
+                        <p class="date text-white">Mar-13-2025</p>
+                        <div class="hover-effect-item">
+                            <div class="thumbnail-wrap">
+                                <img src="https://psw.gov.pk/media//News/image-16.png" width="100%">
+                            </div>
+                            <div class="premium-blog-effect-container  premium-blog-bordered-effect ">
+                                <a class="premium-blog-post-link"
+                                    href="https://www.psw.gov.pk/media/Press%20Release/Psw%20and%20Maqta%20-%20PR%20-%2013-03-2025.pdf"
+                                    target="_blank" rel="noopener noreferrer"></a>
+                            </div>
+                        </div>
+                        <p class="description">
+                            <a href="https://www.psw.gov.pk/media/Press%20Release/Psw%20and%20Maqta%20-%20PR%20-%2013-03-2025.pdf"
+                                target="_blank" rel="noopener noreferrer">
+                                Pakistan Single Window Signs Strategic Partnership Agreement with Maqta Technologies
+                            </a>
+                        </p>
+                    </div>
+                    <div class="col-md-4 news">
+                        <p class="date text-white">Mar-03-2025</p>
+                        <div class="hover-effect-item">
+                            <div class="thumbnail-wrap">
+                                <img src="https://psw.gov.pk/media//News/SHC06172.jpg" width="100%">
+                            </div>
+                            <div class="premium-blog-effect-container  premium-blog-bordered-effect ">
+                                <a class="premium-blog-post-link"
+                                    href="https://www.phoneworld.com.pk/psw-launches-national-workshop-on-airport-community-system-acs-to-enhance-air-cargo-operations/"
+                                    target="_blank" rel="noopener noreferrer"></a>
+                            </div>
+                        </div>
+                        <p class="description">
+                            <a href="https://www.phoneworld.com.pk/psw-launches-national-workshop-on-airport-community-system-acs-to-enhance-air-cargo-operations/"
+                                target="_blank" rel="noopener noreferrer">
+                                PSW Launches National Workshop on Airport Community System (ACS) to Enhance Air Cargo
+                                Operations
+                            </a>
+                        </p>
+                    </div>
+                    <div class="col-md-4 news">
+                        <p class="date text-white">Feb-25-2025</p>
+                        <div class="hover-effect-item">
+                            <div class="thumbnail-wrap">
+                                <img src="https://psw.gov.pk/media//Press Release/WhatsApp Image 2025-02-25 at 16.07.51.jpeg"
+                                    width="100%">
+                            </div>
+                            <div class="premium-blog-effect-container  premium-blog-bordered-effect ">
+                                <a class="premium-blog-post-link"
+                                    href="https://www.brecorder.com/news/40350057/drap-clearance-gateway-officially-launched"
+                                    target="_blank" rel="noopener noreferrer"></a>
+                            </div>
+                        </div>
+                        <p class="description">
+                            <a href="https://www.brecorder.com/news/40350057/drap-clearance-gateway-officially-launched"
+                                target="_blank" rel="noopener noreferrer">
+                                PSW, DRAP Launch Digital Clearance Gateway to Transform Pharmaceutical Trade in Pakistan
+                            </a>
+                        </p>
+                    </div>
+                </div>
+
+                <a class="btn btn-green" href="https://psw.gov.pk/news-updates" rel="noopener noreferrer">
+                    All News &amp; Updates
+                </a>
+            </div>
+        </section>
+        <style>
+            .contact-us {
+                margin-bottom: 0;
+                display: flex;
+                color: white;
+                justify-content: space-between;
+            }
+
+            .contact-us li {
+                width: 24%;
+            }
+
+            .ct-footer-meta .ct-socials li a img {
+                width: 28px !important;
+                position: relative;
+                top: 7px;
+            }
+
+            .ct-footer-list {
+                padding: 23px 0 !important;
+                background-image: initial !important;
+            }
+
+            @media (max-width: 768px) {
+                .contact-us {
+                    display: block;
+                }
+
+                .contact-us li {
+                    width: 100%;
+                }
+            }
+        </style>
+        <div>
+            <footer class="ct-footer">
+                <div class="container">
+                    <div class="ct-footer-meta text-center-sm">
+                        <div class="row">
+                            <div class="col-md-8 col-sm-12" style="padding-top: 30px">
+                                <div class="inner-left">
+                                    <ul>
+                                        <li>
+                                            <a href="https://psw.gov.pk/contact-us" rel="noopener noreferrer">Contact
+                                                Us</a>
+                                        </li>
+                                        <li>
+                                            <a href="https://psw.gov.pk/career-opportunities"
+                                                rel="noopener noreferrer">Career Opportunities</a>
+                                        </li>
+                                        <li>
+                                            <a href="https://psw.gov.pk/documents/legal"
+                                                rel="noopener noreferrer">Legal</a>
+                                        </li>
+                                        <li>
+                                            <a href="https://psw.gov.pk/documents/tenders"
+                                                rel="noopener noreferrer">Tenders</a>
+                                        </li>
+
+                                        <li>
+                                            <a href="https://psw.gov.pk/privacy-policy?id=8"
+                                                rel="noopener noreferrer">Privacy Policy</a>
+                                        </li>
+                                        <li>
+                                            <a href="https://psw.gov.pk/feedback?id=68"
+                                                rel="noopener noreferrer">Feedback</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4 col-sm-12 text-end">
+                                <label class="govt-text">Government of Pakistan</label>
+                                <img src="https://psw.gov.pk/psw/footer_icons/gop-pk-white.png"
+                                    alt="Government of Pakistan" class="govt-logo">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="ct-footer-post">
+                    <div class="container">
+                        <div class="ct-footer-pre-meta text-center-sm">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="inner-left">
+                                        <p>© 2025 Pakistan Single Window. All rights reserved.</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-12">
+                                    <ul class="ct-socials list-unstyled list-inline">
+                                        <li>Follow us</li>
+                                        <li>
+                                            <a href="https://www.facebook.com/pakistansinglewindow/" target="_blank"
+                                                rel="noopener noreferrer">
+                                                <img alt="facebook"
+                                                    src="https://psw.gov.pk/psw/footer_icons/facebook.svg">
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="https://twitter.com/PakSingleWindow?t=V_k_ovogQHdTCWBeDf9g_A&amp;s=09"
+                                                target="_blank" rel="noopener noreferrer">
+                                                <img alt="twitter"
+                                                    src="https://psw.gov.pk/psw/footer_icons/twitter.svg">
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="https://www.youtube.com/c/PakistanSingleWindowOfficial"
+                                                target="_blank" rel="noopener noreferrer">
+                                                <img alt="youtube"
+                                                    src="https://psw.gov.pk/psw/footer_icons/youtube.svg">
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="https://www.instagram.com/pakistansinglewindow/?igshid=YmMyMTA2M2Y%3D"
+                                                target="_blank" rel="noopener noreferrer">
+                                                <img alt="instagram"
+                                                    src="https://psw.gov.pk/psw/footer_icons/insta.svg">
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="https://www.linkedin.com/company/pakistan-single-window"
+                                                target="_blank" rel="noopener noreferrer">
+                                                <img alt="linkedin"
+                                                    src="https://psw.gov.pk/psw/footer_icons/linkedin.svg">
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </footer>
+
+            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
+                integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu"
+                crossorigin="anonymous">
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"
+                integrity="sha384-UG8ao2jwOWB7/oDdObZc6ItJmwUkR/PfMyt9Qs5AwX7PsnYn1CRKCTWyncPTWvaS"
+                crossorigin="anonymous"></script>
+            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"
+                integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd"
+                crossorigin="anonymous"></script>
+        </div>
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+
+            .ct-socials {
+                display: flex;
+                justify-content: flex-end;
+                /* Align items to the end */
+
+            }
+
+            .govt-text {
+                width: 26%;
+                font-family: 'Roboto', sans-serif;
+                font-size: 18px;
+                color: white;
+                /* font-weight: bold; */
+                margin: 5px 2px 0 0;
+                display: inline-block;
+                vertical-align: middle;
+            }
+
+            .govt-logo {
+                max-width: 90px;
+                height: auto;
+                display: inline-block;
+                vertical-align: middle;
+            }
+
+            a {
+                -webkit-transition: all 0.25s ease-in-out;
+                transition: all 0.25s ease-in-out;
+            }
+
+            .ct-u-paddingTop10 {
+                padding-top: 10px !important;
+            }
+
+            .ct-footer {
+                background-color: #1D213E;
+                position: relative;
+            }
+
+            .contact-us li:first-child img {
+                padding-top: 0.5rem;
+            }
+
+            .contact-us li img {
+                padding-top: 1.2rem;
+            }
+
+            .contact-us p {
+                margin-left: 3rem;
+                margin-bottom: 0;
+            }
+
+            .ct-footer-pre {
+                width: 100%;
+                padding-bottom: 55px;
+                border-bottom: 1px solid #555;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+            .ct-footer-pre span {
+                font-family: "Roboto", sans-serif;
+                color: #ebebeb;
+                font-size: 30px;
+            }
+
+            .ct-footer-pre .form-group {
+                position: relative;
+                margin: 0;
+            }
+
+            .ct-footer-pre .form-group:before,
+            .ct-footer-pre .form-group:after {
+                content: "";
+                display: table;
+            }
+
+            .ct-footer-pre .form-group:after {
+                clear: both;
+            }
+
+            .ct-footer-pre .form-group input {
+                border: 1px solid #00bff3;
+                background-color: #333;
+                color: #fff;
+                height: 50px;
+                padding: 0 30px;
+                margin: 0 5px;
+                border-radius: 0 !important;
+            }
+
+            .ct-footer-pre .form-group button {
+                height: 50px;
+                position: relative;
+                width: 80px;
+                padding: 0;
+            }
+
+            .ct-footer-list {
+                padding: 50px 0;
+                list-style: none;
+                padding-left: 0;
+                display: table;
+                width: 100%;
+                border-bottom: 1px solid #555;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+                background-image: url(https://psw.gov.pk/psw/footer_icons/map.png);
+                background-repeat: no-repeat;
+                background-position: right;
+            }
+
+            .ct-footer-list>li .ct-footer-list-header {
+                color: #009A5E;
+                font-family: "Roboto";
+                font-style: normal;
+                font-weight: 600;
+                font-size: 20px;
+                line-height: 23px;
+                text-transform: uppercase;
+                margin-bottom: 3rem;
+            }
+
+            .ct-footer-list>li ul {
+                list-style: none;
+                padding-left: 0;
+                color: #eeeeee;
+            }
+
+            .ct-footer-list>li ul li,
+            .ct-footer-list>li ul li a {
+                font-family: "Roboto";
+                font-style: normal;
+                font-weight: 300;
+                font-size: 16px;
+                line-height: 32px;
+                color: #eeeeee;
+            }
+
+            .ct-footer-list>li ul li a:hover,
+            .ct-footer-post a:hover {
+                text-decoration: underline;
+            }
+
+            .ct-footer-post .container {
+                border-top: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+            .ct-footer-post .inner-left,
+            .ct-footer-post .inner-right {
+                padding: 20px 0;
+            }
+
+            .ct-footer-post ul li {
+                display: inline-block;
+                /*   margin: 0 20px; */
+            }
+
+            .ct-footer-post a {
+                color: #a2a2a2;
+                font-family: "Roboto";
+                font-style: normal;
+                font-weight: 300;
+                font-size: 15px;
+                line-height: 22px;
+            }
+
+            .ct-footer-post p {
+                color: #a2a2a2;
+                font-family: "Roboto";
+                font-style: normal;
+                font-weight: 300;
+                font-size: 15px;
+                line-height: 22px;
+            }
+
+            .ct-footer-meta .ct-socials li {
+                padding: 0 10px;
+            }
+
+            .ct-footer--with-button {
+                padding-top: 150px;
+            }
+
+            address {
+                color: #fff;
+                display: inline-block;
+            }
+
+            address span {
+                font-weight: 600;
+            }
+
+            address a {
+                color: #fff;
+            }
+
+            address a:hover {
+                text-decoration: underline;
+            }
+
+            /*.btn {*/
+            /*  font-family: "Roboto", sans-serif;*/
+            /*  border-radius: 0;*/
+            /*  border: none;*/
+            /*  text-transform: uppercase;*/
+            /*  color: #111;*/
+            /*  font-size: 26px;*/
+            /*  padding: 12px 30px;*/
+            /*}*/
+            .btn.btn-motive {
+                background-color: #00bff3;
+                -webkit-transition: all 0.25s ease;
+                transition: all 0.25s ease;
+            }
+
+            .btn.btn-motive:hover,
+            .btn.btn-motive:hover:active {
+                background-color: #00bff3;
+            }
+
+            .btn.btn-violet {
+                color: #fff;
+                background-color: #4f4f99;
+                -webkit-transition: all 0.25s ease;
+                transition: all 0.25s ease;
+            }
+
+            .btn.btn-violet:hover {
+                background-color: #37376b;
+            }
+
+            .btn.btn-violet:hover:active {
+                background-color: #2f2f5b;
+            }
+
+            .btn.btn-green {
+                color: #fff;
+                background-color: #43670f;
+                -webkit-transition: all 0.25s ease;
+                transition: all 0.25s ease;
+            }
+
+            .btn.btn-green:hover {
+                background-color: #36520c;
+            }
+
+            .btn.btn-green:hover:active {
+                background-color: #314a0b;
+            }
+
+            .btn.btn-red {
+                color: #fff;
+                background-color: #da2229;
+                -webkit-transition: all 0.25s ease;
+                transition: all 0.25s ease;
+            }
+
+            .btn.btn-red:hover {
+                background-color: #ae1b21;
+            }
+
+            .btn.btn-red:hover:active {
+                background-color: #9d181e;
+            }
+
+            .btn.btn-white {
+                background-color: #fff;
+                -webkit-transition: all 0.25s ease;
+                transition: all 0.25s ease;
+            }
+
+            .btn.btn-white:hover {
+                background-color: #d9d9d9;
+            }
+
+            .btn.btn-white:hover:active {
+                background-color: #c9c9c9;
+            }
+
+            .btn.btn-large {
+                padding: 20px 50px;
+                font-size: 30px;
+                white-space: normal;
+            }
+
+            .ct-mediaSection {
+                background-attachment: fixed;
+            }
+
+            .ct-section_header--type1 {
+                font-family: "Roboto", sans-serif;
+                color: #000;
+                font-size: 115px;
+                text-transform: uppercase;
+            }
+
+            .ct-section_header--type2 small {
+                font-family: "coquette", fantasy;
+                font-size: 58px;
+                line-height: 0.7;
+                display: block;
+                font-weight: 700;
+                position: relative;
+                left: -12px;
+            }
+
+            .ct-section_header--type2 span {
+                font-family: "Bebas Neue";
+                font-size: 115px;
+                line-height: 0.8;
+            }
+
+            .ct-section_header--type2 img {
+                display: inline-block;
+                float: left;
+                position: relative;
+                top: 15px;
+                padding-right: 3px;
+            }
+
+            .ct-section_header--type3 {
+                text-align: center;
+            }
+
+            .ct-section_header--type3 span {
+                font-family: "Bebas Neue";
+                font-size: 150px;
+                font-weight: 400;
+                text-transform: uppercase;
+                line-height: 0.85;
+            }
+
+            .ct-section_header--type4 {
+                text-align: center;
+            }
+
+            .ct-section_header--type4:before,
+            .ct-section_header--type4:after {
+                content: "";
+                display: table;
+            }
+
+            .ct-section_header--type4:after {
+                clear: both;
+            }
+
+            .ct-section_header--type4 small {
+                font-family: "coquette", fantasy;
+                font-size: 50px;
+                color: inherit;
+                font-weight: 700;
+                display: block;
+            }
+
+            .ct-section_header--type4 span {
+                font-family: "nimbus-sans-condensed", sans-serif;
+                font-weight: 400;
+                font-weight: bold;
+                font-size: 150px;
+                text-transform: uppercase;
+                display: block;
+                line-height: 0.7;
+            }
+
+            .ct-section_header+p {
+                font-size: 30px;
+                font-weight: 700;
+                letter-spacing: -1.5px;
+                text-align: center;
+            }
+
+            .ct-section_header--type4+p {
+                font-family: "nimbus-sans-condensed", sans-serif;
+                font-weight: 400;
+                font-size: 40px;
+                font-weight: 700;
+                line-height: 1;
+            }
+
+            .ct-socials {
+                display: flex;
+                justify-content: flex-end;
+            }
+
+            .ct-footer-meta.text-center-sm {
+                padding-bottom: 0.7rem;
+                padding-top: 0.7rem;
+            }
+
+            .ct-footer-meta .inner-left {
+                padding-top: 1rem;
+            }
+
+            .ct-footer-meta .inner-left ul li a {
+                color: #EEEEEE;
+            }
+
+            .ct-footer-meta .inner-left ul li {
+                display: inline-flex;
+                font-size: 16px;
+                line-height: 22px;
+                padding-right: 2rem;
+            }
+
+            .ct-footer-meta .ct-socials li:first-child {
+                padding-top: 0.7rem;
+                font-size: 18px;
+                color: #eee;
+            }
+
+            .ct-footer-meta .ct-socials li a img {
+                width: 50px;
+            }
+
+            /* NEW CSS */
+            .ct-footer-pre-meta .ct-socials li {
+                padding: 0 10px;
+            }
+
+            .ct-footer-pre-meta.text-center-sm {
+                padding-bottom: 0.7rem;
+                padding-top: 0.7rem;
+            }
+
+            .ct-footer-pre-meta .inner-left {
+                padding-top: 1rem;
+            }
+
+            .ct-footer-pre-meta .inner-left ul li a {
+                color: #EEEEEE;
+            }
+
+            .ct-footer-pre-meta .inner-left ul li {
+                display: inline-flex;
+                font-size: 16px;
+                line-height: 22px;
+                padding-right: 2rem;
+            }
+
+            .ct-footer-pre-meta .ct-socials li:first-child {
+                padding-top: 0.7rem;
+                font-size: 18px;
+                color: #eee;
+            }
+
+            .ct-footer-pre-meta .ct-socials li a img {
+                width: 50px;
+            }
+
+            .ct-footer-pre-meta .ct-socials li a img {
+                width: 28px !important;
+                position: relative;
+                top: 7px;
+            }
+
+            /* NEW CSS */
+            /* Media Queries */
+
+            @media (min-width: 1200px) {
+                .ct-footer-pre {
+                    display: table;
+                }
+
+                .ct-footer-pre>.inner {
+                    display: table-cell;
+                    vertical-align: middle;
+                }
+
+                .ct-footer-list>li {
+                    width: 20%;
+                    display: table-cell;
+                    vertical-align: top;
+                }
+            }
+
+            @media (max-width: 1199px) {
+                .ct-footer-pre .form-group {
+                    padding-top: 15px;
+                }
+            }
+
+            @media (max-width: 1199px) {
+                .ct-footer-list>li {
+                    display: inline-block;
+                    float: left;
+                }
+            }
+
+            @media (min-width: 992px) {
+                .ct-footer-post .inner-left {
+                    float: left;
+                }
+
+                .ct-footer-post .inner-right {
+                    float: right;
+                }
+            }
+
+            @media (max-width: 991px) {
+                .ct-footer-post {
+                    text-align: center;
+                }
+            }
+
+            @media (min-width: 768px) and (max-width: 1199px) {
+                .ct-footer-list>li {
+                    width: 33.3333%;
+                }
+            }
+
+            @media (min-width: 768px) {
+                .ct-footer-post p {
+                    display: inline-block;
+                }
+
+                .ct-footer-post p+p {
+                    padding-left: 50px;
+                }
+            }
+
+            @media (max-width: 767px) {
+                address {
+                    padding-top: 30px;
+                }
+            }
+
+            @media (min-width: 480px) and (max-width: 767px) {
+                .ct-footer-list>li {
+                    width: 50%;
+                }
+            }
+
+            @media (min-width: 480px) {
+                .ct-footer-pre .form-group button {
+                    top: -1px;
+                }
+
+                .ct-footer-pre .form-group input {
+                    width: 331px;
+                }
+            }
+
+            @media (max-width: 479px) {
+                .ct-footer-pre .form-group input {
+                    float: left;
+                    width: 70%;
+                    margin: 0;
+                }
+
+                .ct-footer-pre .form-group button {
+                    float: left;
+                    width: 30%;
+                }
+
+                .ct-footer-list>li {
+                    width: 100%;
+                    text-align: center;
+                }
+
+                .ct-footer-list {
+                    padding: 20px 0;
+                }
+
+                .btn.btn-large {
+                    padding: 20px 10px;
+                    line-height: 0.9;
+                    font-size: 26px;
+                    letter-spacing: -0.2px;
+                }
+
+                .ct-section_header--type1 {
+                    font-size: 60px;
+                    line-height: 0.8;
+                }
+
+                .ct-section_header+p {
+                    font-size: 22px;
+                }
+
+                .ct-section_header--type3 small {
+                    font-size: 25px;
+                }
+
+                .ct-section_header--type4 small {
+                    font-size: 40px;
+                }
+
+                .ct-section_header--type3 span {
+                    font-size: 90px;
+                }
+
+                .ct-section_header--type4 span {
+                    font-size: 80px;
+                }
+
+                .ct-section_header--type4+p {
+                    font-size: 28px;
+                }
+            }
+        </style>
+    </main>
+    <script src="/livewire/livewire.js?id=fe747446aa84856d8b66" data-turbo-eval="false"
+        data-turbolinks-eval="false"></script>
+    <script data-turbo-eval="false"
+        data-turbolinks-eval="false">window.livewire = new Livewire(); window.Livewire = window.livewire; window.livewire_app_url = ''; window.livewire_token = '6BSHUPZ6Vkvn13epshDbnGD4J8u8hDGYkQpcM3Tw'; window.deferLoadingAlpine = function (callback) { window.addEventListener('livewire:load', function () { callback(); }); }; let started = false; window.addEventListener('alpine:initializing', function () { if (!started) { window.livewire.start(); started = true; } }); document.addEventListener("DOMContentLoaded", function () { if (!started) { window.livewire.start(); started = true; } });</script>
+    <script defer
+        src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015"
+        integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ=="
+        data-cf-beacon='{"rayId":"931c585b0e45243c","version":"2025.4.0-1-g37f21b1","r":1,"token":"ad1752af86fc42818870b4d32d478eb1","serverTiming":{"name":{"cfExtPri":true,"cfL4":true,"cfSpeedBrain":true,"cfCacheStatus":true}}}'
+        crossorigin="anonymous"></script>
+    <script>
+        (function (d, t) {
+            var BASE_URL = "https://www.pswbot.concaveanalytics.com"
+            var g = d.createElement(t), s = d.getElementsByTagName(t)[0];
+            g.src = BASE_URL + "/packs/js/sdk.js";
+            g.defer = true;
+            g.async = true;
+            s.parentNode.insertBefore(g, s);
+            g.onload = function () {
+                window.chatwootSDK.run({
+                    websiteToken: 'SQXTCX8swDkKoJPF5HkWrrTB',
+                    baseUrl: BASE_URL
+                })
+            }
+        })(document, "script");
+    </script>
+</body>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa"
+    crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.js"
+    integrity="sha384-HG6BKr/TAt4T4DFDOXujmPxu2McZJHSdPgKc5hVu8svLZNCIYfLcA3aLHRZD1w5D"
+    crossorigin="anonymous"></script>
+<script src="https://psw.gov.pk/js/particles-js/particles.js"></script>
+<script src="https://psw.gov.pk/js/particles-js/app.js"></script>
+<script src="https://psw.gov.pk/js/particles-js/lib/stats.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    crossorigin="anonymous"></script>
+
+<script type="text/javascript">
+    $(".loader-wrapper").show().delay(2000).fadeOut();
+    setTimeout(function () {
+        $('body').removeClass('isLoading');
+    }, 2000);
+
+    let lang = String("en");
+    if (lang != null && lang === 'ur') {
+        $("#main").addClass("lang-urdu");
+    }
+    else {
+        $("#main").removeClass("lang-urdu");
+    }
+
+    $(document).ready(function () {
+        $('#watch_video').on('click', function () {
+            $('#video-popup').modal('show');
+        })
+    })
+
+    $(window).scroll(function () {
+        const scroll = $(window).scrollTop();
+
+        //>=, not <=
+        if (scroll >= 270) {
+            $(".header").addClass("darkHeader");
+        }
+        else if (scroll <= 270) {
+            $(".header").removeClass("darkHeader");
+        }
+    });
+
+    const url = "https://psw.gov.pk/lang/change";
+
+    function changeLang(e) {
+        window.location.href = url + "?lang=" + e;
+    }
+
+    let clicked = false;
+    let searchIcon = document.querySelector("#search-icon");
+    let searchInput = document.querySelector("#search-input");
+    let searchResults = document.querySelector(".search-result");
+    function showBar() {
+        searchInput.style.display = "inline-block";
+        searchIcon.style.display = "none";
+    }
+
+    function search(keyword) {
+        searchResults.style.display = "block";
+        $.post('https://psw.gov.pk/search',
+            {
+                _token: $('meta[name="csrf-token"]').attr('content'),
+                keyword: keyword
+            },
+            function (res) {
+                const data = res['menu'];
+                $(".search-result li").remove();
+                for (let i = 0; i < data.length; i++) {
+                    $(".search-result").append('<li><a class="search-item" href=' + data[i].url + '>' + data[i].title + '</a></li>');
+                }
+            });
+    }
+
+    // function hideResults() {
+    //     $(".search-item").click(function(e) {
+    //         clicked = true;
+    //     });
+    //
+    //     if(!clicked)
+    //     {
+    //         searchResults.style.display = "none";
+    //     }
+    // }
+
+</script>
+
+<script>
+    jQuery(window).scroll(startCounter);
+    function startCounter() {
+        var hT = jQuery('.love_counter').offset().top,
+            hH = jQuery('.love_counter').outerHeight(),
+            wH = jQuery(window).height();
+        if (jQuery(window).scrollTop() > hT + hH - wH) {
+            jQuery(window).off("scroll", startCounter);
+            jQuery('.love_count').each(function () {
+                var $this = jQuery(this);
+                var initialCounterValue = parseInt($this.text()); // Store the initial value
+
+                jQuery({ Counter: 0 }).animate({ Counter: initialCounterValue }, {
+                    duration: 2000,
+                    easing: 'swing',
+                    /* step: function () {
+                         $this.text(Math.ceil(this.Counter));
+         }
+         */
+                    step: function () {
+                        $this.text(Math.ceil(this.Counter)); // Use Math.ceil to ensure reaching the exact final value
+                    },
+                    complete: function () {
+                        $this.text(initialCounterValue); // Set the final value to ensure accuracy
+                    }
+                });
+            });
+        }
+    }
+</script>
+
+<script>
+    function reveal() {
+        var reveals = document.querySelectorAll(".reveal");
+
+        for (var i = 0; i < reveals.length; i++) {
+            var windowHeight = window.innerHeight;
+            var elementTop = reveals[i].getBoundingClientRect().top;
+            var elementVisible = 80;
+
+            if (elementTop < windowHeight - elementVisible) {
+                reveals[i].classList.add("active");
+            } else {
+                reveals[i].classList.remove("active");
+            }
+        }
+    }
+
+    window.addEventListener("scroll", reveal);
+</script>
+<style>
+    #particles-js {
+        position: absolute;
+        height: 95%;
+    }
+
+    @media (max-width: 768px) {
+        #particles-js {
+            display: none;
+        }
+    }
+
+    #particles1-js {
+        position: absolute;
+        height: 95%;
+    }
+
+    @media (max-width: 768px) {
+        #particles1-js {
+            display: none;
+        }
+    }
+</style>
+<script>
+    let count_particles, update;
+    count_particles = document.querySelector('.js-count-particles');
+    update = function () {
+        requestAnimationFrame(update);
+    };
+    requestAnimationFrame(update);
+</script>
+<script>
+    let count_particles1, update1;
+    count_particles1 = document.querySelector('.js-count-particles');
+    update1 = function () {
+        requestAnimationFrame(update1);
+    };
+    requestAnimationFrame(update1);
+</script>
+
+<script>
+
+    //First slider
+    // Open the Modal
+    function openModal(n) {
+        $("#slide-show-modal-" + n).show();
+    }
+
+    // Close the Modal
+    function closeModal(n) {
+        $("#slide-show-modal-" + n).hide();
+    }
+
+    var slideIndex = 1;
+    showSlides(slideIndex, '');
+
+    // Next/previous controls
+    function plusSlides(n, sno) {
+        showSlides(slideIndex += n, sno);
+    }
+
+    // Thumbnail image controls
+    function currentSlide(n, sno) {
+        showSlides(slideIndex = n, sno);
+    }
+
+    function showSlides(n, sno) {
+        //      alert(sno);
+        let i;
+        let width = screen.width;
+        console.log(width);
+        const slides = width <= '480' ?
+            document.getElementsByClassName("mobileSlides" + sno) :
+            document.getElementsByClassName("mySlides" + sno);
+        const captionText = document.getElementById("caption");
+        if (n > slides.length) { slideIndex = 1 }
+        if (n < 1) { slideIndex = slides.length }
+        for (i = 0; i < slides.length; i++) {
+            slides[i].style.display = "none";
+        }
+        slides[slideIndex - 1].style.display = "block";
+    }
+</script>
+
+
+<script>
+    $(document).ready(function () {
+        $('.customer-logos').slick({
+            slidesToShow: 6,
+            slidesToScroll: 1,
+            autoplay: true,
+            autoplaySpeed: 1500,
+            arrows: false,
+            dots: false,
+            pauseOnHover: false,
+            responsive: [{
+                breakpoint: 768,
+                settings: {
+                    slidesToShow: 4
+                }
+            }, {
+                breakpoint: 520,
+                settings: {
+                    slidesToShow: 3
+                }
+            }]
+        });
+    });
+</script>
+
+
+<script>
+    $(document).ready(function () {
+        $('#play-video').on('click', function (ev) {
+
+            $("#home-video")[0].src += "&autoplay=1";
+            ev.preventDefault();
+        });
+    });
+</script>
+
+<script>
+    $('#newsletter-submit').click(function (e) {
+        const email = $("input[name=email]").val();
+        e.preventDefault();
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        $.ajax({
+            url: "https://psw.gov.pk/subscribe",
+            type: 'POST',
+            data: { email: email },
+            success: function (data) {
+                alert(data.message);
+                if (!data.error) {
+                    location.reload();
+                }
+            },
+            error: function (data) {
+                console.log(data);
+            }
+        });
+    });
+</script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-97TWCPCFPR" crossorigin="anonymous"></script>
+<script> window.dataLayer = window.dataLayer || []; function gtag() { dataLayer.push(arguments); } gtag('js', new Date()); gtag('config', 'G-97TWCPCFPR'); 
+</script>
+
+</html>
