@@ -77,12 +77,13 @@ def number_to_words_with_formatting():
         }]
 
         # Return the result as a formatted JSON string (pretty-printed)
-        return json.dumps(result, indent=2)
+        # return json.dumps(result, indent=2)
+        return jsonify(result)
 
     except Exception as e:
         # If an error occurs, return the exception message as a JSON string
-        return json.dumps(e)
-
+        # return json.dumps(e)
+        return jsonify({"error": str(e)}), 400
 
 @app.route('/chat', methods=['POST'])
 def chat():
