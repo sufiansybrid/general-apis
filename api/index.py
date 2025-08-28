@@ -4,6 +4,7 @@ import re
 from flask_cors import CORS
 import os
 from bs4 import BeautifulSoup
+import html
 
 import requests
 
@@ -262,3 +263,77 @@ def cnic_information():
         return jsonify({"error": f"Request failed: {str(e)}"}), 503
     except Exception as e:
         return jsonify({"error": f"Unexpected error: {str(e)}"}), 500
+
+@app.route('/api/get-numbers-on-cnic-from-simownerdetails', methods=['GET'])
+def get_numbers_on_cnic_from_simownerdetails():
+
+    def parse_html(html_content):
+        soup = BeautifulSoup(html_content, 'html.parser')
+        result_cards = soup.select('.result-card')
+        records = []
+
+        for card in result_cards:
+            fields = card.select('.field')
+            record = {}
+
+            for field in fields:
+                label = field.select_one('label.info')
+                value = field.find('div')
+
+                # print(f"label: {label.text} and value: {value.text}")
+                if label and value:
+                    key = label.text.strip().upper()
+                    record[key] = value.text.strip()
+
+            if record:
+                records.append(record)
+
+        return records
+
+    cnic = request.args.get('cnic')
+
+    if not cnic or not cnic.isdigit() or len(cnic) != 13:
+        return jsonify({'success': False, 'error': 'A valid 13-digit CNIC without dashes is required'}), 400
+
+    HEADERS = {
+        'accept': '*/*',
+        'accept-language': 'en-US,en;q=0.9,en-GB;q=0.8,en-GB-oxendict;q=0.7,ur;q=0.6',
+        'local-cache': 'yes',
+        'priority': 'u=1, i',
+        'referer': 'https://simownerdetails.org.pk/',
+        'sec-ch-ua': '"Not;A=Brand";v="99", "Google Chrome";v="139", "Chromium";v="139"',
+        'sec-ch-ua-mobile': '?0',
+        'sec-ch-ua-platform': '"Windows"',
+        'sec-fetch-dest': 'empty',
+        'sec-fetch-mode': 'cors',
+        'sec-fetch-site': 'same-origin',
+        'sec-gpc': '1',
+        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36',
+    }
+
+    BASE_URL = "https://simownerdetails.org.pk/wp-admin/admin-ajax.php"
+
+    url = f"{BASE_URL}?action=get_number_data&get_number_data=searchdata={cnic}"
+
+    try:
+        response = requests.get(url, headers=HEADERS, timeout=30)
+        response.raise_for_status()
+
+        json_data = json.loads(response.text)
+        raw_html = html.unescape(json_data.get("data", ""))  # unescape HTML string
+
+        parsed_data = parse_html(raw_html)
+
+        if not parsed_data:
+            return jsonify({'success': False, 'error': 'No data found'}), 404
+        
+        return jsonify({
+            'success': True,
+            'records_found': len(parsed_data),
+            'data': parsed_data
+        })
+
+    except requests.exceptions.RequestException as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+    except json.JSONDecodeError:
+        return jsonify({'success': False, 'error': 'Invalid JSON received'}), 500
