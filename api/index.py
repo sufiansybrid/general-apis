@@ -3,6 +3,9 @@ import json
 import re
 from flask_cors import CORS
 import os
+from bs4 import BeautifulSoup
+
+import requests
 
 # app = Flask(__name__, template_folder='templates')
 # Initialize Flask app with custom template folder path
@@ -127,3 +130,60 @@ def psw():
 def psw_home():
     return render_template('psw_home.html')
 
+@app.route('/api/owner-details', methods=['GET', 'POST'])
+def get_owner_details():
+    # Get number from query param or JSON body
+    number = request.args.get('number') or request.json.get('number')
+
+    if not number:
+        return jsonify({"error": "No phone number provided."}), 400
+
+    payload = {
+        'action': 'db_center_uk_search',
+        'search_term': number
+    }
+
+    try:
+        HEADERS = {
+            'accept': '*/*',
+            'accept-language': 'en-US,en;q=0.9',
+            'content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
+            'origin': 'https://dbcenter.pk',
+            'referer': 'https://dbcenter.pk/',
+            'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36',
+            'x-requested-with': 'XMLHttpRequest',
+        }
+        response = requests.post(
+            'https://dbcenter.pk/wp-admin/admin-ajax.php',
+            headers=HEADERS,
+            data=payload,
+            timeout=10
+        )
+        response.raise_for_status()
+        html = response.text
+
+        # Parse HTML using BeautifulSoup
+        soup = BeautifulSoup(html, 'html.parser')
+        owner_card = soup.find('div', {'id': 'resultCard'})
+        owner_details = {}
+
+        if owner_card and "Owner Details" in owner_card.text:
+            try:
+                rows = owner_card.find_all('tr')
+                for row in rows:
+                    cols = row.find_all('td')
+                    if len(cols) == 2:
+                        key = row.find('th').text.strip().lower()
+                        value = cols[1].text.strip()
+                        owner_details[key] = value
+            except Exception as e:
+                return jsonify({"error": f"Error parsing owner details: {e}"}), 500
+        else:
+            return jsonify({"error": "No owner details found for this number."}), 404
+
+        return jsonify(owner_details)
+
+    except requests.exceptions.RequestException as e:
+        return jsonify({"error": f"Request failed: {e}"}), 503
+    except Exception as e:
+        return jsonify({"error": f"Unexpected error: {e}"}), 500
