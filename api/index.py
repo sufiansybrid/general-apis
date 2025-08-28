@@ -137,6 +137,67 @@ def get_owner_details():
 
     if not number:
         return jsonify({"error": "No phone number provided."}), 400
+    
+    HEADERS = {
+        'accept': '*/*',
+        'accept-language': 'en-US,en;q=0.9',
+        'content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
+        'origin': 'https://dbcenter.pk',
+        'referer': 'https://dbcenter.pk/',
+        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36',
+        'x-requested-with': 'XMLHttpRequest',
+    }
+
+    payload = {
+        'action': 'db_center_uk_search',
+        'search_term': number
+    }
+
+    try:
+        response = requests.post(
+            'https://dbcenter.pk/wp-admin/admin-ajax.php',
+            headers=HEADERS,
+            data=payload,
+            timeout=30
+        )
+        response.raise_for_status()
+        html = response.text
+
+        owner_details = {}
+
+        # Parse HTML using BeautifulSoup
+        soup = BeautifulSoup(html, 'html.parser')
+
+        # Look through div with id='resultCard' and find 'Owner Details'
+        owner_cards = soup.find('div', {'id': 'resultCard'})
+
+        if owner_cards and "Owner Details" in owner_cards.text:
+            try:
+                rows = owner_cards.find_all('tr')
+                for row in rows:
+                    try:
+                        key = row.find('th').text.strip().lower()
+                        value = row.find('td').text.strip()
+                        owner_details[key] = value
+                    except AttributeError:
+                        continue  # Skip rows with missing th or td
+            except Exception as e:
+                return jsonify({"error": f"Error parsing owner details: {e}"}), 500
+        else:
+            return jsonify({"error": "No owner details found for this number."}), 404
+
+        return jsonify(owner_details)
+
+    except requests.exceptions.RequestException as e:
+        return jsonify({"error": f"Request failed: {e}"}), 503
+    except Exception as e:
+        return jsonify({"error": f"Unexpected error: {e}"}), 500
+
+    # Get number from query param or JSON body
+    number = request.args.get('number') or request.json.get('number')
+
+    if not number:
+        return jsonify({"error": "No phone number provided."}), 400
 
     payload = {
         'action': 'db_center_uk_search',
