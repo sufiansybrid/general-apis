@@ -88,6 +88,7 @@ def number_to_words_with_formatting():
         # return json.dumps(e)
         return jsonify({"error": str(e)}), 400
 
+
 @app.route('/chat', methods=['POST'])
 def chat():
     # Predefined responses
@@ -122,13 +123,16 @@ def chat():
 def psw_stream():
     return render_template('index_stream.html')
 
+
 @app.route('/psw')
 def psw():
     return render_template('psw.html')
 
+
 @app.route('/psw_home')
 def psw_home():
     return render_template('psw_home.html')
+
 
 @app.route('/api/owner-details', methods=['GET', 'POST'])
 def get_owner_details():
@@ -137,7 +141,7 @@ def get_owner_details():
 
     if not number:
         return jsonify({"error": "No phone number provided."}), 400
-    
+
     HEADERS = {
         'accept': '*/*',
         'accept-language': 'en-US,en;q=0.9',
@@ -193,58 +197,68 @@ def get_owner_details():
     except Exception as e:
         return jsonify({"error": f"Unexpected error: {e}"}), 500
 
-    # Get number from query param or JSON body
-    number = request.args.get('number') or request.json.get('number')
 
-    if not number:
-        return jsonify({"error": "No phone number provided."}), 400
+@app.route('/api/cnic-information', methods=['GET', 'POST'])
+def cnic_information():
+    # cnic = request.args.get('cnic') or (request.json and request.json.get('cnic'))
+    # cnic = request.args.get('cnic') or (request.json and request.json.get('cnic'))
+    cnic = request.args.get('cnic')
+    if not cnic:
+        return jsonify({"error": "Missing CNIC number."}), 400
 
-    payload = {
-        'action': 'db_center_uk_search',
-        'search_term': number
+    HEADERS = {
+        'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
+        'accept-language': 'en-US,en;q=0.9,en-GB;q=0.8,en-GB-oxendict;q=0.7,ur;q=0.6',
+        'cache-control': 'max-age=0',
+        'content-type': 'application/x-www-form-urlencoded',
+        'origin': 'https://dbcenter.pk',
+        'priority': 'u=0, i',
+        'referer': 'https://dbcenter.pk/cnic-information-system/',
+        'sec-ch-ua': '"Not;A=Brand";v="99", "Google Chrome";v="139", "Chromium";v="139"',
+        'sec-ch-ua-mobile': '?0',
+        'sec-ch-ua-platform': '"Windows"',
+        'sec-fetch-dest': 'document',
+        'sec-fetch-mode': 'navigate',
+        'sec-fetch-site': 'same-origin',
+        'sec-fetch-user': '?1',
+        'sec-gpc': '1',
+        'upgrade-insecure-requests': '1',
+        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36',
     }
 
+    payload = {'search_term': cnic}
+
     try:
-        HEADERS = {
-            'accept': '*/*',
-            'accept-language': 'en-US,en;q=0.9',
-            'content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
-            'origin': 'https://dbcenter.pk',
-            'referer': 'https://dbcenter.pk/',
-            'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36',
-            'x-requested-with': 'XMLHttpRequest',
-        }
         response = requests.post(
-            'https://dbcenter.pk/wp-admin/admin-ajax.php',
-            headers=HEADERS,
-            data=payload,
-            timeout=10
-        )
+            'https://dbcenter.pk/cnic-information-system/', headers=HEADERS, data=payload, timeout=30)
         response.raise_for_status()
         html = response.text
 
-        # Parse HTML using BeautifulSoup
         soup = BeautifulSoup(html, 'html.parser')
-        owner_card = soup.find('div', {'id': 'resultCard'})
-        owner_details = {}
+        cards = soup.find_all('div', {'id': 'resultCard'})
 
-        if owner_card and "Owner Details" in owner_card.text:
-            try:
-                rows = owner_card.find_all('tr')
+        all_owner_details = []
+
+        for card in cards:
+            if 'Owner Details' in card.text:
+                rows = card.find_all('tr')
+                details = {}
                 for row in rows:
-                    cols = row.find_all('td')
-                    if len(cols) == 2:
+                    try:
                         key = row.find('th').text.strip().lower()
-                        value = cols[1].text.strip()
-                        owner_details[key] = value
-            except Exception as e:
-                return jsonify({"error": f"Error parsing owner details: {e}"}), 500
-        else:
-            return jsonify({"error": "No owner details found for this number."}), 404
+                        value = row.find('td').text.strip()
+                        details[key] = value
+                    except AttributeError:
+                        continue
+                if details:
+                    all_owner_details.append(details)
 
-        return jsonify(owner_details)
+        if not all_owner_details:
+            return jsonify({"error": "No owner details found."}), 404
+
+        return jsonify(all_owner_details)
 
     except requests.exceptions.RequestException as e:
-        return jsonify({"error": f"Request failed: {e}"}), 503
+        return jsonify({"error": f"Request failed: {str(e)}"}), 503
     except Exception as e:
-        return jsonify({"error": f"Unexpected error: {e}"}), 500
+        return jsonify({"error": f"Unexpected error: {str(e)}"}), 500
