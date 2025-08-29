@@ -316,7 +316,7 @@ def get_numbers_on_cnic_from_simownerdetails():
     url = f"{BASE_URL}?action=get_number_data&get_number_data=searchdata={cnic}"
 
     try:
-        response = requests.get(url, headers=HEADERS, timeout=30)
+        response = requests.get(url, headers=HEADERS, timeout=60)
         response.raise_for_status()
 
         json_data = json.loads(response.text)
