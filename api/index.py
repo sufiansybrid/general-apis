@@ -141,7 +141,7 @@ def get_owner_details():
     number = request.args.get('number') or request.json.get('number')
 
     if not number:
-        return jsonify({"error": "No phone number provided."}), 400
+        return jsonify({"success": False, "error": "No phone number provided."}), 400
 
     HEADERS = {
         'accept': '*/*',
@@ -187,18 +187,18 @@ def get_owner_details():
                     except AttributeError:
                         continue  # Skip rows with missing th or td
             except Exception as e:
-                return jsonify({"error": f"Error parsing owner details: {e}"}), 500
+                return jsonify({"success": False, "error": f"Error parsing owner details: {e}"}), 500
         else:
-            return jsonify({"error": "No owner details found for this number."}), 404
+            return jsonify({"success": False, "error": "No owner details found for this number."}), 404
 
         return jsonify(owner_details)
 
     except requests.exceptions.RequestException as e:
-        return jsonify({"error": f"Request failed: {e}"}), 503
+        return jsonify({"success": False, "error": f"Request failed: {e}"}), 503
     except Exception as e:
-        return jsonify({"error": f"Unexpected error: {e}"}), 500
+        return jsonify({"success": False, "error": f"Unexpected error: {e}"}), 500
     except requests.exceptions.Timeout:
-        return jsonify({"error": "Request to external server timed out."}), 504
+        return jsonify({"success": False, "error": "Request to external server timed out."}), 504
 
 
 @app.route('/api/cnic-information', methods=['GET', 'POST'])
@@ -207,7 +207,7 @@ def cnic_information():
     # cnic = request.args.get('cnic') or (request.json and request.json.get('cnic'))
     cnic = request.args.get('cnic')
     if not cnic:
-        return jsonify({"error": "Missing CNIC number."}), 400
+        return jsonify({"success": False, "error": "Missing CNIC number."}), 400
 
     HEADERS = {
         'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
@@ -257,16 +257,16 @@ def cnic_information():
                     all_owner_details.append(details)
 
         if not all_owner_details:
-            return jsonify({"error": "No owner details found."}), 404
+            return jsonify({"success": False, "error": "No owner details found."}), 404
 
         return jsonify(all_owner_details)
 
     except requests.exceptions.RequestException as e:
-        return jsonify({"error": f"Request failed: {str(e)}"}), 503
+        return jsonify({"success": False, "error": f"Request failed: {str(e)}"}), 503
     except Exception as e:
-        return jsonify({"error": f"Unexpected error: {str(e)}"}), 500
+        return jsonify({"success": False, "error": f"Unexpected error: {str(e)}"}), 500
     except requests.exceptions.Timeout:
-        return jsonify({"error": "Request to external server timed out."}), 504
+        return jsonify({"success": False, "error": "Request to external server timed out."}), 504
 
 @app.route('/api/get-numbers-on-cnic-from-simownerdetails', methods=['GET'])
 def get_numbers_on_cnic_from_simownerdetails():
@@ -342,4 +342,4 @@ def get_numbers_on_cnic_from_simownerdetails():
     except json.JSONDecodeError:
         return jsonify({'success': False, 'error': 'Invalid JSON received'}), 500
     except requests.exceptions.Timeout:
-        return jsonify({"error": "Request to external server timed out."}), 504
+        return jsonify({"success": False, "error": "Request to external server timed out."}), 504
