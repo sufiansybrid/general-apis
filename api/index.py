@@ -343,7 +343,3 @@ def get_numbers_on_cnic_from_simownerdetails():
         return jsonify({'success': False, 'error': 'Invalid JSON received'}), 500
     except requests.exceptions.Timeout:
         return jsonify({"error": "Request to external server timed out."}), 504
-
-# Required for Vercel
-def handler(request, response):
-    return app(request.environ, response.start_response)
