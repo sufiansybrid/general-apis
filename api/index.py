@@ -163,7 +163,7 @@ def get_owner_details():
             'https://dbcenter.pk/wp-admin/admin-ajax.php',
             headers=HEADERS,
             data=payload,
-            timeout=30
+            timeout=8
         )
         response.raise_for_status()
         html = response.text
@@ -197,6 +197,8 @@ def get_owner_details():
         return jsonify({"error": f"Request failed: {e}"}), 503
     except Exception as e:
         return jsonify({"error": f"Unexpected error: {e}"}), 500
+    except requests.exceptions.Timeout:
+        return jsonify({"error": "Request to external server timed out."}), 504
 
 
 @app.route('/api/cnic-information', methods=['GET', 'POST'])
@@ -231,7 +233,7 @@ def cnic_information():
 
     try:
         response = requests.post(
-            'https://dbcenter.pk/cnic-information-system/', headers=HEADERS, data=payload, timeout=30)
+            'https://dbcenter.pk/cnic-information-system/', headers=HEADERS, data=payload, timeout=8)
         response.raise_for_status()
         html = response.text
 
@@ -263,6 +265,8 @@ def cnic_information():
         return jsonify({"error": f"Request failed: {str(e)}"}), 503
     except Exception as e:
         return jsonify({"error": f"Unexpected error: {str(e)}"}), 500
+    except requests.exceptions.Timeout:
+        return jsonify({"error": "Request to external server timed out."}), 504
 
 @app.route('/api/get-numbers-on-cnic-from-simownerdetails', methods=['GET'])
 def get_numbers_on_cnic_from_simownerdetails():
@@ -316,7 +320,7 @@ def get_numbers_on_cnic_from_simownerdetails():
     url = f"{BASE_URL}?action=get_number_data&get_number_data=searchdata={cnic}"
 
     try:
-        response = requests.get(url, headers=HEADERS, timeout=60)
+        response = requests.get(url, headers=HEADERS, timeout=8)
         response.raise_for_status()
 
         json_data = json.loads(response.text)
@@ -337,3 +341,9 @@ def get_numbers_on_cnic_from_simownerdetails():
         return jsonify({'success': False, 'error': str(e)}), 500
     except json.JSONDecodeError:
         return jsonify({'success': False, 'error': 'Invalid JSON received'}), 500
+    except requests.exceptions.Timeout:
+        return jsonify({"error": "Request to external server timed out."}), 504
+
+# Required for Vercel
+def handler(request, response):
+    return app(request.environ, response.start_response)
