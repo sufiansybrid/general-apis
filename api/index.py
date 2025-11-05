@@ -343,3 +343,57 @@ def get_numbers_on_cnic_from_simownerdetails():
         return jsonify({'success': False, 'error': 'Invalid JSON received'}), 500
     except requests.exceptions.Timeout:
         return jsonify({"success": False, "error": "Request to external server timed out."}), 504
+
+@app.route('/api/track-cnic', methods=['GET'])
+def track_cnic():
+    """
+    Fetches CNIC tracking information from cnic.pk.
+    
+    Args:
+        cnic_number (str): The CNIC number to track (without dashes).
+    
+    Returns:
+        dict | str: JSON response from the server if successful, 
+                    otherwise the raw HTML/text for debugging.
+    """
+    try:
+        # Create a session to persist cookies
+        session = requests.Session()
+
+        # Step 1: GET the homepage to fetch a fresh CSRF token
+        response = session.get('https://cnic.pk/')
+        response.raise_for_status()
+
+        # Parse the HTML to find the CSRF token
+        soup = BeautifulSoup(response.text, 'html.parser')
+        csrf_token_input = soup.find('input', {'name': 'csrf_token'})
+        if not csrf_token_input or not csrf_token_input.get('value'):
+            raise ValueError("CSRF token not found on the page.")
+
+        csrf_token = csrf_token_input['value']
+        print(f"Fetched CSRF Token: {csrf_token}")
+
+        # Step 2: Prepare POST data
+        files = {
+            'csrf_token': (None, csrf_token),
+            'user_input': (None, request.args.get('cnic')),
+        }
+
+        headers = {
+            'x-requested-with': 'XMLHttpRequest',
+            'user-agent': 'Mozilla/5.0',
+            'referer': 'https://cnic.pk/',
+        }
+
+        # Step 3: POST using the same session
+        post_response = session.post('https://cnic.pk/track', files=files, headers=headers)
+        post_response.raise_for_status()
+
+        # Try to return JSON if available
+        try:
+            return post_response.json()
+        except ValueError:
+            return post_response.text
+
+    except Exception as e:
+        return {"error": str(e)}
