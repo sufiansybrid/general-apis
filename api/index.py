@@ -361,8 +361,13 @@ def track_cnic():
         session = requests.Session()
 
         # Step 1: GET the homepage to fetch a fresh CSRF token
-        response = session.get('https://cnic.pk/')
-        response.raise_for_status()
+        try:
+            response = session.get('https://cnic.pk/')
+            # response.raise_for_status()
+        except requests.exceptions.RequestException as e:
+            return {"error": f"Failed to fetch CSRF token: {str(e)}"}
+        # response = session.get('https://cnic.pk/')
+        # response.raise_for_status()
 
         # Parse the HTML to find the CSRF token
         soup = BeautifulSoup(response.text, 'html.parser')
