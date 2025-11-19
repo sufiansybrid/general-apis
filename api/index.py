@@ -364,7 +364,7 @@ def track_cnic():
         try:
             response = session.get('https://cnic.pk/')
             # response.raise_for_status()
-        except requests.exceptions.RequestException as e:
+        except Exception as e:
             return {"error": f"Failed to fetch CSRF token: {str(e)}"}
         # response = session.get('https://cnic.pk/')
         # response.raise_for_status()
