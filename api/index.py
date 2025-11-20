@@ -416,6 +416,13 @@ def track_challan(vehicle_number: str, cnic_number: str = "") -> dict:
         dict: A structured response indicating success or failure.
     """
 
+    vehicle_number = request.args.get('vehicle_number')
+    cnic_number = request.args.get('cnic_number')
+    if not vehicle_number:
+        return {"status": "error", "message": "Vehicle number is required"}
+
+    # Create a session to persist cookies
+
     session = requests.Session()
 
     # 1. GET — Fetch CSRF token
