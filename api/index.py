@@ -402,3 +402,70 @@ def track_cnic():
 
     except Exception as e:
         return {"error": str(e)}
+
+@app.route('/api/track_challan', methods=['GET'])
+def track_challan(vehicle_number: str, cnic_number: str = "") -> dict:
+    """
+    Track challan information from sindhpolice.gov.pk.
+    
+    Args:
+        vehicle_number (str): Vehicle number, e.g. "KGI-6908".
+        cnic_number (str): Optional CNIC number.
+    
+    Returns:
+        dict: A structured response indicating success or failure.
+    """
+
+    session = requests.Session()
+
+    # 1. GET — Fetch CSRF token
+    try:
+        r = session.get("https://sindhpolice.gov.pk/challan-check", timeout=15)
+        r.raise_for_status()
+    except Exception as e:
+        return {"status": "error", "message": f"Failed to load page: {e}"}
+
+    soup = BeautifulSoup(r.text, "html.parser")
+    meta_token = soup.find("meta", {"name": "csrf-token"})
+
+    if not meta_token:
+        return {"status": "error", "message": "CSRF token not found"}
+
+    csrf_token = meta_token.get("content")
+    print(f"Fetched CSRF Token: {csrf_token}")
+
+    # 2. Correct POST endpoint
+    post_url = "https://sindhpolice.gov.pk/challan-get"
+
+    # 3. POST payload
+    payload = {
+        "_token": csrf_token,
+        "vehicle": vehicle_number,
+        "cnic": cnic_number
+    }
+
+    # 4. Required headers
+    headers = {
+        "User-Agent": "Mozilla/5.0",
+        "Referer": "https://sindhpolice.gov.pk/challan-check",
+        "X-CSRF-TOKEN": csrf_token,
+        "X-Requested-With": "XMLHttpRequest",
+        "Accept": "application/json, text/javascript, */*; q=0.01",
+        "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
+    }
+
+    # 5. POST request
+    try:
+        response = session.post(post_url, data=payload, headers=headers, timeout=15)
+        response.raise_for_status()
+    except Exception as e:
+        return {"status": "error", "message": f"POST request failed: {e}"}
+
+    # 6. Interpret response
+    text = response.text.strip()
+
+    if "No records found" in text:
+        return {"status": "not_found", "message": "No challan record found", "raw": text}
+
+    return {"status": "found", "message": "Challan record found", "raw": text}
+
