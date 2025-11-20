@@ -472,7 +472,13 @@ def track_challan() -> dict:
     text = response.text.strip()
 
     if "No records found" in text:
-        return {"status": "not_found", "message": "No challan record found", "raw": text}
+        return {"status": "not_found", "message": "No challan record found", "raw": text[:100]}
 
-    return {"status": "found", "message": "Challan record found", "raw": text}
+    return {"status": "found", "message": "Challan record found", "raw": text[:100]}
 
+# ===========================
+# Run Flask App
+# ===========================
+
+# if __name__ == '__main__':
+#     app.run(host="0.0.0.0", port=5000, debug=False)
