@@ -404,7 +404,7 @@ def track_cnic():
         return {"error": str(e)}
 
 @app.route('/api/track_challan', methods=['GET'])
-def track_challan(vehicle_number: str, cnic_number: str = "") -> dict:
+def track_challan() -> dict:
     """
     Track challan information from sindhpolice.gov.pk.
     
