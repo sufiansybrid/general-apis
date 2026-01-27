@@ -134,6 +134,9 @@ def psw():
 def psw_home():
     return render_template('psw_home.html')
 
+@app.route('/ffc_home')
+def ffc_home():
+    return render_template('ffc_home.html')
 
 @app.route('/api/owner-details', methods=['GET', 'POST'])
 def get_owner_details():
