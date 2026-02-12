@@ -480,7 +480,7 @@ def track_challan() -> dict:
 
     return {"status": "found", "message": "Challan record found", "raw": text[:100]}
 
-def scrape_silver_prices(type: str) -> pd.DataFrame:
+def scrape_prices(type: str) -> pd.DataFrame:
     """
     Scrape silver or gold price data from bullion-rates.com and perform analysis.
     Returns a pandas DataFrame with historical prices and calculated metrics.
@@ -516,28 +516,26 @@ def scrape_silver_prices(type: str) -> pd.DataFrame:
             raise ValueError("No data rows found in the table")
         
         # Create DataFrame
-        df = pd.DataFrame(rows, columns=["Date", f"{type}_Price_oz", f"{type}_Price_gram"])
+        df = pd.DataFrame(rows, columns=["Date", f"{type}_Price_gram", f"{type}_Price_oz"])
         
         # Convert Date column
         df["Date"] = pd.to_datetime(df["Date"], format="%d/%m/%y")
         
-        # Remove commas and convert to float
-        df[f"{type}_Price_oz"] = (
-            df[f"{type}_Price_oz"]
-            .astype(str)
-            .str.replace(",", "", regex=False)   # remove separators
-            .str.replace('.', '', regex=False)   # remove separators
-            .astype(float)
-            .round(2)
-        )
-        
+        # 🔹 Clean Silver_Price_gram (European format)
         df[f"{type}_Price_gram"] = (
             df[f"{type}_Price_gram"]
-            .astype(str)
-            .str.replace(",", "", regex=False)   # remove separators
-            .str.replace(".", "", regex=False)   # remove separators
-            .astype(float)
-            .round(2)
+                .astype(str)
+                .str.replace(".", "", regex=False)   # remove thousands dots
+                .str.replace(",", ".", regex=False)  # convert decimal comma to dot
+                .astype(float)
+        )
+
+        # 🔹 Clean Silver_Price_oz (dot = thousands)
+        df[f"{type}_Price_oz"] = (
+            df[f"{type}_Price_oz"]
+                .astype(str)
+                .str.replace(".", "", regex=False)   # remove thousands dots
+                .astype(float)
         )
         
         # Sort by date (important for formulas like pct_change)
@@ -573,7 +571,7 @@ def get_silver_prices():
     """
     try:
         # Scrape and process data
-        df = scrape_silver_prices(type='Silver')
+        df = scrape_prices(type='Silver')
         
         # Get query parameters
         limit = request.args.get('limit', type=int)
@@ -650,7 +648,7 @@ def get_gold_prices():
     """
     try:
         # Scrape and process data
-        df = scrape_silver_prices(type='Gold')
+        df = scrape_prices(type='Gold')
         
         # Get query parameters
         limit = request.args.get('limit', type=int)
@@ -721,7 +719,7 @@ def get_latest_price():
     JSON response with the most recent silver price data
     """
     try:
-        df = scrape_silver_prices(type='Silver')
+        df = scrape_prices(type='Silver')
         
         if len(df) == 0:
             return jsonify({
