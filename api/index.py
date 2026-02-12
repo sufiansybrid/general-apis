@@ -5,6 +5,7 @@ from flask_cors import CORS
 import os
 from bs4 import BeautifulSoup
 import html
+import pandas as pd
 
 import requests
 
@@ -478,6 +479,187 @@ def track_challan() -> dict:
         return {"status": "not_found", "message": "No challan record found", "raw": text[:100]}
 
     return {"status": "found", "message": "Challan record found", "raw": text[:100]}
+
+def scrape_silver_prices():
+    """
+    Scrape silver price data from bullion-rates.com and perform analysis.
+    Returns a pandas DataFrame with historical prices and calculated metrics.
+    """
+    try:
+        # Fetch the webpage
+        response = requests.get(
+            "https://id.bullion-rates.com/silver/PKR-history.htm",
+            timeout=10
+        )
+        response.raise_for_status()
+        
+        # Parse HTML
+        soup = BeautifulSoup(response.text, "html.parser")
+        
+        # Get the main price table
+        table = soup.find("table", {"id": "dtDGrid"})
+        
+        if not table:
+            raise ValueError("Price table not found on the page")
+        
+        # Extract data from table rows
+        rows = []
+        for row in table.find_all("tr", class_="DataRow"):
+            cols = row.find_all("td")
+            if len(cols) >= 3:
+                date = cols[0].text.strip()
+                price_oz = cols[1].text.strip()
+                price_gram = cols[2].text.strip()
+                rows.append([date, price_oz, price_gram])
+        
+        if not rows:
+            raise ValueError("No data rows found in the table")
+        
+        # Create DataFrame
+        df = pd.DataFrame(rows, columns=["Date", "Silver_Price_oz", "Silver_Price_gram"])
+        
+        # Convert Date column
+        df["Date"] = pd.to_datetime(df["Date"], format="%d/%m/%y")
+        
+        # Remove commas and convert to float
+        df["Silver_Price_oz"] = (
+            df["Silver_Price_oz"]
+            .astype(str)
+            .str.replace(",", "", regex=False)
+            .astype(float)
+            .round(2)
+        )
+        
+        df["Silver_Price_gram"] = (
+            df["Silver_Price_gram"]
+            .astype(str)
+            .str.replace(",", "", regex=False)
+            .astype(float)
+            .round(2)
+        )
+        
+        # Sort by date (important for formulas like pct_change)
+        df = df.sort_values("Date").reset_index(drop=True)
+        
+        # Calculate metrics
+        df["Daily_Change_Silver_Price_oz"] = df["Silver_Price_oz"].diff().round(2)
+        df["Daily_Change_Silver_Price_gram"] = df["Silver_Price_gram"].diff().round(2)
+        df["Pct_Change_%"] = (df["Silver_Price_oz"].pct_change() * 100).round(2)
+        df["MA_7"] = df["Silver_Price_oz"].rolling(window=7).mean().round(2)
+        df["Volatility_7"] = df["Silver_Price_oz"].rolling(7).std().round(2)
+        
+        return df
+        
+    except requests.RequestException as e:
+        raise Exception(f"Failed to fetch data: {str(e)}")
+    except Exception as e:
+        raise Exception(f"Error processing data: {str(e)}")
+
+
+@app.route('/api/silver-prices', methods=['GET'])
+def get_silver_prices():
+    """
+    API endpoint to get silver price data.
+    
+    Query parameters:
+    - limit: Number of recent records to return (optional)
+    - start_date: Filter records from this date onwards (format: YYYY-MM-DD, optional)
+    - end_date: Filter records up to this date (format: YYYY-MM-DD, optional)
+    
+    Returns:
+    JSON response with silver price data and calculated metrics
+    """
+    try:
+        # Scrape and process data
+        df = scrape_silver_prices()
+        
+        # Get query parameters
+        limit = request.args.get('limit', type=int)
+        start_date = request.args.get('start_date')
+        end_date = request.args.get('end_date')
+        
+        # Apply date filters if provided
+        if start_date:
+            start_dt = pd.to_datetime(start_date)
+            df = df[df['Date'] >= start_dt]
+        
+        if end_date:
+            end_dt = pd.to_datetime(end_date)
+            df = df[df['Date'] <= end_dt]
+        
+        # Apply limit if provided (get most recent records)
+        if limit:
+            df = df.tail(limit)
+        
+        # Convert DataFrame to dict for JSON response
+        # Convert Date to string format for JSON serialization
+        df['Date'] = df['Date'].dt.strftime('%Y-%m-%d')
+        
+        # Prepare response
+        response_data = {
+            'success': True,
+            'record_count': len(df),
+            'data': df.to_dict(orient='records'),
+            'summary': {
+                'latest_price_oz': float(df.iloc[-1]['Silver_Price_oz']) if len(df) > 0 else None,
+                'latest_price_gram': float(df.iloc[-1]['Silver_Price_gram']) if len(df) > 0 else None,
+                'latest_date': df.iloc[-1]['Date'] if len(df) > 0 else None,
+                'avg_price_oz': float(df['Silver_Price_oz'].mean().round(2)),
+                'min_price_oz': float(df['Silver_Price_oz'].min()),
+                'max_price_oz': float(df['Silver_Price_oz'].max()),
+            }
+        }
+        
+        return jsonify(response_data), 200
+        
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+
+@app.route('/api/silver-prices/latest', methods=['GET'])
+def get_latest_price():
+    """
+    API endpoint to get only the latest silver price.
+    
+    Returns:
+    JSON response with the most recent silver price data
+    """
+    try:
+        df = scrape_silver_prices()
+        
+        if len(df) == 0:
+            return jsonify({
+                'success': False,
+                'error': 'No data available'
+            }), 404
+        
+        # Get the latest record
+        latest = df.iloc[-1]
+        
+        response_data = {
+            'success': True,
+            'data': {
+                'date': latest['Date'].strftime('%Y-%m-%d'),
+                'silver_price_oz': float(latest['Silver_Price_oz']),
+                'silver_price_gram': float(latest['Silver_Price_gram']),
+                'daily_change_oz': float(latest['Daily_Change_Silver_Price_oz']) if pd.notna(latest['Daily_Change_Silver_Price_oz']) else None,
+                'daily_change_gram': float(latest['Daily_Change_Silver_Price_gram']) if pd.notna(latest['Daily_Change_Silver_Price_gram']) else None,
+                'pct_change': float(latest['Pct_Change_%']) if pd.notna(latest['Pct_Change_%']) else None,
+                'ma_7': float(latest['MA_7']) if pd.notna(latest['MA_7']) else None,
+                'volatility_7': float(latest['Volatility_7']) if pd.notna(latest['Volatility_7']) else None,
+            }
+        }
+        
+        return jsonify(response_data), 200
+        
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
 
 # ===========================
 # Run Flask App
