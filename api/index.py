@@ -590,8 +590,10 @@ def get_silver_prices():
         # Apply limit if provided (get most recent records)
         if limit:
             df = df.tail(limit)
+
+        # Clean the DataFrame: convert all NaN to None
+        df = df.fillna(0).replace({pd.NA: None, pd.NaT: None})
         
-        # Convert DataFrame to dict for JSON response
         # Convert Date to string format for JSON serialization
         df['Date'] = df['Date'].dt.strftime('%Y-%m-%d')
         
