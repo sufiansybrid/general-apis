@@ -612,6 +612,7 @@ def get_silver_prices():
         response_data = {
             'success': True,
             'record_count': len(df),
+            "type": "Silver",
             'data': df.to_dict(orient='records'),
             'summary': {
                 'latest_price_oz': None if latest_oz is None or math.isnan(latest_oz) else float(latest_oz),
@@ -688,6 +689,7 @@ def get_gold_prices():
         response_data = {
             'success': True,
             'record_count': len(df),
+            "type": "Gold",
             'data': df.to_dict(orient='records'),
             'summary': {
                 'latest_price_oz': None if latest_oz is None or math.isnan(latest_oz) else float(latest_oz),
