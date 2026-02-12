@@ -595,20 +595,30 @@ def get_silver_prices():
         # Convert Date to string format for JSON serialization
         df['Date'] = df['Date'].dt.strftime('%Y-%m-%d')
         
-        # Prepare response
+        import math
+
+        # Summary values with NaN handling
+        latest_oz = df.iloc[-1]['Silver_Price_oz'] if len(df) > 0 else None
+        latest_gram = df.iloc[-1]['Silver_Price_gram'] if len(df) > 0 else None
+
+        avg_oz = df['Silver_Price_oz'].mean() if len(df) > 0 else None
+        min_oz = df['Silver_Price_oz'].min() if len(df) > 0 else None
+        max_oz = df['Silver_Price_oz'].max() if len(df) > 0 else None
+
         response_data = {
             'success': True,
             'record_count': len(df),
             'data': df.to_dict(orient='records'),
             'summary': {
-                'latest_price_oz': float(df.iloc[-1]['Silver_Price_oz']) if len(df) > 0 else None,
-                'latest_price_gram': float(df.iloc[-1]['Silver_Price_gram']) if len(df) > 0 else None,
+                'latest_price_oz': None if latest_oz is None or math.isnan(latest_oz) else float(latest_oz),
+                'latest_price_gram': None if latest_gram is None or math.isnan(latest_gram) else float(latest_gram),
                 'latest_date': df.iloc[-1]['Date'] if len(df) > 0 else None,
-                'avg_price_oz': float(df['Silver_Price_oz'].mean().round(2)),
-                'min_price_oz': float(df['Silver_Price_oz'].min()),
-                'max_price_oz': float(df['Silver_Price_oz'].max()),
+                'avg_price_oz': None if avg_oz is None or math.isnan(avg_oz) else float(round(avg_oz, 2)),
+                'min_price_oz': None if min_oz is None or math.isnan(min_oz) else float(min_oz),
+                'max_price_oz': None if max_oz is None or math.isnan(max_oz) else float(max_oz),
             }
         }
+
         
         return jsonify(response_data), 200
         
@@ -665,5 +675,5 @@ def get_latest_price():
 # Run Flask App
 # ===========================
 
-# if __name__ == '__main__':
-#     app.run(host="0.0.0.0", port=5000, debug=False)
+if __name__ == '__main__':
+    app.run(host="0.0.0.0", port=5000, debug=True)
