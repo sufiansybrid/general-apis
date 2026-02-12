@@ -480,15 +480,15 @@ def track_challan() -> dict:
 
     return {"status": "found", "message": "Challan record found", "raw": text[:100]}
 
-def scrape_silver_prices():
+def scrape_silver_prices(type: str) -> pd.DataFrame:
     """
-    Scrape silver price data from bullion-rates.com and perform analysis.
+    Scrape silver or gold price data from bullion-rates.com and perform analysis.
     Returns a pandas DataFrame with historical prices and calculated metrics.
     """
     try:
         # Fetch the webpage
         response = requests.get(
-            "https://id.bullion-rates.com/silver/PKR-history.htm",
+            f"https://id.bullion-rates.com/{type}/PKR-history.htm",
             timeout=10
         )
         response.raise_for_status()
@@ -516,24 +516,26 @@ def scrape_silver_prices():
             raise ValueError("No data rows found in the table")
         
         # Create DataFrame
-        df = pd.DataFrame(rows, columns=["Date", "Silver_Price_oz", "Silver_Price_gram"])
+        df = pd.DataFrame(rows, columns=["Date", f"{type}_Price_oz", f"{type}_Price_gram"])
         
         # Convert Date column
         df["Date"] = pd.to_datetime(df["Date"], format="%d/%m/%y")
         
         # Remove commas and convert to float
-        df["Silver_Price_oz"] = (
-            df["Silver_Price_oz"]
+        df[f"{type}_Price_oz"] = (
+            df[f"{type}_Price_oz"]
             .astype(str)
-            .str.replace(",", "", regex=False)
+            .str.replace(",", "", regex=False)   # remove separators
+            .str.replace('.', '', regex=False)   # remove separators
             .astype(float)
             .round(2)
         )
         
-        df["Silver_Price_gram"] = (
-            df["Silver_Price_gram"]
+        df[f"{type}_Price_gram"] = (
+            df[f"{type}_Price_gram"]
             .astype(str)
-            .str.replace(",", "", regex=False)
+            .str.replace(",", "", regex=False)   # remove separators
+            .str.replace(".", "", regex=False)   # remove separators
             .astype(float)
             .round(2)
         )
@@ -542,11 +544,11 @@ def scrape_silver_prices():
         df = df.sort_values("Date").reset_index(drop=True)
         
         # Calculate metrics
-        df["Daily_Change_Silver_Price_oz"] = df["Silver_Price_oz"].diff().round(2)
-        df["Daily_Change_Silver_Price_gram"] = df["Silver_Price_gram"].diff().round(2)
-        df["Pct_Change_%"] = (df["Silver_Price_oz"].pct_change() * 100).round(2)
-        df["MA_7"] = df["Silver_Price_oz"].rolling(window=7).mean().round(2)
-        df["Volatility_7"] = df["Silver_Price_oz"].rolling(7).std().round(2)
+        df[f"Daily_Change_{type}_Price_oz"] = df[f"{type}_Price_oz"].diff().round(2)
+        df[f"Daily_Change_{type}_Price_gram"] = df[f"{type}_Price_gram"].diff().round(2)
+        df[f"Pct_Change_%"] = (df[f"{type}_Price_oz"].pct_change() * 100).round(2)
+        df[f"MA_7"] = df[f"{type}_Price_oz"].rolling(window=7).mean().round(2)
+        df[f"Volatility_7"] = df[f"{type}_Price_oz"].rolling(7).std().round(2)
         
         return df
         
@@ -571,7 +573,7 @@ def get_silver_prices():
     """
     try:
         # Scrape and process data
-        df = scrape_silver_prices()
+        df = scrape_silver_prices(type='Silver')
         
         # Get query parameters
         limit = request.args.get('limit', type=int)
@@ -625,6 +627,83 @@ def get_silver_prices():
         return jsonify(response_data), 200
         
     except Exception as e:
+        print(e)
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+
+@app.route('/api/gold-prices', methods=['GET'])
+def get_gold_prices():
+    """
+    API endpoint to get gold price data.
+    
+    Query parameters:
+    - limit: Number of recent records to return (optional)
+    - start_date: Filter records from this date onwards (format: YYYY-MM-DD, optional)
+    - end_date: Filter records up to this date (format: YYYY-MM-DD, optional)
+    
+    Returns:
+    JSON response with gold price data and calculated metrics
+    """
+    try:
+        # Scrape and process data
+        df = scrape_silver_prices(type='Gold')
+        
+        # Get query parameters
+        limit = request.args.get('limit', type=int)
+        start_date = request.args.get('start_date')
+        end_date = request.args.get('end_date')
+        
+        # Apply date filters if provided
+        if start_date:
+            start_dt = pd.to_datetime(start_date)
+            df = df[df['Date'] >= start_dt]
+        
+        if end_date:
+            end_dt = pd.to_datetime(end_date)
+            df = df[df['Date'] <= end_dt]
+        
+        # Apply limit if provided (get most recent records)
+        if limit:
+            df = df.tail(limit)
+
+        # Clean the DataFrame: convert all NaN to None
+        df = df.fillna(0).replace({pd.NA: None, pd.NaT: None})
+        
+        # Convert Date to string format for JSON serialization
+        df['Date'] = df['Date'].dt.strftime('%Y-%m-%d')
+        
+        import math
+
+        # Summary values with NaN handling
+        latest_oz = df.iloc[-1]['Gold_Price_oz'] if len(df) > 0 else None
+        latest_gram = df.iloc[-1]['Gold_Price_gram'] if len(df) > 0 else None
+
+        avg_oz = df['Gold_Price_oz'].mean() if len(df) > 0 else None
+        min_oz = df['Gold_Price_oz'].min() if len(df) > 0 else None
+        max_oz = df['Gold_Price_oz'].max() if len(df) > 0 else None
+
+        response_data = {
+            'success': True,
+            'record_count': len(df),
+            'data': df.to_dict(orient='records'),
+            'summary': {
+                'latest_price_oz': None if latest_oz is None or math.isnan(latest_oz) else float(latest_oz),
+                'latest_price_gram': None if latest_gram is None or math.isnan(latest_gram) else float(latest_gram),
+                'latest_date': df.iloc[-1]['Date'] if len(df) > 0 else None,
+                'avg_price_oz': None if avg_oz is None or math.isnan(avg_oz) else float(round(avg_oz, 2)),
+                'min_price_oz': None if min_oz is None or math.isnan(min_oz) else float(min_oz),
+                'max_price_oz': None if max_oz is None or math.isnan(max_oz) else float(max_oz),
+            }
+        }
+
+        
+        return jsonify(response_data), 200
+        
+    except Exception as e:
+        print(e)
         return jsonify({
             'success': False,
             'error': str(e)
@@ -640,7 +719,7 @@ def get_latest_price():
     JSON response with the most recent silver price data
     """
     try:
-        df = scrape_silver_prices()
+        df = scrape_silver_prices(type='Silver')
         
         if len(df) == 0:
             return jsonify({
