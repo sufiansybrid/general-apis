@@ -1,8 +1,14 @@
 {
+  "$schema": "https://openapi.vercel.sh/vercel.json",
   "rewrites": [
     {
       "source": "/(.*)",
-      "destination": "/api/index",
+      "destination": "/api/index"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
       "headers": [
         {
           "key": "Content-Security-Policy",
