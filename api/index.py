@@ -479,6 +479,11 @@ def track_challan() -> dict:
 
     return {"status": "found", "message": "Challan record found", "raw": text[:100]}
 
+
+@app.route('/claude-chat')
+def claude_chat():
+    return render_template('claude-chat.html')
+    
 # ===========================
 # Run Flask App
 # ===========================
