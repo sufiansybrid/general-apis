@@ -483,6 +483,18 @@ def track_challan() -> dict:
 @app.route('/claude-chat')
 def claude_chat():
     return render_template('claude-chat.html')
+
+@app.route('/marked-1')
+def marked1():
+    return render_template('marked-1.html')
+
+@app.route('/marked-2')
+def marked2():
+    return render_template('marked-2.html')
+
+@app.route('/marked-3')
+def marked3():
+    return render_template('marked-3.html')
     
 # ===========================
 # Run Flask App

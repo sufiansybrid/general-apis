@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <title>Document title here</title>
+    <style>
+        #content {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        pre {
+            background: #f4f4f4;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+
+        code {
+            background: #f4f4f4;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="content"></div>
+
+    <!-- 
+        THE FIX: Instead of putting markdown in a JS variable (which breaks on backticks),
+        put it inside a hidden <div> as raw text using a <textarea> or <template> tag.
+        The browser never interprets its content as JS or HTML, so ANY markdown is safe.
+        
+        In Django, just do:
+            <textarea id="raw-markdown" hidden>{{ response }}</textarea>
+    -->
+    <textarea id="raw-markdown" hidden>
+This is a common challenge with embeddable widgets, and you have three solid options to fix your CSS conflicts. Here's my recommendation on each approach:
+
+## **Best Solution: Contact the Widget Provider**
+
+The most effective long-term solution is to **contact the provider of your chat widget** (Sybrid) and request they implement Shadow DOM in their widget code.
+
+Shadow DOM is the industry-standard solution for this exact problem . It creates an isolated DOM tree where:
+- Your website's CSS cannot leak into the widget
+- The widget's CSS cannot affect your website 
+
+I can see this is likely the issue because your website is overriding the widget's styles and vice versa. Looking at your site, you have your own CSS that's probably conflicting with the chat widget's styles.
+
+**How to request this:**
+Explain to Sybrid that you need CSS encapsulation and ask them to implement Shadow DOM with `mode: 'closed'` or `mode: 'open'` in their widget loader .
+
+## **Immediate Workarounds You Can Apply**
+
+While waiting for the provider to implement a proper solution, here are two approaches you can apply on your end:
+
+### **Option 1: Isolate with an iframe**
+
+Wrap the widget script in an iframe on your page. This creates a completely separate browsing context where CSS cannot cross boundaries .
+
+```html
+<iframe src="about:blank" id="widget-iframe" style="border: none; width: 100%; height: 600px;"></iframe>
+<script>
+  const iframe = document.getElementById('widget-iframe');
+  const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+  
+  // Write the widget script into the iframe
+  iframeDoc.open();
+  iframeDoc.write(`
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <script src="https://chat-server.sybrid.com/widget/widget.js?website_id=a9e5457a-707a-4b8c-8540-5b5f331619b3" defer></script>
+      </head>
+      <body></body>
+    </html>
+  `);
+  iframeDoc.close();
+</script>
+```
+
+**Downsides:** The iframe has a fixed size, and the chat widget might not expand properly if it needs to overlay content. Also, any popup/modals from the widget will be confined to the iframe .
+
+### **Option 2: Override with Higher Specificity**
+
+If you just need to fix specific styling issues quickly, you can override the conflicting styles by writing CSS with higher specificity :
+
+```css
+/* Use multiple class selectors to increase specificity */
+.widget-container.widget-container.widget-container .widget-element {
+  /* Your styles here */
+  background-color: #fff !important; /* Use !important as last resort */
+}
+```
+
+**Note:** This is a temporary fix and becomes unmaintainable if there are many style conflicts .
+
+## **If You Control the Widget Source Code**
+
+If you have access to the widget's source code and can modify it, here's what you should implement :
+
+```javascript
+// When mounting the widget
+const host = document.getElementById('widget-root'); // Your widget's container
+const shadowRoot = host.attachShadow({ mode: 'closed' }); // or 'open'
+
+// Inject styles directly into Shadow DOM
+const style = document.createElement('style');
+style.textContent = getWidgetStyles(); // Your widget CSS as string
+shadowRoot.appendChild(style);
+
+// Mount your widget inside Shadow DOM
+const widgetContainer = document.createElement('div');
+widgetContainer.className = 'widget-root';
+shadowRoot.appendChild(widgetContainer);
+
+// Render your chat widget inside widgetContainer
+```
+
+This is exactly how major widget providers (like Intercom, Drift, etc.) prevent CSS conflicts .
+
+## **What Not to Do**
+
+- ❌ Don't rely on `all: unset` - It creates more problems than it solves and requires extensive additional CSS to restore basic functionality 
+- ❌ Don't add `!important` everywhere - This is a maintenance nightmare and can break your other site styles 
+
+## **Summary Recommendation**
+
+1. **First:** Contact Sybrid support and request Shadow DOM implementation
+2. **While waiting:** Use the iframe wrapper approach if the widget doesn't need to overlay content
+3. **For quick fixes:** Override specific conflicting styles with higher specificity CSS
+
+The Shadow DOM solution is the only complete answer here, and the widget provider should implement it on their end. Most modern widget platforms already do this, so it's reasonable to request it from Sybrid.
+    </textarea>
+
+    <script>
+        function markdownToHTML(markdownText) {
+            if (!markdownText) return '';
+
+            const html = marked.parse(markdownText);
+
+            const tempContainer = document.createElement('div');
+            tempContainer.innerHTML = html;
+
+            const links = tempContainer.querySelectorAll('a');
+            links.forEach(link => {
+                link.setAttribute('target', '_blank');
+                link.setAttribute('rel', 'noopener noreferrer');
+            });
+
+            const allElements = tempContainer.querySelectorAll('*');
+            allElements.forEach(el => {
+                if (el.tagName === 'P' && !el.textContent.trim() && !el.querySelector('img, canvas, svg')) {
+                    el.remove();
+                }
+            });
+
+            return tempContainer.innerHTML;
+        }
+
+        // Read the raw markdown from the textarea — zero JS string escaping needed
+        const text = document.getElementById('raw-markdown').value;
+        document.getElementById('content').innerHTML = markdownToHTML(text);
+    </script>
+</body>
+
+</html>

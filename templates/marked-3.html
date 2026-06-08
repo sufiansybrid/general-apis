@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <title>Document title here</title>
+    <style>
+        #content {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        pre {
+            background: #f4f4f4;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+
+        code {
+            background: #f4f4f4;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="content"></div>
+
+    <!-- 
+        THE FIX: Instead of putting markdown in a JS variable (which breaks on backticks),
+        put it inside a hidden <div> as raw text using a <textarea> or <template> tag.
+        The browser never interprets its content as JS or HTML, so ANY markdown is safe.
+        
+        In Django, just do:
+            <textarea id="raw-markdown" hidden>{{ response }}</textarea>
+    -->
+    <textarea id="raw-markdown" hidden>
+This is no longer a Django or ALLOWED_HOSTS issue — this is **pure SSL certificate mismatch**.
+
+---
+
+# 🔴 Root Cause
+
+Your browser is saying:
+
+> ❌ `net::ERR_CERT_COMMON_NAME_INVALID`
+
+And specifically:
+
+* You opened:
+  `https://www.chat-hrms-widget.sybrid.com`
+
+* But your certificate is:
+  `*.sybrid.com`
+
+---
+
+# 🧠 Why this is happening
+
+A wildcard certificate:
+
+```text
+*.sybrid.com
+```
+
+ONLY covers:
+
+* chat-hrms-widget.sybrid.com ✔️
+* api.sybrid.com ✔️
+* anything.sybrid.com ✔️
+
+BUT ❌ it does NOT cover:
+
+* www.chat-hrms-widget.sybrid.com ❌
+
+Because that is:
+
+> a "nested subdomain" (2 levels deep)
+
+---
+
+# 🚨 Key insight
+
+Your domain is:
+
+```
+www.chat-hrms-widget.sybrid.com
+```
+
+Wildcard only supports:
+
+```
+*.sybrid.com
+```
+
+So it does NOT match.
+    </textarea>
+
+    <script>
+        function markdownToHTML(markdownText) {
+            if (!markdownText) return '';
+
+            const html = marked.parse(markdownText);
+
+            const tempContainer = document.createElement('div');
+            tempContainer.innerHTML = html;
+
+            const links = tempContainer.querySelectorAll('a');
+            links.forEach(link => {
+                link.setAttribute('target', '_blank');
+                link.setAttribute('rel', 'noopener noreferrer');
+            });
+
+            const allElements = tempContainer.querySelectorAll('*');
+            allElements.forEach(el => {
+                if (el.tagName === 'P' && !el.textContent.trim() && !el.querySelector('img, canvas, svg')) {
+                    el.remove();
+                }
+            });
+
+            return tempContainer.innerHTML;
+        }
+
+        // Read the raw markdown from the textarea — zero JS string escaping needed
+        const text = document.getElementById('raw-markdown').value;
+        document.getElementById('content').innerHTML = markdownToHTML(text);
+    </script>
+</body>
+
+</html>

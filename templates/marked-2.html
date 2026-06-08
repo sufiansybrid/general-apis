@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <title>Document title here</title>
+    <style>
+        #content {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        pre {
+            background: #f4f4f4;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+
+        code {
+            background: #f4f4f4;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="content"></div>
+
+    <!-- 
+        THE FIX: Instead of putting markdown in a JS variable (which breaks on backticks),
+        put it inside a hidden <div> as raw text using a <textarea> or <template> tag.
+        The browser never interprets its content as JS or HTML, so ANY markdown is safe.
+        
+        In Django, just do:
+            <textarea id="raw-markdown" hidden>{{ response }}</textarea>
+    -->
+    <textarea id="raw-markdown" hidden>
+The leave policy at Sybrid Private Limited is as follows:
+
+**Leave Entitlement:**
+
+- **Permanent Employees:**
+  - Casual Leaves: 10 days
+  - Sick Leaves: 8 days
+  - Annual Leaves (Officers & AMs): 14 days
+  - Annual Leaves (Manager & Above): 21 days
+  - Maternity Leaves: 90 days paid
+
+- **Contractual Employees (Full-Time, 1 year):**
+  - Casual Leaves: 10 days
+  - Sick Leaves: 10 days
+  - Annual Leaves: 7 days
+  - Annual Leaves (Manager & Above): 0 days
+  - Maternity Leaves: 30 days paid
+
+- **Contractual Employees (Part-Time):**
+  - Casual Leaves: 5 days
+  - Sick Leaves: 5 days
+  - Annual Leaves: 0 days
+  - Annual Leaves (Manager & Above): 0 days
+  - Maternity Leaves: 0 days
+
+**Casual Leaves Policy Details:**
+- Cannot be carried forward; unavailed casual leave lapses at year-end.
+- Not granted for more than three days at a time.
+- Cannot be combined with other leave types.
+- Full pay from date of joining, but can be availed only after completing three months of service; leave taken before that is unpaid.
+- Upon resignation, casual leave balance becomes zero; any leave during notice period is deducted from annual/vacation leave.
+
+**Annual Leaves Policy Details:**
+- Unavailed annual leaves are carried forward up to 42 days for managers and above, and 28 days for AMs and officers.
+- Earned annual leaves are encashed at separation for the same maximum limits.
+- Must be requested at least 1 month in advance.
+- Annual leave entitlement starts after completing one year of employment.
+- Annual leave is generally not permitted during the notice period unless under exceptional circumstances.
+- Contractual employees are not eligible for annual leave encashment or carry forward.
+
+**Sick Leaves Policy Details:**
+- Sick leave over 2 days requires a medical certificate.
+- Full pay from date of joining, but can be availed only after completing three months of service; leave taken before that is unpaid.
+- Employee must notify the company of absence and provide a medical certificate.
+- Unused sick leaves cannot be encashed at separation.
+- Sick leave balance can be carried forward up to a maximum of 16 days.
+- If sick leaves are exhausted, annual leaves may be used if available.
+- Upon resignation, sick leave balance becomes zero; leave during notice period is unpaid.
+
+**Maternity Leaves Policy Details:**
+- Paid maternity leave for permanent employees is 12 consecutive weeks (90 days), up to twice during employment.
+- For contractual employees, maternity leave is 30 days paid.
+- Leave can start up to 6 weeks before and up to 6 weeks after delivery for permanent employees; 15 days before and after for contractual employees.
+- Maternity leave is not encashable and cannot be accumulated.
+- Paid at the rate equal to last paid wages.
+
+**How to Apply for Leave:**
+1. Log in to the HRMS portal.
+2. Go to the “Leave” section.
+3. Select leave type and dates.
+4. Submit for approval.
+
+**Checking Leave Balance:**
+- Available in the HRMS under the “Apply Leave” section.
+
+**Relevant Policies:** RECORD OF TIME WORKED - Leave Entitlement Table, Casual Leaves - Policy Details, Annual Leaves - Policy Details, Sick Leaves - Policy Details, Maternity Leaves - Policy Details, and Sybrid (Pvt) Ltd Frequently Asked Questions.
+
+If you need information on other types of leave or specific cases, please contact HR.
+    </textarea>
+
+    <script>
+        function markdownToHTML(markdownText) {
+            if (!markdownText) return '';
+
+            const html = marked.parse(markdownText);
+
+            const tempContainer = document.createElement('div');
+            tempContainer.innerHTML = html;
+
+            const links = tempContainer.querySelectorAll('a');
+            links.forEach(link => {
+                link.setAttribute('target', '_blank');
+                link.setAttribute('rel', 'noopener noreferrer');
+            });
+
+            const allElements = tempContainer.querySelectorAll('*');
+            allElements.forEach(el => {
+                if (el.tagName === 'P' && !el.textContent.trim() && !el.querySelector('img, canvas, svg')) {
+                    el.remove();
+                }
+            });
+
+            return tempContainer.innerHTML;
+        }
+
+        // Read the raw markdown from the textarea — zero JS string escaping needed
+        const text = document.getElementById('raw-markdown').value;
+        document.getElementById('content').innerHTML = markdownToHTML(text);
+    </script>
+</body>
+
+</html>
