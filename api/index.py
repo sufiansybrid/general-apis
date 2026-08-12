@@ -1,3 +1,5 @@
+from urllib import response
+
 from flask import Flask, request, jsonify, render_template
 import json
 import re
@@ -5,7 +7,9 @@ from flask_cors import CORS
 import os
 from bs4 import BeautifulSoup
 import html
+import io
 
+import pandas as pd
 import requests
 
 # app = Flask(__name__, template_folder='templates')
@@ -760,7 +764,7 @@ def transform_billing_json(raw_data: dict) -> dict:
     }
 
 
-def fetch_from_upstream(consumer_id: str):
+def fetch_water_bill(consumer_id: str):
     """Utility to query the upstream KW&SC API."""
 
     # Headers matching your curl setup
@@ -822,13 +826,131 @@ def get_water_bill():
     else:
         consumer_id = request.args.get("consumer_id")
         
-    result, status_code = fetch_from_upstream(consumer_id)
+    result, status_code = fetch_water_bill(consumer_id)
     return jsonify(result), status_code
+
+
+def fetch_ke_bill(account_number):
+    """Utility to query the upstream KE API."""
+    
+    COOKIES = {
+        '_gid': 'GA1.3.1883196109.1786542815',
+        'wp-wpml_current_language': 'en',
+        'ASP.NET_SessionId': 'yxvfwpxlgqkbpf3kbakh5tsn',
+        'BNIS_vid': '6KPy3kbWSYWJyN2fK6XxIymP3viCmwDePUknd0o4ZFOvFtrjrjJD9VXXJxfQgLIzXKJeF9xS1bW4+GojLVjFeIqV1gxzKdKS0ayBzQ2HXJjd46AwfhbB8rbSAa9sXNWNFBVnDu30bdwGAzozMeHnekxWU3LM1+K1k+VCdtHqP6t53k/00RmlXjpjtPiuFfpjiwfYxfNswLYNNEUjD6DS3Xsc6c0aIS024EHW6o/r0RA=',
+        '_ga_J1MES32KE0': 'GS2.1.s1786542811$o1$g1$t1786542932$j42$l0$h0',
+        '_ga': 'GA1.3.543227447.1786542811',
+        '__utma': '138832625.543227447.1786542811.1786542939.1786542939.1',
+        '__utmc': '138832625',
+        '__utmz': '138832625.1786542939.1.1.utmcsr=ke.com.pk|utmccn=(referral)|utmcmd=referral|utmcct=/',
+        'x-bni-ja': '151966141',
+        'wp-settings-5': 'editor%3Dtinymce%26libraryContent%3Dbrowse%26posts_list_mode%3Dlist%26advImgDetails%3Dshow',
+        'wp-settings-6': 'editor%3Dtinymce%26libraryContent%3Dbrowse',
+        'wp-settings-time-6': '1758694708',
+        'wp-settings-time-8': '1765435100',
+        'wp-settings-8': 'editor%3Dhtml',
+        'wp-settings-time-5': '1776233017',
+        'BNIS_x-bni-jas': 'vAY265Wyu+j+9m5Nq4gLRvP0VnWg1qic109uZQN5FKc+Ov7weALliJg8UvakJ0XLmXi8R2wjVeSpPEkZgoFtuthS6vvnaeQ5jrVL5v6FtBoz8Y3A66DAOA==',
+        'BNIS___utm_is1': 'PWSHSw03XAxhEA252tjc8nQ4pI/lAUsh2ltVgBlAs2tPDjdntShzc5EQDOs2568eol4igkJGKhSBEslRjEUWB10Y7QEejlxKx1KwH4vRxxfDo8p6mVa0eA==',
+        'BNIS___utm_is2': 'J5wshXGUC1hHBiWUwUyqt3JhpeOuUj8tp0usjNVYFJuarSkmbKGSWBOiTXLO/dtPrbWHs09duiY=',
+        'BNIS___utm_is3': '0YF8tWJK6obyu9hqdh2ZJqgsdRn7T0Zw3+1Zoo7m2Yu1iehwNymAO3dwuskvNsDT4PYlx9Hx49JNEyItEdqtqaB7FS+Hq1AZUDpevL6mtBB+SmsfbGaPCQ==',
+        '__utmb': '138832625.3.10.1786542939',
+    }
+
+    HEADERS = {
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
+        'Accept-Language': 'en-US,en;q=0.9,ur;q=0.8,en-GB;q=0.7,en-GB-oxendict;q=0.6',
+        'Cache-Control': 'max-age=0',
+        'Connection': 'keep-alive',
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Origin': 'https://staging.ke.com.pk:24555',
+        'Referer': 'https://staging.ke.com.pk:24555/ReBrand/DuplicateBill.aspx',
+        'Sec-Fetch-Dest': 'iframe',
+        'Sec-Fetch-Mode': 'navigate',
+        'Sec-Fetch-Site': 'same-origin',
+        'Sec-Fetch-User': '?1',
+        'Upgrade-Insecure-Requests': '1',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36',
+        'sec-ch-ua': '"Not=A?Brand";v="99", "Google Chrome";v="151", "Chromium";v="151"',
+        'sec-ch-ua-mobile': '?0',
+        'sec-ch-ua-platform': '"Windows"',
+        'sec-gpc': '1',
+        # 'Cookie': '_gid=GA1.3.1883196109.1786542815; wp-wpml_current_language=en; ASP.NET_SessionId=yxvfwpxlgqkbpf3kbakh5tsn; BNIS_vid=6KPy3kbWSYWJyN2fK6XxIymP3viCmwDePUknd0o4ZFOvFtrjrjJD9VXXJxfQgLIzXKJeF9xS1bW4+GojLVjFeIqV1gxzKdKS0ayBzQ2HXJjd46AwfhbB8rbSAa9sXNWNFBVnDu30bdwGAzozMeHnekxWU3LM1+K1k+VCdtHqP6t53k/00RmlXjpjtPiuFfpjiwfYxfNswLYNNEUjD6DS3Xsc6c0aIS024EHW6o/r0RA=; _ga_J1MES32KE0=GS2.1.s1786542811$o1$g1$t1786542932$j42$l0$h0; _ga=GA1.3.543227447.1786542811; __utma=138832625.543227447.1786542811.1786542939.1786542939.1; __utmc=138832625; __utmz=138832625.1786542939.1.1.utmcsr=ke.com.pk|utmccn=(referral)|utmcmd=referral|utmcct=/; x-bni-ja=151966141; wp-settings-5=editor%3Dtinymce%26libraryContent%3Dbrowse%26posts_list_mode%3Dlist%26advImgDetails%3Dshow; wp-settings-6=editor%3Dtinymce%26libraryContent%3Dbrowse; wp-settings-time-6=1758694708; wp-settings-time-8=1765435100; wp-settings-8=editor%3Dhtml; wp-settings-time-5=1776233017; BNIS_x-bni-jas=vAY265Wyu+j+9m5Nq4gLRvP0VnWg1qic109uZQN5FKc+Ov7weALliJg8UvakJ0XLmXi8R2wjVeSpPEkZgoFtuthS6vvnaeQ5jrVL5v6FtBoz8Y3A66DAOA==; BNIS___utm_is1=PWSHSw03XAxhEA252tjc8nQ4pI/lAUsh2ltVgBlAs2tPDjdntShzc5EQDOs2568eol4igkJGKhSBEslRjEUWB10Y7QEejlxKx1KwH4vRxxfDo8p6mVa0eA==; BNIS___utm_is2=J5wshXGUC1hHBiWUwUyqt3JhpeOuUj8tp0usjNVYFJuarSkmbKGSWBOiTXLO/dtPrbWHs09duiY=; BNIS___utm_is3=0YF8tWJK6obyu9hqdh2ZJqgsdRn7T0Zw3+1Zoo7m2Yu1iehwNymAO3dwuskvNsDT4PYlx9Hx49JNEyItEdqtqaB7FS+Hq1AZUDpevL6mtBB+SmsfbGaPCQ==; __utmb=138832625.3.10.1786542939',
+    }
+
+    data = {
+        '__EVENTTARGET': 'btnViewBill',
+        '__EVENTARGUMENT': '',
+        '__VIEWSTATE': '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',
+        '__VIEWSTATEGENERATOR': 'C3B80535',
+        '__VIEWSTATEENCRYPTED': '',
+        '__EVENTVALIDATION': '8nNpVJt1kaKmjBDGMbyqLI9t930lvN4OaFrEqs17/HaRGd+sW5Zu7HOnfXHq5pymrImigO+qL9K8f+DHpWktefZeYFmjQG8TU4McIdX6oWM5OJWREDONDH/vdG2ptlnsxeFNvP+DmwddyV7iUamncy3cgVacOFANLRmD/Iy0vNnndJpFaL8dTTEZg4/nei/eTZyBD5qOQcB488aAtC/xDLiRRK6WuB4ya+GS7gkwsfPcj1imAj4D+lLsvCrdAo/8zx+KmUCz1d1+DWogh3jaHMDKJ7ZpylTUQHgEuYW6ms7Ys4/ZqiHTjGkGczfRhajILGI00R0lQHZPksuVMMFbIpFLSawFEdWhn0py0D2XQGREfsQ8Co/d6I0p91tGaIgOCX/8gAoKAc54z5L/gYQgl43ebAmGbY67k8t1z+7qEyaUwSGg3eTlgSgVN5L7/P9Dam9/zCbjBkX1t1B9w+LjbQ==',
+        'txtAccNo': '0400024067937',
+        'txtAccNo': account_number,
+        'txtConNo': '',
+        'txtEmailAdd': '',
+        'txtMobNo': '',
+        'txtimgcode': '',
+        'hdCaptcha': '0qk8773',
+        '__ncforminfo': 'ELt89TDPNggOLveL7HGN8XMj1sRhErNn-4RagIVXpIWBF1x7e32vmmi0yZMpTCdf1w3Mw75Uz6C71_uU6HkUr4PsHXqdKZBMtWdFltkm3SD_yqEX2RJMvojwqIaVHJfYcPppwLuE--yMR9RFMnL9uJg1-O3t2jpbbqBHCEMOT7OVj7Pa8J0SNRUDwFVG9QCba2qXaqGmLmGfxrYrVGDgeg==',
+    }
+
+    try:
+        response = requests.post(
+            'https://staging.ke.com.pk:24555/ReBrand/DuplicateBill.aspx',
+            headers=HEADERS,
+            cookies=COOKIES,
+            data=data,
+            timeout=10
+        )
+        response.raise_for_status()
+        raw_html = response.text
+    except requests.exceptions.HTTPError as exc:
+        return {"error": "Upstream KE API returned an error.", "details": str(exc)}, exc.response.status_code
+    except requests.exceptions.RequestException as exc:
+        return {"error": "Failed to connect to upstream server.", "details": str(exc)}, 500
+
+    if not raw_html:
+        return {"error": "Bill record not found for this Account Number."}, 404
+
+    return raw_html, 200
+
+
+@app.route('/api/view-ke-bill', methods=['GET', 'POST'])
+def get_ke_bill():
+    """GET endpoint: /api/view-ke-bill/ """
+
+    account_number = None
+    
+    if request.is_json:
+        data = request.get_json()
+        account_number = data.get("account_number")
+    elif request.method == "POST":
+        account_number = request.form.get("account_number")
+    else:
+        account_number = request.args.get("account_number")
+        
+    result, status_code = fetch_ke_bill(account_number)
+
+    # Wrap response.text in io.StringIO
+    # Extract tables
+    dfs = pd.read_html(io.StringIO(result))
+    df = dfs[1]
+
+    # Keep columns that DO NOT start with 'Unnamed'
+    df = df.loc[:, ~df.columns.str.startswith('Unnamed')]
+
+    # Clean up empty columns (like Download buttons & Payment images)
+    df = df.dropna(how='all', axis=1)
+
+    # Convert to JSON records for your Flask app
+    json_output = df.to_dict(orient="records")
+    return jsonify(json_output), status_code
 
 
 # ===========================
 # Run Flask App
 # ===========================
 
-# if __name__ == '__main__':
-#     app.run(host="0.0.0.0", port=5000, debug=False)
+if __name__ == '__main__':
+    app.run(host="0.0.0.0", port=5000, debug=False)
