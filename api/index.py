@@ -618,7 +618,7 @@ def fetch_ssgc_bill(customer_number: str) -> dict:
 
 
 @app.route("/api/view-gas-bill", methods=["GET", "POST"])
-def get_bill():
+def get_gas_bill():
     # Accept customer number via JSON body, URL parameters, or Form data
     customer_number = None
 
@@ -658,6 +658,172 @@ def get_bill():
         )
 
     return jsonify({"status": "success", "data": bill_details}), 200
+
+
+def to_num(val, default=0):
+    """Safely cast numeric string fields into int/float."""
+    if val is None or val == "":
+        return default
+    try:
+        return float(val) if "." in str(val) else int(val)
+    except ValueError:
+        return default
+
+
+def transform_billing_json(raw_data: dict) -> dict:
+    """Transforms raw KW&SC JSON payload into structured camelCase JSON."""
+    inner = raw_data.get("data", {}) or {}
+
+    # Extract dynamic 12-month billing history
+    billing_history = []
+    for i in range(1, 13):
+        month_key = f"billinG_MONTH_{i}"
+        if month_key in inner and inner[month_key]:
+            billing_history.append({
+                "month": inner.get(month_key),
+                "amountBilled": to_num(inner.get(f"amounT_BILLED_{i}")),
+                "amountPaid": to_num(inner.get(f"amounT_PAID_{i}")),
+                "paymentDate": inner.get(f"paymenT_DATE_{i}")
+            })
+    
+    # Reverse to keep chronological order (Oldest -> Recent)
+    billing_history.reverse()
+
+    return {
+        "status": raw_data.get("status", 0),
+        "billStatus": raw_data.get("billstatus", "Unknown"),
+        "data": {
+            "consumer": {
+                "consumerNo": inner.get("conS_NO"),
+                "consumerIdCheckDigit": inner.get("consumeR_ID_CHK_DG"),
+                "name": inner.get("consumeR_NAME"),
+                "address": {
+                    "line1": inner.get("adD1"),
+                    "line2": (inner.get("adD2") or "").strip(),
+                    "townName": inner.get("towN_NAME"),
+                    "townCode": inner.get("towN_CODE"),
+                    "townAbbreviation": inner.get("towN_ABBRI"),
+                    "zoneName": inner.get("zonE_NAME")
+                },
+                "propertyDetails": {
+                    "plotType": inner.get("ploT_TYPE"),
+                    "plotSizeSqFt": to_num(inner.get("ploT_SIZE")),
+                    "flatSizeSqFt": to_num(inner.get("flaT_SIZE")),
+                    "additionalStories": to_num(inner.get("additionaL_STORY"))
+                }
+            },
+            "billDetails": {
+                "billPeriod": inner.get("bilL_PERIOD"),
+                "issueDate": inner.get("issU_DT"),
+                "dueDate": inner.get("duE_DT"),
+                "barcode": inner.get("baR_CODE"),
+                "noticeMessage": inner.get("messeagE_rebate"),
+                "contactInfo": inner.get("towN_MSG")
+            },
+            "charges": {
+                "currentCharges": {
+                    "water": to_num(inner.get("wateR_CURRENT")),
+                    "sewerage": to_num(inner.get("seweragE_CURRENT")),
+                    "conservancy": to_num(inner.get("conservancY_CURRENT")),
+                    "fire": to_num(inner.get("firE_CURRENT")),
+                    "waterSurcharge": to_num(inner.get("wateR_SURCHARGE"))
+                },
+                "arrears": {
+                    "water": to_num(inner.get("wateR_ARREARS")),
+                    "sewerage": to_num(inner.get("seweragE_ARREARS")),
+                    "conservancy": to_num(inner.get("conservancY_ARREARS")),
+                    "fire": to_num(inner.get("fire_ARREARS")),
+                    "total": to_num(inner.get("outstandinG_ARREARS"))
+                },
+                "totals": {
+                    "waterTotal": to_num(inner.get("totaL_WATER")),
+                    "sewerageTotal": to_num(inner.get("totaL_SEWERAGE")),
+                    "conservancyTotal": to_num(inner.get("totaL_CONSERVANCY")),
+                    "fireTotal": to_num(inner.get("totaL_FIRE")),
+                    "bankCharges": to_num(inner.get("banK_CHARGES"))
+                },
+                "rebates": {
+                    "water": to_num(inner.get("waterRebate")),
+                    "sewerage": to_num(inner.get("sewerageRebate")),
+                    "conservancy": to_num(inner.get("conservancyRebate")),
+                    "fire": to_num(inner.get("fireRebate")),
+                    "total": to_num(inner.get("totalRebate")),
+                    "percentage": to_num(inner.get("rebatePercentage"))
+                },
+                "paymentSummary": {
+                    "payableByDueDate": to_num(inner.get("payablE_DUE_DATE")),
+                    "payableAfterDueDate": to_num(inner.get("payablE_AFTER_DATE"))
+                }
+            },
+            "billingHistory": billing_history
+        }
+    }
+
+
+def fetch_from_upstream(consumer_id: str):
+    """Utility to query the upstream KW&SC API."""
+
+    # Headers matching your curl setup
+    HEADERS = {
+        'Accept': '*/*',
+        'Accept-Language': 'en-US,en;q=0.9,ur;q=0.8,en-GB;q=0.7',
+        'Connection': 'keep-alive',
+        'Content-Type': 'application/json',
+        'Origin': 'https://www.kwsc.gos.pk',
+        'Sec-Fetch-Dest': 'empty',
+        'Sec-Fetch-Mode': 'cors',
+        'Sec-Fetch-Site': 'same-origin',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36',
+        'sec-ch-ua': '"Not=A?Brand";v="99", "Google Chrome";v="151", "Chromium";v="151"',
+        'sec-ch-ua-mobile': '?0',
+        'sec-ch-ua-platform': '"Windows"',
+        'sec-gpc': '1',
+    }
+
+    COOKIES = {
+        'cookie-consent': 'declined',
+    }
+
+    HEADERS['Referer'] = f'https://www.kwsc.gos.pk/bill/view?consumerId={consumer_id}'
+
+    try:
+        response = requests.post(
+            'https://www.kwsc.gos.pk/api/bill/get-bill',
+            headers=HEADERS,
+            cookies=COOKIES,
+            json={'consumerId': consumer_id},
+            timeout=10
+        )
+        response.raise_for_status()
+        raw_json = response.json()
+    except requests.exceptions.HTTPError as exc:
+        return {"error": "Upstream KW&SC API returned an error.", "details": str(exc)}, exc.response.status_code
+    except requests.exceptions.RequestException as exc:
+        return {"error": "Failed to connect to upstream server.", "details": str(exc)}, 500
+
+    if not raw_json.get("data"):
+        return {"error": "Bill record not found for this Consumer ID."}, 404
+
+    return transform_billing_json(raw_json), 200
+
+
+@app.route('/api/view-water-bill', methods=['GET', 'POST'])
+def get_water_bill():
+    """GET endpoint: /api/view-water-bill/ \n
+    Accepts consumer_id as a query parameter or JSON body and fetches water bill details."""
+
+    consumer_id = None
+    
+    if request.is_json:
+        data = request.get_json()
+        consumer_id = data.get("consumer_id")
+    elif request.method == "POST":
+        consumer_id = request.form.get("consumer_id")
+    else:
+        consumer_id = request.args.get("consumer_id")
+        
+    result, status_code = fetch_from_upstream(consumer_id)
+    return jsonify(result), status_code
 
 
 # ===========================
