@@ -10,26 +10,27 @@ import requests
 
 # app = Flask(__name__, template_folder='templates')
 # Initialize Flask app with custom template folder path
-app = Flask(__name__, template_folder=os.path.join(
-    os.path.dirname(__file__), '..', 'templates'))
+app = Flask(
+    __name__, template_folder=os.path.join(os.path.dirname(__file__), "..", "templates")
+)
 
 CORS(app)  # Enable CORS for all route
 
 
-@app.route('/')
+@app.route("/")
 def home():
-    return 'Hello World'
+    return "Hello World"
 
 
-@app.route('/about')
+@app.route("/about")
 def about():
-    return 'About'
+    return "About"
 
 
-@app.route('/number_to_words_with_formatting')
+@app.route("/number_to_words_with_formatting")
 def number_to_words_with_formatting():
     """
-    Converts a given number into words with proper formatting, including capitalizing each word 
+    Converts a given number into words with proper formatting, including capitalizing each word
     and returning the result in a JSON format.
 
     The endpoint accepts a query parameter 'num' in the URL. If 'num' is not provided, it defaults to 1000000.
@@ -37,7 +38,7 @@ def number_to_words_with_formatting():
 
     Example:
         URL: "/number_to_words_with_formatting?num=1000000"
-        Response: 
+        Response:
             {
                 "In Numbers:": "1,000,000.0",
                 "In Words:": "One Million"
@@ -51,15 +52,16 @@ def number_to_words_with_formatting():
     """
     try:
         # Get the 'num' parameter from the URL query string, defaulting to 1000000 if not present
-        num = request.args.get('num', default=1000000, type=str)
+        num = request.args.get("num", default=1000000, type=str)
 
         print(num)
 
         # Extract only the digits from the input
-        num = ''.join(re.findall(r'\d', num))
+        num = "".join(re.findall(r"\d", num))
 
         # Import the 'inflect' library to convert numbers to words
         import inflect
+
         p = inflect.engine()  # Create an inflect engine instance
 
         # Convert the number to words and capitalize the first letter of the sentence
@@ -74,11 +76,13 @@ def number_to_words_with_formatting():
         capitalized_sentence = " ".join(capitalized_words)
 
         # Prepare the result as a dictionary with the number in both numeric and word form
-        result = [{
-            # Format the number with commas for readability
-            "In Numbers:": f"{float(num):,}",
-            "In Words:": capitalized_sentence  # The capitalized word form of the number
-        }]
+        result = [
+            {
+                # Format the number with commas for readability
+                "In Numbers:": f"{float(num):,}",
+                "In Words:": capitalized_sentence,  # The capitalized word form of the number
+            }
+        ]
 
         # Return the result as a formatted JSON string (pretty-printed)
         # return json.dumps(result, indent=2)
@@ -90,7 +94,7 @@ def number_to_words_with_formatting():
         return jsonify({"error": str(e)}), 400
 
 
-@app.route('/chat', methods=['POST'])
+@app.route("/chat", methods=["POST"])
 def chat():
     # Predefined responses
     responses = {
@@ -111,62 +115,60 @@ def chat():
         "bye": "Goodbye! Have a great day!",
     }
     try:
-        user_message = request.json.get('question', '').lower()
-        response = responses.get(
-            user_message, "Sorry, I don't understand that.")
+        user_message = request.json.get("question", "").lower()
+        response = responses.get(user_message, "Sorry, I don't understand that.")
         return jsonify({"answer": response})
     except Exception as e:
         # If an error occurs, return the exception message as a JSON string
         return json.dumps(e)
 
 
-@app.route('/psw_stream')
+@app.route("/psw_stream")
 def psw_stream():
-    return render_template('index_stream.html')
+    return render_template("index_stream.html")
 
 
-@app.route('/psw')
+@app.route("/psw")
 def psw():
-    return render_template('psw.html')
+    return render_template("psw.html")
 
 
-@app.route('/psw_home')
+@app.route("/psw_home")
 def psw_home():
-    return render_template('psw_home.html')
+    return render_template("psw_home.html")
 
-@app.route('/ffc_home')
+
+@app.route("/ffc_home")
 def ffc_home():
-    return render_template('ffc_index.html')
+    return render_template("ffc_index.html")
 
-@app.route('/api/owner-details', methods=['GET', 'POST'])
+
+@app.route("/api/owner-details", methods=["GET", "POST"])
 def get_owner_details():
     # Get number from query param or JSON body
-    number = request.args.get('number') or request.json.get('number')
+    number = request.args.get("number") or request.json.get("number")
 
     if not number:
         return jsonify({"success": False, "error": "No phone number provided."}), 400
 
     HEADERS = {
-        'accept': '*/*',
-        'accept-language': 'en-US,en;q=0.9',
-        'content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
-        'origin': 'https://dbcenter.pk',
-        'referer': 'https://dbcenter.pk/',
-        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36',
-        'x-requested-with': 'XMLHttpRequest',
+        "accept": "*/*",
+        "accept-language": "en-US,en;q=0.9",
+        "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+        "origin": "https://dbcenter.pk",
+        "referer": "https://dbcenter.pk/",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+        "x-requested-with": "XMLHttpRequest",
     }
 
-    payload = {
-        'action': 'db_center_uk_search',
-        'search_term': number
-    }
+    payload = {"action": "db_center_uk_search", "search_term": number}
 
     try:
         response = requests.post(
-            'https://dbcenter.pk/wp-admin/admin-ajax.php',
+            "https://dbcenter.pk/wp-admin/admin-ajax.php",
             headers=HEADERS,
             data=payload,
-            timeout=8
+            timeout=8,
         )
         response.raise_for_status()
         html = response.text
@@ -174,25 +176,38 @@ def get_owner_details():
         owner_details = {}
 
         # Parse HTML using BeautifulSoup
-        soup = BeautifulSoup(html, 'html.parser')
+        soup = BeautifulSoup(html, "html.parser")
 
         # Look through div with id='resultCard' and find 'Owner Details'
-        owner_cards = soup.find('div', {'id': 'resultCard'})
+        owner_cards = soup.find("div", {"id": "resultCard"})
 
         if owner_cards and "Owner Details" in owner_cards.text:
             try:
-                rows = owner_cards.find_all('tr')
+                rows = owner_cards.find_all("tr")
                 for row in rows:
                     try:
-                        key = row.find('th').text.strip().lower()
-                        value = row.find('td').text.strip()
+                        key = row.find("th").text.strip().lower()
+                        value = row.find("td").text.strip()
                         owner_details[key] = value
                     except AttributeError:
                         continue  # Skip rows with missing th or td
             except Exception as e:
-                return jsonify({"success": False, "error": f"Error parsing owner details: {e}"}), 500
+                return (
+                    jsonify(
+                        {"success": False, "error": f"Error parsing owner details: {e}"}
+                    ),
+                    500,
+                )
         else:
-            return jsonify({"success": False, "error": "No owner details found for this number."}), 404
+            return (
+                jsonify(
+                    {
+                        "success": False,
+                        "error": "No owner details found for this number.",
+                    }
+                ),
+                404,
+            )
 
         return jsonify(owner_details)
 
@@ -201,58 +216,67 @@ def get_owner_details():
     except Exception as e:
         return jsonify({"success": False, "error": f"Unexpected error: {e}"}), 500
     except requests.exceptions.Timeout:
-        return jsonify({"success": False, "error": "Request to external server timed out."}), 504
+        return (
+            jsonify(
+                {"success": False, "error": "Request to external server timed out."}
+            ),
+            504,
+        )
 
 
-@app.route('/api/cnic-information', methods=['GET', 'POST'])
+@app.route("/api/cnic-information", methods=["GET", "POST"])
 def cnic_information():
     # cnic = request.args.get('cnic') or (request.json and request.json.get('cnic'))
     # cnic = request.args.get('cnic') or (request.json and request.json.get('cnic'))
-    cnic = request.args.get('cnic')
+    cnic = request.args.get("cnic")
     if not cnic:
         return jsonify({"success": False, "error": "Missing CNIC number."}), 400
 
     HEADERS = {
-        'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
-        'accept-language': 'en-US,en;q=0.9,en-GB;q=0.8,en-GB-oxendict;q=0.7,ur;q=0.6',
-        'cache-control': 'max-age=0',
-        'content-type': 'application/x-www-form-urlencoded',
-        'origin': 'https://dbcenter.pk',
-        'priority': 'u=0, i',
-        'referer': 'https://dbcenter.pk/cnic-information-system/',
-        'sec-ch-ua': '"Not;A=Brand";v="99", "Google Chrome";v="139", "Chromium";v="139"',
-        'sec-ch-ua-mobile': '?0',
-        'sec-ch-ua-platform': '"Windows"',
-        'sec-fetch-dest': 'document',
-        'sec-fetch-mode': 'navigate',
-        'sec-fetch-site': 'same-origin',
-        'sec-fetch-user': '?1',
-        'sec-gpc': '1',
-        'upgrade-insecure-requests': '1',
-        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36',
+        "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+        "accept-language": "en-US,en;q=0.9,en-GB;q=0.8,en-GB-oxendict;q=0.7,ur;q=0.6",
+        "cache-control": "max-age=0",
+        "content-type": "application/x-www-form-urlencoded",
+        "origin": "https://dbcenter.pk",
+        "priority": "u=0, i",
+        "referer": "https://dbcenter.pk/cnic-information-system/",
+        "sec-ch-ua": '"Not;A=Brand";v="99", "Google Chrome";v="139", "Chromium";v="139"',
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua-platform": '"Windows"',
+        "sec-fetch-dest": "document",
+        "sec-fetch-mode": "navigate",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-user": "?1",
+        "sec-gpc": "1",
+        "upgrade-insecure-requests": "1",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
     }
 
-    payload = {'search_term': cnic}
+    payload = {"search_term": cnic}
 
     try:
         response = requests.post(
-            'https://dbcenter.pk/cnic-information-system/', headers=HEADERS, data=payload, timeout=8)
+            "https://dbcenter.pk/cnic-information-system/",
+            headers=HEADERS,
+            data=payload,
+            timeout=8,
+        )
         response.raise_for_status()
         html = response.text
 
-        soup = BeautifulSoup(html, 'html.parser')
-        cards = soup.find_all('div', {'id': 'resultCard'})
+        soup = BeautifulSoup(html, "html.parser")
+        cards = soup.find_all("div", {"id": "resultCard"})
 
         all_owner_details = []
 
         for card in cards:
-            if 'Owner Details' in card.text:
-                rows = card.find_all('tr')
+            if "Owner Details" in card.text:
+                rows = card.find_all("tr")
                 details = {}
                 for row in rows:
                     try:
-                        key = row.find('th').text.strip().lower()
-                        value = row.find('td').text.strip()
+                        key = row.find("th").text.strip().lower()
+                        value = row.find("td").text.strip()
                         details[key] = value
                     except AttributeError:
                         continue
@@ -269,23 +293,29 @@ def cnic_information():
     except Exception as e:
         return jsonify({"success": False, "error": f"Unexpected error: {str(e)}"}), 500
     except requests.exceptions.Timeout:
-        return jsonify({"success": False, "error": "Request to external server timed out."}), 504
+        return (
+            jsonify(
+                {"success": False, "error": "Request to external server timed out."}
+            ),
+            504,
+        )
 
-@app.route('/api/get-numbers-on-cnic-from-simownerdetails', methods=['GET'])
+
+@app.route("/api/get-numbers-on-cnic-from-simownerdetails", methods=["GET"])
 def get_numbers_on_cnic_from_simownerdetails():
 
     def parse_html(html_content):
-        soup = BeautifulSoup(html_content, 'html.parser')
-        result_cards = soup.select('.result-card')
+        soup = BeautifulSoup(html_content, "html.parser")
+        result_cards = soup.select(".result-card")
         records = []
 
         for card in result_cards:
-            fields = card.select('.field')
+            fields = card.select(".field")
             record = {}
 
             for field in fields:
-                label = field.select_one('label.info')
-                value = field.find('div')
+                label = field.select_one("label.info")
+                value = field.find("div")
 
                 # print(f"label: {label.text} and value: {value.text}")
                 if label and value:
@@ -297,25 +327,33 @@ def get_numbers_on_cnic_from_simownerdetails():
 
         return records
 
-    cnic = request.args.get('cnic')
+    cnic = request.args.get("cnic")
 
     if not cnic or not cnic.isdigit() or len(cnic) != 13:
-        return jsonify({'success': False, 'error': 'A valid 13-digit CNIC without dashes is required'}), 400
+        return (
+            jsonify(
+                {
+                    "success": False,
+                    "error": "A valid 13-digit CNIC without dashes is required",
+                }
+            ),
+            400,
+        )
 
     HEADERS = {
-        'accept': '*/*',
-        'accept-language': 'en-US,en;q=0.9,en-GB;q=0.8,en-GB-oxendict;q=0.7,ur;q=0.6',
-        'local-cache': 'yes',
-        'priority': 'u=1, i',
-        'referer': 'https://simownerdetails.org.pk/',
-        'sec-ch-ua': '"Not;A=Brand";v="99", "Google Chrome";v="139", "Chromium";v="139"',
-        'sec-ch-ua-mobile': '?0',
-        'sec-ch-ua-platform': '"Windows"',
-        'sec-fetch-dest': 'empty',
-        'sec-fetch-mode': 'cors',
-        'sec-fetch-site': 'same-origin',
-        'sec-gpc': '1',
-        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36',
+        "accept": "*/*",
+        "accept-language": "en-US,en;q=0.9,en-GB;q=0.8,en-GB-oxendict;q=0.7,ur;q=0.6",
+        "local-cache": "yes",
+        "priority": "u=1, i",
+        "referer": "https://simownerdetails.org.pk/",
+        "sec-ch-ua": '"Not;A=Brand";v="99", "Google Chrome";v="139", "Chromium";v="139"',
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua-platform": '"Windows"',
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "same-origin",
+        "sec-gpc": "1",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
     }
 
     BASE_URL = "https://simownerdetails.org.pk/wp-admin/admin-ajax.php"
@@ -332,31 +370,35 @@ def get_numbers_on_cnic_from_simownerdetails():
         parsed_data = parse_html(raw_html)
 
         if not parsed_data:
-            return jsonify({'success': False, 'error': 'No data found'}), 404
-        
-        return jsonify({
-            'success': True,
-            'records_found': len(parsed_data),
-            'data': parsed_data
-        })
+            return jsonify({"success": False, "error": "No data found"}), 404
+
+        return jsonify(
+            {"success": True, "records_found": len(parsed_data), "data": parsed_data}
+        )
 
     except requests.exceptions.RequestException as e:
-        return jsonify({'success': False, 'error': str(e)}), 500
+        return jsonify({"success": False, "error": str(e)}), 500
     except json.JSONDecodeError:
-        return jsonify({'success': False, 'error': 'Invalid JSON received'}), 500
+        return jsonify({"success": False, "error": "Invalid JSON received"}), 500
     except requests.exceptions.Timeout:
-        return jsonify({"success": False, "error": "Request to external server timed out."}), 504
+        return (
+            jsonify(
+                {"success": False, "error": "Request to external server timed out."}
+            ),
+            504,
+        )
 
-@app.route('/api/track-cnic', methods=['GET'])
+
+@app.route("/api/track-cnic", methods=["GET"])
 def track_cnic():
     """
     Fetches CNIC tracking information from cnic.pk.
-    
+
     Args:
         cnic_number (str): The CNIC number to track (without dashes).
-    
+
     Returns:
-        dict | str: JSON response from the server if successful, 
+        dict | str: JSON response from the server if successful,
                     otherwise the raw HTML/text for debugging.
     """
     try:
@@ -365,7 +407,7 @@ def track_cnic():
 
         # Step 1: GET the homepage to fetch a fresh CSRF token
         try:
-            response = session.get('https://cnic.pk/')
+            response = session.get("https://cnic.pk/")
             # response.raise_for_status()
         except Exception as e:
             return {"error": f"Failed to fetch CSRF token: {str(e)}"}
@@ -373,28 +415,30 @@ def track_cnic():
         # response.raise_for_status()
 
         # Parse the HTML to find the CSRF token
-        soup = BeautifulSoup(response.text, 'html.parser')
-        csrf_token_input = soup.find('input', {'name': 'csrf_token'})
-        if not csrf_token_input or not csrf_token_input.get('value'):
+        soup = BeautifulSoup(response.text, "html.parser")
+        csrf_token_input = soup.find("input", {"name": "csrf_token"})
+        if not csrf_token_input or not csrf_token_input.get("value"):
             raise ValueError("CSRF token not found on the page.")
 
-        csrf_token = csrf_token_input['value']
+        csrf_token = csrf_token_input["value"]
         print(f"Fetched CSRF Token: {csrf_token}")
 
         # Step 2: Prepare POST data
         files = {
-            'csrf_token': (None, csrf_token),
-            'user_input': (None, request.args.get('cnic')),
+            "csrf_token": (None, csrf_token),
+            "user_input": (None, request.args.get("cnic")),
         }
 
         headers = {
-            'x-requested-with': 'XMLHttpRequest',
-            'user-agent': 'Mozilla/5.0',
-            'referer': 'https://cnic.pk/',
+            "x-requested-with": "XMLHttpRequest",
+            "user-agent": "Mozilla/5.0",
+            "referer": "https://cnic.pk/",
         }
 
         # Step 3: POST using the same session
-        post_response = session.post('https://cnic.pk/track', files=files, headers=headers)
+        post_response = session.post(
+            "https://cnic.pk/track", files=files, headers=headers
+        )
         post_response.raise_for_status()
 
         # Try to return JSON if available
@@ -406,21 +450,22 @@ def track_cnic():
     except Exception as e:
         return {"error": str(e)}
 
-@app.route('/api/track_challan', methods=['GET'])
+
+@app.route("/api/track_challan", methods=["GET"])
 def track_challan() -> dict:
     """
     Track challan information from sindhpolice.gov.pk.
-    
+
     Args:
         vehicle_number (str): Vehicle number, e.g. "KGI-6908".
         cnic_number (str): Optional CNIC number.
-    
+
     Returns:
         dict: A structured response indicating success or failure.
     """
 
-    vehicle_number = request.args.get('vehicle_number')
-    cnic_number = request.args.get('cnic_number')
+    vehicle_number = request.args.get("vehicle_number")
+    cnic_number = request.args.get("cnic_number")
     if not vehicle_number:
         return {"status": "error", "message": "Vehicle number is required"}
 
@@ -448,11 +493,7 @@ def track_challan() -> dict:
     post_url = "https://sindhpolice.gov.pk/challan-get"
 
     # 3. POST payload
-    payload = {
-        "_token": csrf_token,
-        "vehicle": vehicle_number,
-        "cnic": cnic_number
-    }
+    payload = {"_token": csrf_token, "vehicle": vehicle_number, "cnic": cnic_number}
 
     # 4. Required headers
     headers = {
@@ -461,7 +502,7 @@ def track_challan() -> dict:
         "X-CSRF-TOKEN": csrf_token,
         "X-Requested-With": "XMLHttpRequest",
         "Accept": "application/json, text/javascript, */*; q=0.01",
-        "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
+        "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
     }
 
     # 5. POST request
@@ -475,27 +516,150 @@ def track_challan() -> dict:
     text = response.text.strip()
 
     if "No records found" in text:
-        return {"status": "not_found", "message": "No challan record found", "raw": text[:100]}
+        return {
+            "status": "not_found",
+            "message": "No challan record found",
+            "raw": text[:100],
+        }
 
     return {"status": "found", "message": "Challan record found", "raw": text[:100]}
 
 
-@app.route('/claude-chat')
+@app.route("/claude-chat")
 def claude_chat():
-    return render_template('claude-chat.html')
+    return render_template("claude-chat.html")
 
-@app.route('/marked-1')
+
+@app.route("/marked-1")
 def marked1():
-    return render_template('marked-1.html')
+    return render_template("marked-1.html")
 
-@app.route('/marked-2')
+
+@app.route("/marked-2")
 def marked2():
-    return render_template('marked-2.html')
+    return render_template("marked-2.html")
 
-@app.route('/marked-3')
+
+@app.route("/marked-3")
 def marked3():
-    return render_template('marked-3.html')
-    
+    return render_template("marked-3.html")
+
+
+def fetch_ssgc_bill(customer_number: str) -> dict:
+    """Helper function to fetch bill data from SSGC and return a structured dictionary."""
+    url = "https://viewbill.ssgc.com.pk/web/"
+
+    cookies = {
+        '_gcl_au': '1.1.67700686.1786084287',
+        '_ga_H6YLY258B5': 'GS2.1.s1786084288$o1$g0$t1786084296$j52$l0$h0',
+        '_ga': 'GA1.3.1629238666.1786084289',
+        '__utma': '147246261.1629238666.1786084289.1786085306.1786085306.1',
+        '__utmz': '147246261.1786085306.1.1.utmcsr=google|utmccn=(organic)|utmcmd=organic|utmctr=(not%20provided)',
+        '_gid': 'GA1.3.916068457.1786350642',
+        'PHPSESSID': '9vhng51j7e11j5sbe2cidgd7pa',
+        '_gat': '1',
+        '_ga_1FE7NXRM1T': 'GS2.3.s1786523277$o9$g1$t1786523279$j58$l0$h0',
+    }
+
+    headers = {
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
+        'Accept-Language': 'en-US,en;q=0.9,ur;q=0.8,en-GB;q=0.7,en-GB-oxendict;q=0.6',
+        'Cache-Control': 'max-age=0',
+        'Connection': 'keep-alive',
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Origin': 'https://viewbill.ssgc.com.pk',
+        'Referer': 'https://viewbill.ssgc.com.pk/web/',
+        'Sec-Fetch-Dest': 'document',
+        'Sec-Fetch-Mode': 'navigate',
+        'Sec-Fetch-Site': 'same-origin',
+        'Sec-Fetch-User': '?1',
+        'Upgrade-Insecure-Requests': '1',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36',
+        'sec-ch-ua': '"Not=A?Brand";v="99", "Google Chrome";v="151", "Chromium";v="151"',
+        'sec-ch-ua-mobile': '?0',
+        'sec-ch-ua-platform': '"Windows"',
+        'sec-gpc': '1',
+        # 'Cookie': '_gcl_au=1.1.67700686.1786084287; _ga_H6YLY258B5=GS2.1.s1786084288$o1$g0$t1786084296$j52$l0$h0; _ga=GA1.3.1629238666.1786084289; __utma=147246261.1629238666.1786084289.1786085306.1786085306.1; __utmz=147246261.1786085306.1.1.utmcsr=google|utmccn=(organic)|utmcmd=organic|utmctr=(not%20provided); _gid=GA1.3.916068457.1786350642; PHPSESSID=9vhng51j7e11j5sbe2cidgd7pa; _gat=1; _ga_1FE7NXRM1T=GS2.3.s1786523277$o9$g1$t1786523279$j58$l0$h0',
+    }
+
+    payload = {
+        "b": customer_number,
+        'g-recaptcha-response': '0cAFcWeA4WEaeHou2q4NzzrD5FaYjeExWfjIQ6jRVoxHvf7KVgKXp_1Vqsubvn80Lr6HMzLAp4B1IwYumoORhamtZ0VuXmeYV_8Il3z06wHuM8vVM0HD5n-dhFzO72FXrFYJZLYYJeuz9rTfQ22n83uyIp4uk_-SdZ1RPH7_WPfYZ7C3D3NnhReKCHoiULh752_Mp9e1Qp2DzxLTtqvBOHLi5akgDSXgo4hyIifztlJ6GUvAy_Ks4-tbw8wz6QDuDqPt3D9waxqAV7QFnlFuqBRkM9mLH0G5bKEL_BJBfGgwv12NeWvy4tyf2-LJGBxv9Qh68k9Z21u7MlnhUAnbO67jjCPHW5ZWJkvEsrzm2DO8M3RyrC3vseJKdSl6ceTWmjSInJA_LnjyZveL_xbAaIa7Oq6bLNDcqL3Fctn6GHjBtro2ngoCSTzA1x-M3xYg86BDdUoRqaGwwaNRNKaD5b7eTxQ4546RpyF-pj09kOG7R1d-Lg53bkJ6hYVNItCCQheYcZs4UyeTTKeDKEkGrfMofOSwILtK3Mda43XNY3aMV3WBZtcxusYeptsjJE6PdV3MszZ48XiAwk-Bwt1FrJGwm8AVQGOTamP9cdflePcWSxCty0zQn48sglVg9kNmrK9tDdnzPqPdfj8taaeRy6lmnzp6XQlf6xIF9anOgeqxK25h1sUmeGnDXsuixOj6926KEgFt0MdvC6QPqxqMI0fQvTjqPvyCyEgNwwZxfEM9dzqaXkKHjLIjuzJ1iDuSZwhzIKtyypt5NdjYgZGWwHaJIunt3hm8QjfIb7BEqm1wHdaj1qfcmcQQnYbIWL0Ac9dNUpzMsqiFUA8Lb4RICUksMaIPUDZZiPNafemyTszdFQ2Wft4KUlvTjtmH4ZJjUEAL6_y2Cw3AorTByiRWlaib8pQMlqrGgmSKHVwr8KGZ5MXz-13lzD3HnwNsfOG7xgbZBkHIgD32qJBmcMsJIoCrJlhzPjOUEHzbM290n2LEKzeAaVIkp3qQyv6D2GF61dwv5w2ud38CxMdcvkCwy6_hXyMYJfOFui71Jw7hdRk6usom6JXozXbTdPtnDOtNxqzxP4uZD1Cvzq7dPFjqvTTplQkv6oNfE4ta8dlWxblIkMbRi1WMynPsTdd6UxVJCvPngSzZdvoRQAISq4QVZr78ZbsNupcEPjLT5FQQaQA6QPzzDYNtvY6lL1tNB-MLqIThCmZdCwDPQAWv5zhk7XEFzc7yjJIDhqzRVkxlqhK1rP6ONZkbyABhCLRq3p1LMFvUqwtJbJcFGSh5awFw93qztQYLmGGHNg45kHoiU7n4db66riFXwoh-iug9kDUX04Kv6JcOfiFDQ2UH2oijQG7aQmBrenwnqVQ4js4wtH2b28syCraU1J2lamzzH4Zpf8RRLJryWVwnDPxeTT4s5nTPGBb8amAPSuMRIrinj5-TR88tomvsBsytKXMLfPHs6hvQ7fxpSOtUP_F6lWcoiDvUHyF2X1WN80qnIWFT-EFrVIPWF0bGCabpCfR8fLnKKEiXWENCatFaX03Fkvallky3BGiFKatEWdEPjSLExlk84e0AD7Jf4xBYHYPj0lGwe3uNxz3hy-As7hLyksGrEcVIAGBdURTnY3hr35JDczBIMC55Lhv6bumxvxaq86I41WRw-6cc3HAN0h5ugyyZS-P7Y7GLDg-mhTDXHGJ-M68EkHf7GGI-KGYMFCdakww73BxGf3O7ONzlqifZHmwHD6e7EVrMEw4eXybQssHb1q-_sFfWvkUSsX9dgpT7dwZoo4YgW9YKXgRAnDCHYUoE8TJ8ETyGlpUrn1AkgBnUL5jOUntL2rTaN6UurIM8IQK49_M2BjQmIAFKumIopGDgBgavSxzUDErkCS7PMJq3KTAAjii6aKJv9C1j32xlKKEK3UfIxykkDkvdfej_ArbOeHoV6qJMSiju8b0XHyGoZbJUAU-cm8_t41w6QrSfKzgadfe3TBMny7QVuImvdDW_UznMfId8uJWCxd7zlR4qN48vkYzT4SYyZScbcEuHcgBMOetncSYtRvEHI-WjKKmat8kAQNgETMWPS2eH2cqUbGNCzFGGzUIb2M3z3_01yOOuaKXsm3XDRgl2B4WJWdggLg4j0GWVanMmRXEBJu6qm5Hk03x4OcrPu87BEiTgLN_JpfLzBHv3j392pyhgOB1HlNg1aTz5iCtffiMvMXLhihzg5wAxFQmzc3sww8bC-u8gQzq_SLLgtkLJvQCZNhvBGFkSlEAcQ1REZjGMrWhH0ilTGZ-LzUq7Bo8iQ',
+        '_wpnonce': '92ed8e1566',
+        '_wp_http_referer': '/web/',
+    }
+
+    try:
+        response = requests.post(
+            url, cookies=cookies, headers=headers, data=payload, timeout=15
+        )
+        response.raise_for_status()
+
+        # Parse HTML string using BeautifulSoup
+        soup = BeautifulSoup(response.text, "html.parser")
+        extracted_data = {}
+
+        # Extract rows
+        for row in soup.find_all("div", class_="row"):
+            label_div = row.find("div", class_="one_half")
+            if label_div:
+                label = label_div.get_text(strip=True).rstrip(":")
+                value_div = label_div.find_next_sibling("div")
+                value = value_div.get_text(strip=True) if value_div else ""
+
+                # Normalize key names for JSON friendliness
+                key = label.lower().replace(" ", "_")
+                extracted_data[key] = value
+
+        return extracted_data
+
+    except requests.exceptions.RequestException as e:
+        return {"error": f"Failed to fetch bill details: {str(e)}"}
+
+
+@app.route("/api/view-gas-bill", methods=["GET", "POST"])
+def get_bill():
+    # Accept customer number via JSON body, URL parameters, or Form data
+    customer_number = None
+
+    if request.is_json:
+        data = request.get_json()
+        customer_number = data.get("customer_number") or data.get("b")
+    elif request.method == "POST":
+        customer_number = request.form.get("customer_number") or request.form.get("b")
+    else:
+        customer_number = request.args.get("customer_number") or request.args.get("b")
+
+    if not customer_number:
+        return (
+            jsonify(
+                {
+                    "status": "error",
+                    "message": "Missing 'customer_number' or 'b' parameter.",
+                }
+            ),
+            400,
+        )
+
+    bill_details = fetch_ssgc_bill(customer_number)
+
+    if "error" in bill_details:
+        return jsonify({"status": "error", "message": bill_details["error"]}), 502
+
+    if not bill_details:
+        return (
+            jsonify(
+                {
+                    "status": "fail",
+                    "message": "No account summary found for the provided customer number.",
+                }
+            ),
+            404,
+        )
+
+    return jsonify({"status": "success", "data": bill_details}), 200
+
+
 # ===========================
 # Run Flask App
 # ===========================
