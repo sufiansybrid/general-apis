@@ -890,7 +890,7 @@ def fetch_ke_bill(account_number):
         'txtConNo': '',
         'txtEmailAdd': '',
         'txtMobNo': '',
-        'txtimgcode': '',
+        'txtimgcode': '0qk8773',
         'hdCaptcha': '0qk8773',
         '__ncforminfo': 'ELt89TDPNggOLveL7HGN8XMj1sRhErNn-4RagIVXpIWBF1x7e32vmmi0yZMpTCdf1w3Mw75Uz6C71_uU6HkUr4PsHXqdKZBMtWdFltkm3SD_yqEX2RJMvojwqIaVHJfYcPppwLuE--yMR9RFMnL9uJg1-O3t2jpbbqBHCEMOT7OVj7Pa8J0SNRUDwFVG9QCba2qXaqGmLmGfxrYrVGDgeg==',
     }
