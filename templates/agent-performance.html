@@ -570,6 +570,69 @@
             color: var(--text-muted);
         }
 
+        /* Dropdown */
+        .chart-header-row {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .chart-header-left {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .granularity-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .granularity-select {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(236, 72, 153, 0.15));
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            color: var(--text);
+            padding: 8px 36px 8px 16px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .granularity-select:hover {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.25), rgba(236, 72, 153, 0.25));
+            border-color: rgba(139, 92, 246, 0.5);
+        }
+
+        .granularity-select:focus {
+            border-color: rgba(139, 92, 246, 0.6);
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.15);
+        }
+
+        .granularity-select option {
+            background: #1a1a3e;
+            color: var(--text);
+            padding: 8px;
+        }
+
+        .granularity-dropdown::after {
+            content: '▼';
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 9px;
+            color: #a78bfa;
+            pointer-events: none;
+        }
+
         /* Responsive */
         @media (max-width: 1024px) {
             .chart-grid, .chart-grid-2, .chart-grid-3 {
@@ -664,11 +727,24 @@
     <!-- Daily Activity + Assignment Breakdown -->
     <div class="chart-grid">
         <div class="chart-card">
-            <div class="chart-title">
-                <span class="dot" style="background: #8b5cf6"></span>
-                Daily Activity — Conversation Volume Over Time
+            <div class="chart-header-row">
+                <div class="chart-header-left">
+                    <div class="chart-title">
+                        <span class="dot" style="background: #8b5cf6"></span>
+                        Daily Activity — Conversation Volume Over Time
+                    </div>
+                    <div class="chart-subtitle">Conversations handled from Jul 2025 to Aug 2026</div>
+                </div>
+                <div class="granularity-dropdown">
+                    <select class="granularity-select" id="granularitySelect">
+                        <option value="daily">📅 Daily</option>
+                        <option value="weekly">📆 Weekly</option>
+                        <option value="monthly">🗓️ Monthly</option>
+                        <option value="quarterly">📊 Quarterly</option>
+                        <option value="yearly">📈 Yearly</option>
+                    </select>
+                </div>
             </div>
-            <div class="chart-subtitle">Daily conversations handled from Jul 2025 to Aug 2026</div>
             <div class="chart-container">
                 <canvas id="dailyActivityChart"></canvas>
             </div>
@@ -781,7 +857,6 @@
                     <div class="rt-sub">60,939.03 seconds</div>
                 </div>
                 <div class="rt-card">
-                    <div class="rt-label">⚡ Avg Response Time</div>
                     <div class="rt-label">⚡ Avg Response</div>
                     <div class="rt-value blue">13.7 min</div>
                     <div class="rt-sub">824.93 seconds</div>
@@ -884,11 +959,67 @@
             {date:"2025-07-15",conversations:11},{date:"2025-07-16",conversations:4},{date:"2025-07-17",conversations:19},{date:"2025-07-18",conversations:17},{date:"2025-07-20",conversations:5},{date:"2025-07-21",conversations:17},{date:"2025-07-22",conversations:35},{date:"2025-07-23",conversations:59},{date:"2025-07-24",conversations:23},{date:"2025-07-25",conversations:1},{date:"2025-07-27",conversations:5},{date:"2025-07-28",conversations:15},{date:"2025-07-29",conversations:17},{date:"2025-07-30",conversations:18},{date:"2025-07-31",conversations:11},{date:"2025-08-01",conversations:3},{date:"2025-08-03",conversations:1},{date:"2025-08-04",conversations:17},{date:"2025-08-05",conversations:12},{date:"2025-08-06",conversations:11},{date:"2025-08-07",conversations:27},{date:"2025-08-08",conversations:16},{date:"2025-08-10",conversations:8},{date:"2025-08-11",conversations:12},{date:"2025-08-12",conversations:16},{date:"2025-08-13",conversations:16},{date:"2025-08-14",conversations:4},{date:"2025-08-15",conversations:9},{date:"2025-08-17",conversations:5},{date:"2025-08-18",conversations:28},{date:"2025-08-19",conversations:24},{date:"2025-08-20",conversations:28},{date:"2025-08-21",conversations:15},{date:"2025-08-22",conversations:11},{date:"2025-08-24",conversations:1},{date:"2025-08-25",conversations:10},{date:"2025-08-26",conversations:28},{date:"2025-08-27",conversations:17},{date:"2025-08-29",conversations:11},{date:"2025-08-31",conversations:8},{date:"2025-09-01",conversations:10},{date:"2025-09-02",conversations:15},{date:"2025-09-03",conversations:38},{date:"2025-09-04",conversations:23},{date:"2025-09-05",conversations:12},{date:"2025-09-06",conversations:7},{date:"2025-09-08",conversations:9},{date:"2025-09-09",conversations:16},{date:"2025-09-10",conversations:15},{date:"2025-09-11",conversations:60},{date:"2025-09-12",conversations:5},{date:"2025-09-14",conversations:2},{date:"2025-09-15",conversations:21},{date:"2025-09-16",conversations:26},{date:"2025-09-18",conversations:7},{date:"2025-09-19",conversations:5},{date:"2025-09-22",conversations:7},{date:"2025-09-23",conversations:8},{date:"2025-09-24",conversations:4},{date:"2025-09-25",conversations:15},{date:"2025-09-26",conversations:3},{date:"2025-09-28",conversations:5},{date:"2025-09-29",conversations:3},{date:"2025-09-30",conversations:9},{date:"2025-10-01",conversations:6},{date:"2025-10-02",conversations:11},{date:"2025-10-03",conversations:48},{date:"2025-10-05",conversations:4},{date:"2025-10-06",conversations:17},{date:"2025-10-07",conversations:3},{date:"2025-10-08",conversations:4},{date:"2025-10-09",conversations:9},{date:"2025-10-10",conversations:4},{date:"2025-10-12",conversations:6},{date:"2025-10-13",conversations:11},{date:"2025-10-14",conversations:3},{date:"2025-10-15",conversations:8},{date:"2025-10-16",conversations:13},{date:"2025-10-17",conversations:5},{date:"2025-10-20",conversations:17},{date:"2025-10-21",conversations:15},{date:"2025-10-22",conversations:6},{date:"2025-10-23",conversations:17},{date:"2025-10-24",conversations:27},{date:"2025-10-25",conversations:15},{date:"2025-10-27",conversations:7},{date:"2025-10-28",conversations:2},{date:"2025-10-29",conversations:31},{date:"2025-10-30",conversations:20},{date:"2025-10-31",conversations:14},{date:"2025-11-02",conversations:1},{date:"2025-11-03",conversations:8},{date:"2025-11-04",conversations:12},{date:"2025-11-05",conversations:7},{date:"2025-11-06",conversations:2},{date:"2025-11-07",conversations:31},{date:"2025-11-09",conversations:8},{date:"2025-11-10",conversations:21},{date:"2025-11-11",conversations:31},{date:"2025-11-12",conversations:42},{date:"2025-11-13",conversations:23},{date:"2025-11-14",conversations:29},{date:"2025-11-16",conversations:7},{date:"2025-11-17",conversations:17},{date:"2025-11-18",conversations:21},{date:"2025-11-19",conversations:24},{date:"2025-11-20",conversations:19},{date:"2025-11-21",conversations:23},{date:"2025-11-23",conversations:2},{date:"2025-11-24",conversations:27},{date:"2025-11-25",conversations:32},{date:"2025-11-26",conversations:30},{date:"2025-11-27",conversations:31},{date:"2025-11-28",conversations:23},{date:"2025-11-30",conversations:9},{date:"2025-12-01",conversations:21},{date:"2025-12-02",conversations:20},{date:"2025-12-03",conversations:21},{date:"2025-12-04",conversations:16},{date:"2025-12-05",conversations:47},{date:"2025-12-06",conversations:16},{date:"2025-12-08",conversations:25},{date:"2025-12-09",conversations:22},{date:"2025-12-10",conversations:26},{date:"2025-12-11",conversations:22},{date:"2025-12-12",conversations:45},{date:"2025-12-13",conversations:8},{date:"2025-12-14",conversations:4},{date:"2025-12-15",conversations:28},{date:"2025-12-16",conversations:27},{date:"2025-12-17",conversations:13},{date:"2025-12-18",conversations:14},{date:"2025-12-19",conversations:26},{date:"2025-12-21",conversations:3},{date:"2025-12-22",conversations:14},{date:"2025-12-23",conversations:36},{date:"2025-12-24",conversations:11},{date:"2025-12-26",conversations:16},{date:"2025-12-28",conversations:3},{date:"2025-12-29",conversations:6},{date:"2025-12-30",conversations:18},{date:"2026-01-01",conversations:5},{date:"2026-01-02",conversations:19},{date:"2026-01-04",conversations:19},{date:"2026-01-05",conversations:18},{date:"2026-01-06",conversations:39},{date:"2026-01-07",conversations:31},{date:"2026-01-08",conversations:20},{date:"2026-01-09",conversations:20},{date:"2026-01-10",conversations:12},{date:"2026-01-12",conversations:21},{date:"2026-01-13",conversations:17},{date:"2026-01-14",conversations:42},{date:"2026-01-15",conversations:55},{date:"2026-01-16",conversations:23},{date:"2026-01-17",conversations:26},{date:"2026-01-18",conversations:9},{date:"2026-01-19",conversations:23},{date:"2026-01-20",conversations:39},{date:"2026-01-22",conversations:45},{date:"2026-01-23",conversations:22},{date:"2026-01-24",conversations:28},{date:"2026-01-26",conversations:25},{date:"2026-01-27",conversations:4},{date:"2026-01-28",conversations:20},{date:"2026-01-29",conversations:8},{date:"2026-01-30",conversations:13},{date:"2026-02-01",conversations:10},{date:"2026-02-02",conversations:7},{date:"2026-02-03",conversations:19},{date:"2026-02-04",conversations:22},{date:"2026-02-05",conversations:32},{date:"2026-02-06",conversations:13},{date:"2026-02-09",conversations:9},{date:"2026-02-10",conversations:20},{date:"2026-02-11",conversations:51},{date:"2026-02-12",conversations:31},{date:"2026-02-13",conversations:22},{date:"2026-02-19",conversations:37},{date:"2026-02-20",conversations:13},{date:"2026-02-21",conversations:15},{date:"2026-02-23",conversations:26},{date:"2026-02-24",conversations:18},{date:"2026-02-25",conversations:12},{date:"2026-02-26",conversations:29},{date:"2026-02-27",conversations:12},{date:"2026-03-01",conversations:1},{date:"2026-03-02",conversations:6},{date:"2026-03-03",conversations:31},{date:"2026-03-04",conversations:37},{date:"2026-03-05",conversations:24},{date:"2026-03-06",conversations:10},{date:"2026-03-09",conversations:23},{date:"2026-03-10",conversations:6},{date:"2026-03-11",conversations:14},{date:"2026-03-12",conversations:14},{date:"2026-03-13",conversations:10},{date:"2026-03-16",conversations:6},{date:"2026-03-17",conversations:14},{date:"2026-03-18",conversations:10},{date:"2026-03-19",conversations:7},{date:"2026-03-20",conversations:1},{date:"2026-03-23",conversations:1},{date:"2026-03-24",conversations:11},{date:"2026-03-25",conversations:5},{date:"2026-03-26",conversations:10},{date:"2026-03-27",conversations:45},{date:"2026-03-29",conversations:9},{date:"2026-03-30",conversations:14},{date:"2026-03-31",conversations:13},{date:"2026-04-01",conversations:20},{date:"2026-04-02",conversations:11},{date:"2026-04-03",conversations:20},{date:"2026-04-04",conversations:10},{date:"2026-04-06",conversations:13},{date:"2026-04-07",conversations:6},{date:"2026-04-08",conversations:1},{date:"2026-04-09",conversations:24},{date:"2026-04-10",conversations:10},{date:"2026-04-12",conversations:7},{date:"2026-04-13",conversations:2},{date:"2026-04-14",conversations:2},{date:"2026-04-15",conversations:4},{date:"2026-04-17",conversations:1},{date:"2026-04-19",conversations:6},{date:"2026-04-20",conversations:1},{date:"2026-04-21",conversations:13},{date:"2026-04-23",conversations:2},{date:"2026-04-27",conversations:7},{date:"2026-04-28",conversations:3},{date:"2026-04-29",conversations:1},{date:"2026-05-03",conversations:1},{date:"2026-05-04",conversations:3},{date:"2026-05-05",conversations:9},{date:"2026-05-07",conversations:7},{date:"2026-05-08",conversations:6},{date:"2026-05-10",conversations:1},{date:"2026-05-11",conversations:1},{date:"2026-05-12",conversations:9},{date:"2026-05-13",conversations:10},{date:"2026-05-14",conversations:4},{date:"2026-05-15",conversations:3},{date:"2026-05-17",conversations:3},{date:"2026-05-19",conversations:1},{date:"2026-05-20",conversations:1},{date:"2026-05-21",conversations:2},{date:"2026-05-22",conversations:2},{date:"2026-05-23",conversations:2},{date:"2026-05-27",conversations:1},{date:"2026-06-03",conversations:3},{date:"2026-06-04",conversations:7},{date:"2026-06-07",conversations:3},{date:"2026-06-10",conversations:1},{date:"2026-06-11",conversations:3},{date:"2026-06-14",conversations:1},{date:"2026-06-15",conversations:1},{date:"2026-06-16",conversations:2},{date:"2026-06-17",conversations:1},{date:"2026-06-18",conversations:3},{date:"2026-06-21",conversations:1},{date:"2026-06-23",conversations:3},{date:"2026-06-30",conversations:1},{date:"2026-07-13",conversations:1},{date:"2026-07-14",conversations:2},{date:"2026-07-17",conversations:1},{date:"2026-07-28",conversations:6},{date:"2026-07-30",conversations:2},{date:"2026-08-06",conversations:7},{date:"2026-08-11",conversations:4}
         ];
 
-        const dailyLabels = dailyData.map(d => {
-            const date = new Date(d.date);
-            return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: '2-digit' });
-        });
-        const dailyValues = dailyData.map(d => d.conversations);
+        // ========== Aggregation Functions ==========
+        function getWeekKey(date) {
+            const d = new Date(date);
+            const day = d.getDay();
+            const diff = d.getDate() - day + (day === 0 ? -6 : 1);
+            const monday = new Date(d.setDate(diff));
+            return monday.toISOString().slice(0, 10);
+        }
+
+        function getMonthKey(date) {
+            return date.slice(0, 7);
+        }
+
+        function getQuarterKey(date) {
+            const d = new Date(date);
+            const q = Math.floor(d.getMonth() / 3) + 1;
+            return d.getFullYear() + '-Q' + q;
+        }
+
+        function getYearKey(date) {
+            return date.slice(0, 4);
+        }
+
+        function aggregateData(data, granularity) {
+            const groups = {};
+            const keyFunc = {
+                daily: d => d.date,
+                weekly: d => getWeekKey(d.date),
+                monthly: d => getMonthKey(d.date),
+                quarterly: d => getQuarterKey(d.date),
+                yearly: d => getYearKey(d.date)
+            }[granularity];
+
+            data.forEach(d => {
+                const key = keyFunc(d);
+                if (!groups[key]) groups[key] = 0;
+                groups[key] += d.conversations;
+            });
+
+            const sortedKeys = Object.keys(groups).sort();
+            return sortedKeys.map(key => ({ label: formatLabel(key, granularity), value: groups[key] }));
+        }
+
+        function formatLabel(key, granularity) {
+            switch (granularity) {
+                case 'daily':
+                    const d = new Date(key);
+                    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: '2-digit' });
+                case 'weekly':
+                    const w = new Date(key);
+                    return w.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                case 'monthly':
+                    const m = new Date(key + '-01');
+                    return m.toLocaleDateString('en-US', { month: 'short', year: '2-digit' });
+                case 'quarterly':
+                    const [y, q] = key.split('-Q');
+                    return y + ' Q' + q;
+                case 'yearly':
+                    return key;
+            }
+        }
 
         // ========== Daily Activity Chart ==========
         const dailyCtx = document.getElementById('dailyActivityChart').getContext('2d');
@@ -896,13 +1027,13 @@
         dailyGradient.addColorStop(0, 'rgba(139, 92, 246, 0.4)');
         dailyGradient.addColorStop(1, 'rgba(139, 92, 246, 0.0)');
 
-        new Chart(dailyCtx, {
+        let dailyActivityChart = new Chart(dailyCtx, {
             type: 'line',
             data: {
-                labels: dailyLabels,
+                labels: [],
                 datasets: [{
                     label: 'Conversations',
-                    data: dailyValues,
+                    data: [],
                     borderColor: '#8b5cf6',
                     backgroundColor: dailyGradient,
                     borderWidth: 2,
@@ -949,6 +1080,33 @@
                     }
                 }
             }
+        });
+
+        function updateDailyActivityChart(granularity) {
+            const aggregated = aggregateData(dailyData, granularity);
+            dailyActivityChart.data.labels = aggregated.map(d => d.label);
+            dailyActivityChart.data.datasets[0].data = aggregated.map(d => d.value);
+
+            // Adjust point radius based on data count
+            const pointR = aggregated.length > 50 ? 0 : (aggregated.length > 20 ? 2 : 4);
+            dailyActivityChart.data.datasets[0].pointRadius = pointR;
+            dailyActivityChart.data.datasets[0].pointHoverRadius = Math.max(pointR + 2, 6);
+
+            // Adjust tick limits
+            const maxTicks = granularity === 'daily' ? 12 : (granularity === 'weekly' ? 15 : 20);
+            dailyActivityChart.options.scales.x.ticks.maxTicksLimit = maxTicks;
+            dailyActivityChart.options.scales.x.ticks.maxRotation = granularity === 'yearly' ? 0 : 45;
+            dailyActivityChart.options.scales.x.ticks.minRotation = granularity === 'yearly' ? 0 : 45;
+
+            dailyActivityChart.update('active');
+        }
+
+        // Initial render
+        updateDailyActivityChart('daily');
+
+        // Dropdown event listener
+        document.getElementById('granularitySelect').addEventListener('change', function(e) {
+            updateDailyActivityChart(e.target.value);
         });
 
         // ========== Assignment Breakdown Doughnut ==========
