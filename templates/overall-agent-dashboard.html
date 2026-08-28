@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0f0f23;
+            --card-bg: #1a1a3e;
+            --card-bg-hover: #222260;
+            --text: #ffffff;
+            --text-muted: #a0a0c0;
+            --accent-purple: #8b5cf6;
+            --accent-pink: #ec4899;
+            --accent-cyan: #06b6d4;
+            --accent-green: #10b981;
+            --accent-yellow: #f59e0b;
+            --accent-orange: #f97316;
+            --accent-red: #ef4444;
+            --accent-blue: #3b82f6;
+            --accent-indigo: #6366f1;
+            --accent-teal: #14b8a6;
+            --accent-lime: #84cc16;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0f0f23 0%, #1a0a2e 50%, #0f0f23 100%);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 24px;
+        }
+
+        /* Animated background blobs */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 20% 30%, rgba(139, 92, 246, 0.08) 0%, transparent 40%),
+                        radial-gradient(circle at 80% 70%, rgba(6, 182, 212, 0.08) 0%, transparent 40%),
+                        radial-gradient(circle at 50% 50%, rgba(236, 72, 153, 0.05) 0%, transparent 40%);
+            z-index: -1;
+            animation: float 20s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            33% { transform: translate(-30px, 30px); }
+            66% { transform: translate(30px, -30px); }
+        }
+
+        .dashboard-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 28px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .dashboard-title {
+            font-size: 32px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #8b5cf6, #ec4899, #06b6d4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            background-size: 200% auto;
+            animation: shimmer 4s linear infinite;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: 0% center; }
+            100% { background-position: 200% center; }
+        }
+
+        .dashboard-subtitle {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .date-badge {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(236, 72, 153, 0.2));
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            padding: 10px 20px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-muted);
+        }
+
+        .date-badge span {
+            color: var(--text);
+            font-weight: 600;
+        }
+
+        /* KPI Cards Grid */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .kpi-card {
+            background: linear-gradient(135deg, var(--card-bg), rgba(26, 26, 62, 0.8));
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 24px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .kpi-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .kpi-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            border-radius: 20px 20px 0 0;
+        }
+
+        .kpi-card.purple::before { background: linear-gradient(90deg, #8b5cf6, #a78bfa); }
+        .kpi-card.pink::before { background: linear-gradient(90deg, #ec4899, #f472b6); }
+        .kpi-card.cyan::before { background: linear-gradient(90deg, #06b6d4, #22d3ee); }
+        .kpi-card.green::before { background: linear-gradient(90deg, #10b981, #34d399); }
+        .kpi-card.yellow::before { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
+        .kpi-card.orange::before { background: linear-gradient(90deg, #f97316, #fb923c); }
+        .kpi-card.blue::before { background: linear-gradient(90deg, #3b82f6, #60a5fa); }
+        .kpi-card.indigo::before { background: linear-gradient(90deg, #6366f1, #818cf8); }
+        .kpi-card.teal::before { background: linear-gradient(90deg, #14b8a6, #2dd4bf); }
+        .kpi-card.red::before { background: linear-gradient(90deg, #ef4444, #f87171); }
+
+        .kpi-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            margin-bottom: 16px;
+        }
+
+        .kpi-card.purple .kpi-icon { background: rgba(139, 92, 246, 0.2); color: #a78bfa; }
+        .kpi-card.pink .kpi-icon { background: rgba(236, 72, 153, 0.2); color: #f472b6; }
+        .kpi-card.cyan .kpi-icon { background: rgba(6, 182, 212, 0.2); color: #22d3ee; }
+        .kpi-card.green .kpi-icon { background: rgba(16, 185, 129, 0.2); color: #34d399; }
+        .kpi-card.yellow .kpi-icon { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
+        .kpi-card.orange .kpi-icon { background: rgba(249, 115, 22, 0.2); color: #fb923c; }
+        .kpi-card.blue .kpi-icon { background: rgba(59, 130, 246, 0.2); color: #60a5fa; }
+        .kpi-card.indigo .kpi-icon { background: rgba(99, 102, 241, 0.2); color: #818cf8; }
+        .kpi-card.teal .kpi-icon { background: rgba(20, 184, 166, 0.2); color: #2dd4bf; }
+        .kpi-card.red .kpi-icon { background: rgba(239, 68, 68, 0.2); color: #f87171; }
+
+        .kpi-label {
+            font-size: 13px;
+            color: var(--text-muted);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .kpi-value {
+            font-size: 32px;
+            font-weight: 800;
+            line-height: 1;
+        }
+
+        .kpi-sub {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 8px;
+        }
+
+        .kpi-sub .highlight {
+            font-weight: 600;
+        }
+
+        .kpi-card.pink .kpi-value { color: #f472b6; }
+        .kpi-card.purple .kpi-value { color: #a78bfa; }
+        .kpi-card.cyan .kpi-value { color: #22d3ee; }
+        .kpi-card.green .kpi-value { color: #34d399; }
+        .kpi-card.yellow .kpi-value { color: #fbbf24; }
+        .kpi-card.orange .kpi-value { color: #fb923c; }
+        .kpi-card.blue .kpi-value { color: #60a5fa; }
+        .kpi-card.indigo .kpi-value { color: #818cf8; }
+        .kpi-card.teal .kpi-value { color: #2dd4bf; }
+        .kpi-card.red .kpi-value { color: #f87171; }
+
+        /* Chart Grid */
+        .chart-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .chart-grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .chart-grid-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .chart-card {
+            background: linear-gradient(135deg, var(--card-bg), rgba(26, 26, 62, 0.8));
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 24px;
+            transition: all 0.3s ease;
+        }
+
+        .chart-card:hover {
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .chart-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .chart-title .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .chart-subtitle {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+        }
+
+        .chart-container.tall {
+            height: 360px;
+        }
+
+        .chart-container.short {
+            height: 240px;
+        }
+
+        /* Agent Table */
+        .table-card {
+            background: linear-gradient(135deg, var(--card-bg), rgba(26, 26, 62, 0.8));
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 24px;
+            overflow-x: auto;
+        }
+
+        .agent-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .agent-table th {
+            text-align: left;
+            padding: 14px 16px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .agent-table td {
+            padding: 14px 16px;
+            font-size: 14px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .agent-table tr {
+            transition: background 0.2s ease;
+        }
+
+        .agent-table tbody tr:hover {
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .agent-rank {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .rank-1 { background: linear-gradient(135deg, #f59e0b, #fbbf24); color: #1a1a3e; }
+        .rank-2 { background: linear-gradient(135deg, #94a3b8, #cbd5e1); color: #1a1a3e; }
+        .rank-3 { background: linear-gradient(135deg, #d97706, #f59e0b); color: #1a1a3e; }
+        .rank-other { background: rgba(255, 255, 255, 0.08); color: var(--text-muted); }
+
+        .agent-name {
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .agent-email {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .badge-purple { background: rgba(139, 92, 246, 0.2); color: #a78bfa; }
+        .badge-green { background: rgba(16, 185, 129, 0.2); color: #34d399; }
+        .badge-blue { background: rgba(59, 130, 246, 0.2); color: #60a5fa; }
+        .badge-orange { background: rgba(249, 115, 22, 0.2); color: #fb923c; }
+        .badge-pink { background: rgba(236, 72, 153, 0.2); color: #f472b6; }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 4px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 1s ease;
+        }
+
+        .response-time {
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .response-time.fast { color: #34d399; }
+        .response-time.medium { color: #fbbf24; }
+        .response-time.slow { color: #f87171; }
+
+        /* Stat pills */
+        .stat-pills {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .stat-pill {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            font-size: 13px;
+        }
+
+        .stat-pill .pill-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .stat-pill .pill-value {
+            font-weight: 700;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .chart-grid {
+                grid-template-columns: 1fr;
+            }
+            .chart-grid-2 {
+                grid-template-columns: 1fr;
+            }
+            .chart-grid-3 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 640px) {
+            body { padding: 12px; }
+            .dashboard-title { font-size: 24px; }
+            .kpi-value { font-size: 26px; }
+            .kpi-grid { grid-template-columns: 1fr 1fr; }
+        }
+
+        /* CSAT Stars */
+        .csat-display {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .star {
+            font-size: 24px;
+            color: #fbbf24;
+        }
+
+        .star.empty {
+            color: rgba(255, 255, 255, 0.15);
+        }
+
+        /* Rating bars */
+        .rating-bar-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+
+        .rating-label {
+            width: 60px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .rating-bar-container {
+            flex: 1;
+            height: 24px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .rating-bar-fill {
+            height: 100%;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            color: #1a1a3e;
+            transition: width 1s ease;
+        }
+
+        .rating-count {
+            width: 40px;
+            text-align: right;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <div class="dashboard-header">
+        <div>
+            <div class="dashboard-title">📊 Analytics Dashboard</div>
+            <div class="dashboard-subtitle">Customer Support Performance Overview</div>
+        </div>
+        <div class="date-badge">
+            📅 Last Updated: <span>Aug 28, 2026</span>
+        </div>
+    </div>
+
+    <!-- KPI Cards -->
+    <div class="kpi-grid">
+        <div class="kpi-card purple">
+            <div class="kpi-icon">💬</div>
+            <div class="kpi-label">Total Conversations</div>
+            <div class="kpi-value">16,380</div>
+            <div class="kpi-sub"><span class="highlight">231</span> in last 7 days</div>
+        </div>
+        <div class="kpi-card pink">
+            <div class="kpi-icon">✅</div>
+            <div class="kpi-label">Closed Conversations</div>
+            <div class="kpi-value">6,710</div>
+            <div class="kpi-sub"><span class="highlight">41.0%</span> closure rate</div>
+        </div>
+        <div class="kpi-card cyan">
+            <div class="kpi-icon">🤖</div>
+            <div class="kpi-label">Bot Handled</div>
+            <div class="kpi-value">9,669</div>
+            <div class="kpi-sub"><span class="highlight">59.0%</span> of total</div>
+        </div>
+        <div class="kpi-card green">
+            <div class="kpi-icon">👥</div>
+            <div class="kpi-label">Total Agents</div>
+            <div class="kpi-value">35</div>
+            <div class="kpi-sub"><span class="highlight">27</span> active · <span class="highlight">1</span> online</div>
+        </div>
+        <div class="kpi-card yellow">
+            <div class="kpi-icon">📨</div>
+            <div class="kpi-label">Total Messages</div>
+            <div class="kpi-value">113,892</div>
+            <div class="kpi-sub"><span class="highlight">6.95</span> per conversation</div>
+        </div>
+        <div class="kpi-card orange">
+            <div class="kpi-icon">⭐</div>
+            <div class="kpi-label">Avg CSAT Score</div>
+            <div class="kpi-value">4.25</div>
+            <div class="kpi-sub"><span class="highlight">79</span> feedback responses</div>
+        </div>
+        <div class="kpi-card blue">
+            <div class="kpi-icon">🔄</div>
+            <div class="kpi-label">Total Transfers</div>
+            <div class="kpi-value">115</div>
+            <div class="kpi-sub"><span class="highlight">110</span> transferred conversations</div>
+        </div>
+        <div class="kpi-card indigo">
+            <div class="kpi-icon">⚡</div>
+            <div class="kpi-label">Avg Response Time</div>
+            <div class="kpi-value">27.9<span style="font-size:18px">m</span></div>
+            <div class="kpi-sub">First response: <span class="highlight">13.8 hrs</span></div>
+        </div>
+        <div class="kpi-card teal">
+            <div class="kpi-icon">📊</div>
+            <div class="kpi-label">Convos / Agent</div>
+            <div class="kpi-value">468</div>
+            <div class="kpi-sub">Average per agent</div>
+        </div>
+        <div class="kpi-card red">
+            <div class="kpi-icon">📝</div>
+            <div class="kpi-label">Feedback Rate</div>
+            <div class="kpi-value">0.48<span style="font-size:18px">%</span></div>
+            <div class="kpi-sub">Room for improvement</div>
+        </div>
+    </div>
+
+    <!-- Conversation Trend + Assignment Breakdown -->
+    <div class="chart-grid">
+        <div class="chart-card">
+            <div class="chart-title">
+                <span class="dot" style="background: #8b5cf6"></span>
+                Conversation Trend — Last 14 Days
+            </div>
+            <div class="chart-subtitle">Daily conversation volume from Aug 15 to Aug 28, 2026</div>
+            <div class="chart-container">
+                <canvas id="trendChart"></canvas>
+            </div>
+        </div>
+        <div class="chart-card">
+            <div class="chart-title">
+                <span class="dot" style="background: #ec4899"></span>
+                Assignment Breakdown
+            </div>
+            <div class="chart-subtitle">Conversations by assignment type</div>
+            <div class="chart-container">
+                <canvas id="assignmentChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Query Distribution + Message Breakdown -->
+    <div class="chart-grid">
+        <div class="chart-card">
+            <div class="chart-title">
+                <span class="dot" style="background: #06b6d4"></span>
+                Query Distribution by Category
+            </div>
+            <div class="chart-subtitle">Top categories from 67,429 total user queries</div>
+            <div class="chart-container tall">
+                <canvas id="queryChart"></canvas>
+            </div>
+        </div>
+        <div class="chart-card">
+            <div class="chart-title">
+                <span class="dot" style="background: #10b981"></span>
+                Message Breakdown
+            </div>
+            <div class="chart-subtitle">Messages by source</div>
+            <div class="chart-container">
+                <canvas id="messageChart"></canvas>
+            </div>
+            <div class="stat-pills" style="margin-top: 20px;">
+                <div class="stat-pill">
+                    <span class="pill-dot" style="background: #3b82f6"></span>
+                    By User: <span class="pill-value">67,429</span>
+                </div>
+                <div class="stat-pill">
+                    <span class="pill-dot" style="background: #8b5cf6"></span>
+                    By Bot: <span class="pill-value">26,189</span>
+                </div>
+                <div class="stat-pill">
+                    <span class="pill-dot" style="background: #10b981"></span>
+                    By Agent: <span class="pill-value">20,274</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Agent Status + CSAT Distribution + Response Performance -->
+    <div class="chart-grid-3">
+        <div class="chart-card">
+            <div class="chart-title">
+                <span class="dot" style="background: #f59e0b"></span>
+                Agent Status
+            </div>
+            <div class="chart-subtitle">Online vs offline agents</div>
+            <div class="chart-container short">
+                <canvas id="agentStatusChart"></canvas>
+            </div>
+            <div class="stat-pills" style="margin-top: 16px;">
+                <div class="stat-pill">
+                    <span class="pill-dot" style="background: #10b981"></span>
+                    Online: <span class="pill-value">1</span>
+                </div>
+                <div class="stat-pill">
+                    <span class="pill-dot" style="background: #64748b"></span>
+                    Offline: <span class="pill-value">26</span>
+                </div>
+                <div class="stat-pill">
+                    <span class="pill-dot" style="background: #8b5cf6"></span>
+                    Active: <span class="pill-value">27</span>
+                </div>
+            </div>
+        </div>
+        <div class="chart-card">
+            <div class="chart-title">
+                <span class="dot" style="background: #ec4899"></span>
+                CSAT Rating Distribution
+            </div>
+            <div class="chart-subtitle">79 total feedback responses</div>
+            <div style="margin-top: 16px;">
+                <div class="rating-bar-row">
+                    <div class="rating-label">⭐ 5</div>
+                    <div class="rating-bar-container">
+                        <div class="rating-bar-fill" style="width: 79.7%; background: linear-gradient(90deg, #10b981, #34d399);">79.7%</div>
+                    </div>
+                    <div class="rating-count">63</div>
+                </div>
+                <div class="rating-bar-row">
+                    <div class="rating-label">⭐ 4</div>
+                    <div class="rating-bar-container">
+                        <div class="rating-bar-fill" style="width: 1.3%; background: linear-gradient(90deg, #14b8a6, #2dd4bf); min-width: 30px;">1</div>
+                    </div>
+                    <div class="rating-count">1</div>
+                </div>
+                <div class="rating-bar-row">
+                    <div class="rating-label">⭐ 3</div>
+                    <div class="rating-bar-container">
+                        <div class="rating-bar-fill" style="width: 0%; background: linear-gradient(90deg, #f59e0b, #fbbf24); min-width: 30px;">0</div>
+                    </div>
+                    <div class="rating-count">0</div>
+                </div>
+                <div class="rating-bar-row">
+                    <div class="rating-label">⭐ 2</div>
+                    <div class="rating-bar-container">
+                        <div class="rating-bar-fill" style="width: 2.5%; background: linear-gradient(90deg, #f97316, #fb923c); min-width: 30px;">2</div>
+                    </div>
+                    <div class="rating-count">2</div>
+                </div>
+                <div class="rating-bar-row">
+                    <div class="rating-label">⭐ 1</div>
+                    <div class="rating-bar-container">
+                        <div class="rating-bar-fill" style="width: 16.5%; background: linear-gradient(90deg, #ef4444, #f87171);">16.5%</div>
+                    </div>
+                    <div class="rating-count">13</div>
+                </div>
+            </div>
+            <div style="margin-top: 20px; display: flex; align-items: center; gap: 12px; padding: 16px; background: rgba(255,255,255,0.03); border-radius: 12px;">
+                <div class="csat-display">
+                    <span class="star">★</span>
+                    <span class="star">★</span>
+                    <span class="star">★</span>
+                    <span class="star">★</span>
+                    <span class="star empty">★</span>
+                </div>
+                <div>
+                    <div style="font-size: 24px; font-weight: 800; color: #fbbf24;">4.25</div>
+                    <div style="font-size: 12px; color: var(--text-muted);">Average CSAT</div>
+                </div>
+            </div>
+        </div>
+        <div class="chart-card">
+            <div class="chart-title">
+                <span class="dot" style="background: #6366f1"></span>
+                Response Performance
+            </div>
+            <div class="chart-subtitle">Average response times</div>
+            <div style="display: flex; flex-direction: column; gap: 16px; margin-top: 20px;">
+                <div style="padding: 20px; background: rgba(99, 102, 241, 0.1); border-radius: 14px; border: 1px solid rgba(99, 102, 241, 0.2);">
+                    <div style="font-size: 13px; color: var(--text-muted); margin-bottom: 8px;">⚡ Avg Response Time</div>
+                    <div style="font-size: 36px; font-weight: 800; color: #818cf8;">27.9<span style="font-size:18px"> min</span></div>
+                    <div style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">1,677.84 seconds</div>
+                </div>
+                <div style="padding: 20px; background: rgba(236, 72, 153, 0.1); border-radius: 14px; border: 1px solid rgba(236, 72, 153, 0.2);">
+                    <div style="font-size: 13px; color: var(--text-muted); margin-bottom: 8px;">🕐 Avg First Response Time</div>
+                    <div style="font-size: 36px; font-weight: 800; color: #f472b6;">13.8<span style="font-size:18px"> hrs</span></div>
+                    <div style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">49,609 seconds</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Top 10 Agents Table -->
+    <div class="table-card">
+        <div class="chart-title">
+            <span class="dot" style="background: #f97316"></span>
+            Top 10 Agents by Conversations Handled
+        </div>
+        <div class="chart-subtitle">Performance breakdown of top-performing agents</div>
+        <table class="agent-table" style="margin-top: 16px;">
+            <thead>
+                <tr>
+                    <th>Rank</th>
+                    <th>Agent</th>
+                    <th>Conversations</th>
+                    <th>Performance</th>
+                    <th>Avg First Response</th>
+                </tr>
+            </thead>
+            <tbody id="agentTableBody"></tbody>
+        </table>
+    </div>
+
+    <script>
+        // ========== Chart Defaults ==========
+        Chart.defaults.color = '#a0a0c0';
+        Chart.defaults.borderColor = 'rgba(255, 255, 255, 0.08)';
+        Chart.defaults.font.family = "'Inter', sans-serif";
+
+        // ========== Conversation Trend Chart ==========
+        const trendCtx = document.getElementById('trendChart').getContext('2d');
+        const trendGradient = trendCtx.createLinearGradient(0, 0, 0, 300);
+        trendGradient.addColorStop(0, 'rgba(139, 92, 246, 0.4)');
+        trendGradient.addColorStop(1, 'rgba(139, 92, 246, 0.0)');
+
+        new Chart(trendCtx, {
+            type: 'line',
+            data: {
+                labels: ['Aug 15', 'Aug 16', 'Aug 17', 'Aug 18', 'Aug 19', 'Aug 20', 'Aug 21', 'Aug 22', 'Aug 23', 'Aug 24', 'Aug 25', 'Aug 26', 'Aug 27', 'Aug 28'],
+                datasets: [{
+                    label: 'Conversations',
+                    data: [29, 18, 85, 52, 48, 43, 25, 30, 24, 52, 35, 35, 57, 2],
+                    borderColor: '#8b5cf6',
+                    backgroundColor: trendGradient,
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.4,
+                    pointBackgroundColor: '#ec4899',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2,
+                    pointRadius: 5,
+                    pointHoverRadius: 8,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: 'rgba(26, 26, 62, 0.95)',
+                        borderColor: 'rgba(139, 92, 246, 0.3)',
+                        borderWidth: 1,
+                        padding: 12,
+                        cornerRadius: 12,
+                        titleColor: '#fff',
+                        bodyColor: '#a0a0c0',
+                        callbacks: {
+                            label: (ctx) => ` ${ctx.parsed.y} conversations`
+                        }
+                    }
+                },
+                scales: {
+                    x: { grid: { display: false } },
+                    y: { grid: { color: 'rgba(255,255,255,0.05)' }, beginAtZero: true }
+                }
+            }
+        });
+
+        // ========== Assignment Breakdown Doughnut ==========
+        new Chart(document.getElementById('assignmentChart'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Bot Handled', 'Resolved', 'Assigned'],
+                datasets: [{
+                    data: [9669, 6710, 1],
+                    backgroundColor: ['#06b6d4', '#10b981', '#f59e0b'],
+                    borderColor: 'rgba(26, 26, 62, 1)',
+                    borderWidth: 3,
+                    hoverOffset: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '65%',
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: { padding: 16, usePointStyle: true, pointStyle: 'circle' }
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(26, 26, 62, 0.95)',
+                        cornerRadius: 12,
+                        padding: 12,
+                    }
+                }
+            }
+        });
+
+        // ========== Query Distribution Horizontal Bar ==========
+        new Chart(document.getElementById('queryChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Others', 'Imports, Exports & Transit', 'Registration & Subscription', 'Support, Troubleshooting & Info', 'Banking & Financial Integration', 'Documentation & Records', 'Licenses, Permits & Certificates', 'Application Status & Tracking', 'Regulatory & Compliance', 'Complaints & Feedback'],
+                datasets: [{
+                    label: 'Queries',
+                    data: [48124, 5751, 4752, 4467, 2277, 816, 729, 264, 188, 61],
+                    backgroundColor: [
+                        '#8b5cf6', '#ec4899', '#06b6d4', '#10b981', '#f59e0b',
+                        '#f97316', '#3b82f6', '#6366f1', '#14b8a6', '#ef4444'
+                    ],
+                    borderRadius: 8,
+                    barThickness: 18,
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: 'rgba(26, 26, 62, 0.95)',
+                        cornerRadius: 12,
+                        padding: 12,
+                        callbacks: {
+                            label: (ctx) => {
+                                const pct = (ctx.parsed.x / 67429 * 100).toFixed(2);
+                                return ` ${ctx.parsed.x.toLocaleString()} queries (${pct}%)`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: { grid: { color: 'rgba(255,255,255,0.05)' }, beginAtZero: true },
+                    y: { grid: { display: false } }
+                }
+            }
+        });
+
+        // ========== Message Breakdown Pie ==========
+        new Chart(document.getElementById('messageChart'), {
+            type: 'pie',
+            data: {
+                labels: ['By User', 'By Bot', 'By Agent'],
+                datasets: [{
+                    data: [67429, 26189, 20274],
+                    backgroundColor: ['#3b82f6', '#8b5cf6', '#10b981'],
+                    borderColor: 'rgba(26, 26, 62, 1)',
+                    borderWidth: 3,
+                    hoverOffset: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: { padding: 16, usePointStyle: true, pointStyle: 'circle' }
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(26, 26, 62, 0.95)',
+                        cornerRadius: 12,
+                        padding: 12,
+                        callbacks: {
+                            label: (ctx) => ` ${ctx.parsed.toLocaleString()} messages`
+                        }
+                    }
+                }
+            }
+        });
+
+        // ========== Agent Status Chart ==========
+        new Chart(document.getElementById('agentStatusChart'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Online', 'Offline'],
+                datasets: [{
+                    data: [1, 26],
+                    backgroundColor: ['#10b981', '#475569'],
+                    borderColor: 'rgba(26, 26, 62, 1)',
+                    borderWidth: 3,
+                    hoverOffset: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '70%',
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: { padding: 12, usePointStyle: true, pointStyle: 'circle' }
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(26, 26, 62, 0.95)',
+                        cornerRadius: 12,
+                        padding: 12,
+                    }
+                }
+            }
+        });
+
+        // ========== Agent Table ==========
+        const agents = [
+            { rank: 1, name: "Anus Shahid", email: "anus.shahid169@gmail.com", conversations: 138, frt: 34260.34 },
+            { rank: 2, name: "Haris.Khan", email: "Haris.Khan@sybridcs.com", conversations: 128, frt: 111274.80 },
+            { rank: 3, name: "Abdul Wajid", email: "mr.abdulwajid1996@gmail.com", conversations: 124, frt: 31834.99 },
+            { rank: 4, name: "Tarun Kumar", email: "tarun.official108@gmail.com", conversations: 104, frt: 15236.16 },
+            { rank: 5, name: "Haris.Khan", email: "hariskhan2921@gmail.com", conversations: 94, frt: 9518.40 },
+            { rank: 6, name: "Salman Amjad", email: "salmanamjad309@gmail.com", conversations: 79, frt: 10526.80 },
+            { rank: 7, name: "Madiha Zahra", email: "madihazahra796@gmail.com", conversations: 63, frt: 3423.60 },
+            { rank: 8, name: "Vivek Kumar", email: "vivekkumar22550@gmail.com", conversations: 50, frt: 10377.72 },
+            { rank: 9, name: "Muhammad Zohaib", email: "zohaibmirza59@gmail.com", conversations: 46, frt: 8770.95 },
+            { rank: 10, name: "Muhammad Faraz Raza Khan", email: "mohammad786kh@gmail.com", conversations: 28, frt: 2610.68 },
+        ];
+
+        const maxConv = Math.max(...agents.map(a => a.conversations));
+        const rankClasses = ['rank-1', 'rank-2', 'rank-3', 'rank-other', 'rank-other', 'rank-other', 'rank-other', 'rank-other', 'rank-other', 'rank-other'];
+
+        function formatResponseTime(seconds) {
+            if (seconds < 60) return seconds.toFixed(1) + 's';
+            if (seconds < 3600) return (seconds / 60).toFixed(1) + ' min';
+            if (seconds < 86400) return (seconds / 3600).toFixed(1) + ' hrs';
+            return (seconds / 86400).toFixed(1) + ' days';
+        }
+
+        function getResponseClass(seconds) {
+            if (seconds < 3600) return 'fast';
+            if (seconds < 21600) return 'medium';
+            return 'slow';
+        }
+
+        const tableBody = document.getElementById('agentTableBody');
+        agents.forEach((agent, i) => {
+            const width = (agent.conversations / maxConv * 100).toFixed(0);
+            const colors = ['#8b5cf6', '#ec4899', '#06b6d4', '#10b981', '#f59e0b', '#f97316', '#3b82f6', '#6366f1', '#14b8a6', '#ef4444'];
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td><span class="agent-rank ${rankClasses[i]}">${agent.rank}</span></td>
+                <td>
+                    <div class="agent-name">${agent.name}</div>
+                    <div class="agent-email">${agent.email}</div>
+                </td>
+                <td>
+                    <span class="badge badge-purple">${agent.conversations}</span>
+                </td>
+                <td style="min-width: 160px;">
+                    <div style="font-size: 12px; color: var(--text-muted);">${agent.conversations} conv.</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${width}%; background: linear-gradient(90deg, ${colors[i]}, ${colors[i]}aa);"></div>
+                    </div>
+                </td>
+                <td>
+                    <span class="response-time ${getResponseClass(agent.frt)}">${formatResponseTime(agent.frt)}</span>
+                </td>
+            `;
+            tableBody.appendChild(row);
+        });
+    </script>
+
+</body>
+</html>

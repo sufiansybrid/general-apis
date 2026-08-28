@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agent Performance Dashboard — Tauqeer Nazeer</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0f0f23;
+            --card-bg: #1a1a3e;
+            --card-bg-hover: #222260;
+            --text: #ffffff;
+            --text-muted: #a0a0c0;
+            --accent-purple: #8b5cf6;
+            --accent-pink: #ec4899;
+            --accent-cyan: #06b6d4;
+            --accent-green: #10b981;
+            --accent-yellow: #f59e0b;
+            --accent-orange: #f97316;
+            --accent-red: #ef4444;
+            --accent-blue: #3b82f6;
+            --accent-indigo: #6366f1;
+            --accent-teal: #14b8a6;
+            --accent-lime: #84cc16;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0f0f23 0%, #1a0a2e 50%, #0f0f23 100%);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 24px;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 20% 30%, rgba(139, 92, 246, 0.08) 0%, transparent 40%),
+                        radial-gradient(circle at 80% 70%, rgba(6, 182, 212, 0.08) 0%, transparent 40%),
+                        radial-gradient(circle at 50% 50%, rgba(236, 72, 153, 0.05) 0%, transparent 40%);
+            z-index: -1;
+            animation: float 20s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            33% { transform: translate(-30px, 30px); }
+            66% { transform: translate(30px, -30px); }
+        }
+
+        /* Header */
+        .dashboard-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 28px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .agent-avatar {
+            width: 72px;
+            height: 72px;
+            border-radius: 20px;
+            background: linear-gradient(135deg, #8b5cf6, #ec4899, #06b6d4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            font-weight: 800;
+            color: #fff;
+            box-shadow: 0 8px 32px rgba(139, 92, 246, 0.3);
+            flex-shrink: 0;
+        }
+
+        .dashboard-title {
+            font-size: 28px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #8b5cf6, #ec4899, #06b6d4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            background-size: 200% auto;
+            animation: shimmer 4s linear infinite;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: 0% center; }
+            100% { background-position: 200% center; }
+        }
+
+        .dashboard-subtitle {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-top: 4px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-offline {
+            background: rgba(100, 116, 139, 0.2);
+            color: #94a3b8;
+            border: 1px solid rgba(100, 116, 139, 0.3);
+        }
+
+        .status-active {
+            background: rgba(16, 185, 129, 0.2);
+            color: #34d399;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .status-offline .status-dot { background: #94a3b8; }
+        .status-active .status-dot { background: #34d399; box-shadow: 0 0 8px #34d399; animation: pulse 2s infinite; }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .date-badge {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(236, 72, 153, 0.2));
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            padding: 10px 20px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-muted);
+        }
+
+        .date-badge span { color: var(--text); font-weight: 600; }
+
+        /* KPI Cards Grid */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .kpi-card {
+            background: linear-gradient(135deg, var(--card-bg), rgba(26, 26, 62, 0.8));
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 24px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .kpi-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .kpi-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            border-radius: 20px 20px 0 0;
+        }
+
+        .kpi-card.purple::before { background: linear-gradient(90deg, #8b5cf6, #a78bfa); }
+        .kpi-card.pink::before { background: linear-gradient(90deg, #ec4899, #f472b6); }
+        .kpi-card.cyan::before { background: linear-gradient(90deg, #06b6d4, #22d3ee); }
+        .kpi-card.green::before { background: linear-gradient(90deg, #10b981, #34d399); }
+        .kpi-card.yellow::before { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
+        .kpi-card.orange::before { background: linear-gradient(90deg, #f97316, #fb923c); }
+        .kpi-card.blue::before { background: linear-gradient(90deg, #3b82f6, #60a5fa); }
+        .kpi-card.indigo::before { background: linear-gradient(90deg, #6366f1, #818cf8); }
+        .kpi-card.teal::before { background: linear-gradient(90deg, #14b8a6, #2dd4bf); }
+        .kpi-card.red::before { background: linear-gradient(90deg, #ef4444, #f87171); }
+
+        .kpi-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            margin-bottom: 16px;
+        }
+
+        .kpi-card.purple .kpi-icon { background: rgba(139, 92, 246, 0.2); color: #a78bfa; }
+        .kpi-card.pink .kpi-icon { background: rgba(236, 72, 153, 0.2); color: #f472b6; }
+        .kpi-card.cyan .kpi-icon { background: rgba(6, 182, 212, 0.2); color: #22d3ee; }
+        .kpi-card.green .kpi-icon { background: rgba(16, 185, 129, 0.2); color: #34d399; }
+        .kpi-card.yellow .kpi-icon { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
+        .kpi-card.orange .kpi-icon { background: rgba(249, 115, 22, 0.2); color: #fb923c; }
+        .kpi-card.blue .kpi-icon { background: rgba(59, 130, 246, 0.2); color: #60a5fa; }
+        .kpi-card.indigo .kpi-icon { background: rgba(99, 102, 241, 0.2); color: #818cf8; }
+        .kpi-card.teal .kpi-icon { background: rgba(20, 184, 166, 0.2); color: #2dd4bf; }
+        .kpi-card.red .kpi-icon { background: rgba(239, 68, 68, 0.2); color: #f87171; }
+
+        .kpi-label {
+            font-size: 13px;
+            color: var(--text-muted);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .kpi-value {
+            font-size: 32px;
+            font-weight: 800;
+            line-height: 1;
+        }
+
+        .kpi-sub {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 8px;
+        }
+
+        .kpi-sub .highlight { font-weight: 600; }
+
+        .kpi-card.pink .kpi-value { color: #f472b6; }
+        .kpi-card.purple .kpi-value { color: #a78bfa; }
+        .kpi-card.cyan .kpi-value { color: #22d3ee; }
+        .kpi-card.green .kpi-value { color: #34d399; }
+        .kpi-card.yellow .kpi-value { color: #fbbf24; }
+        .kpi-card.orange .kpi-value { color: #fb923c; }
+        .kpi-card.blue .kpi-value { color: #60a5fa; }
+        .kpi-card.indigo .kpi-value { color: #818cf8; }
+        .kpi-card.teal .kpi-value { color: #2dd4bf; }
+        .kpi-card.red .kpi-value { color: #f87171; }
+
+        /* Chart Grid */
+        .chart-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .chart-grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .chart-grid-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .chart-card {
+            background: linear-gradient(135deg, var(--card-bg), rgba(26, 26, 62, 0.8));
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 24px;
+            transition: all 0.3s ease;
+        }
+
+        .chart-card:hover { border-color: rgba(255, 255, 255, 0.15); }
+
+        .chart-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .chart-title .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .chart-subtitle {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+        }
+
+        .chart-container.tall { height: 360px; }
+        .chart-container.short { height: 240px; }
+
+        /* Stat pills */
+        .stat-pills {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .stat-pill {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            font-size: 13px;
+        }
+
+        .stat-pill .pill-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .stat-pill .pill-value { font-weight: 700; }
+
+        /* Insight Cards */
+        .insights-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .insight-card {
+            background: linear-gradient(135deg, var(--card-bg), rgba(26, 26, 62, 0.8));
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 24px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .insight-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .insight-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            width: 4px;
+        }
+
+        .insight-card.green::before { background: linear-gradient(180deg, #10b981, #34d399); }
+        .insight-card.pink::before { background: linear-gradient(180deg, #ec4899, #f472b6); }
+        .insight-card.yellow::before { background: linear-gradient(180deg, #f59e0b, #fbbf24); }
+        .insight-card.cyan::before { background: linear-gradient(180deg, #06b6d4, #22d3ee); }
+        .insight-card.orange::before { background: linear-gradient(180deg, #f97316, #fb923c); }
+
+        .insight-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            margin-bottom: 14px;
+        }
+
+        .insight-card.green .insight-icon { background: rgba(16, 185, 129, 0.2); color: #34d399; }
+        .insight-card.pink .insight-icon { background: rgba(236, 72, 153, 0.2); color: #f472b6; }
+        .insight-card.yellow .insight-icon { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
+        .insight-card.cyan .insight-icon { background: rgba(6, 182, 212, 0.2); color: #22d3ee; }
+        .insight-card.orange .insight-icon { background: rgba(249, 115, 22, 0.2); color: #fb923c; }
+
+        .insight-title {
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .insight-card.green .insight-title { color: #34d399; }
+        .insight-card.pink .insight-title { color: #f472b6; }
+        .insight-card.yellow .insight-title { color: #fbbf24; }
+        .insight-card.cyan .insight-title { color: #22d3ee; }
+        .insight-card.orange .insight-title { color: #fb923c; }
+
+        .insight-text {
+            font-size: 14px;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        /* Rating bars */
+        .rating-bar-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+
+        .rating-label {
+            width: 60px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .rating-bar-container {
+            flex: 1;
+            height: 24px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .rating-bar-fill {
+            height: 100%;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            color: #1a1a3e;
+            transition: width 1s ease;
+        }
+
+        .rating-count {
+            width: 40px;
+            text-align: right;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        /* CSAT Stars */
+        .csat-display {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .star { font-size: 24px; color: #fbbf24; }
+        .star.empty { color: rgba(255, 255, 255, 0.15); }
+
+        /* Response time cards */
+        .rt-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .rt-card {
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .rt-label {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+
+        .rt-value {
+            font-size: 24px;
+            font-weight: 800;
+        }
+
+        .rt-value.green { color: #34d399; }
+        .rt-value.red { color: #f87171; }
+        .rt-value.blue { color: #60a5fa; }
+        .rt-value.purple { color: #a78bfa; }
+
+        .rt-sub {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        /* Transfer visual */
+        .transfer-visual {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 24px;
+            padding: 20px 0;
+        }
+
+        .transfer-circle {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            position: relative;
+        }
+
+        .transfer-circle.received {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(16, 185, 129, 0.05));
+            border: 2px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .transfer-circle.made {
+            background: linear-gradient(135deg, rgba(249, 115, 22, 0.2), rgba(249, 115, 22, 0.05));
+            border: 2px solid rgba(249, 115, 22, 0.3);
+        }
+
+        .transfer-circle .tc-num {
+            font-size: 28px;
+        }
+
+        .transfer-circle.received .tc-num { color: #34d399; }
+        .transfer-circle.made .tc-num { color: #fb923c; }
+
+        .transfer-circle .tc-label {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .transfer-arrow {
+            font-size: 28px;
+            color: var(--text-muted);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .chart-grid, .chart-grid-2, .chart-grid-3 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 640px) {
+            body { padding: 12px; }
+            .dashboard-title { font-size: 22px; }
+            .kpi-value { font-size: 26px; }
+            .kpi-grid { grid-template-columns: 1fr 1fr; }
+            .header-left { flex-direction: column; text-align: center; }
+            .rt-grid { grid-template-columns: 1fr; }
+            .transfer-visual { flex-direction: column; }
+            .transfer-arrow { transform: rotate(90deg); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <div class="dashboard-header">
+        <div class="header-left">
+            <div class="agent-avatar">TN</div>
+            <div>
+                <div class="dashboard-title">Tauqeer Nazeer</div>
+                <div class="dashboard-subtitle">
+                    Agent ID: <span style="color:#fff;font-weight:600;">29</span>
+                    <span class="status-badge status-offline"><span class="status-dot"></span>Offline</span>
+                    <span class="status-badge status-active"><span class="status-dot"></span>Active</span>
+                </div>
+            </div>
+        </div>
+        <div class="date-badge">
+            📅 Period: <span>All Time</span>
+        </div>
+    </div>
+
+    <!-- KPI Cards -->
+    <div class="kpi-grid">
+        <div class="kpi-card purple">
+            <div class="kpi-icon">💬</div>
+            <div class="kpi-label">Conversations Handled</div>
+            <div class="kpi-value">3,564</div>
+            <div class="kpi-sub"><span class="highlight">100%</span> resolution rate</div>
+        </div>
+        <div class="kpi-card green">
+            <div class="kpi-icon">✅</div>
+            <div class="kpi-label">Conversations Closed</div>
+            <div class="kpi-value">3,564</div>
+            <div class="kpi-sub"><span class="highlight">0</span> currently open</div>
+        </div>
+        <div class="kpi-card cyan">
+            <div class="kpi-icon">📨</div>
+            <div class="kpi-label">Messages Sent</div>
+            <div class="kpi-value">9,577</div>
+            <div class="kpi-sub"><span class="highlight">2.7</span> msgs per conversation</div>
+        </div>
+        <div class="kpi-card yellow">
+            <div class="kpi-icon">⭐</div>
+            <div class="kpi-label">Avg CSAT Score</div>
+            <div class="kpi-value">4.5</div>
+            <div class="kpi-sub"><span class="highlight">30</span> feedback responses</div>
+        </div>
+        <div class="kpi-card orange">
+            <div class="kpi-icon">⚡</div>
+            <div class="kpi-label">Avg Response Time</div>
+            <div class="kpi-value">13.7<span style="font-size:18px">m</span></div>
+            <div class="kpi-sub">824.93 seconds average</div>
+        </div>
+        <div class="kpi-card pink">
+            <div class="kpi-icon">🕐</div>
+            <div class="kpi-label">Avg First Response</div>
+            <div class="kpi-value">16.9<span style="font-size:18px"> hrs</span></div>
+            <div class="kpi-sub">60,939 seconds average</div>
+        </div>
+        <div class="kpi-card blue">
+            <div class="kpi-icon">🔄</div>
+            <div class="kpi-label">Transfers Received</div>
+            <div class="kpi-value">73</div>
+            <div class="kpi-sub"><span class="highlight">23</span> transfers made</div>
+        </div>
+        <div class="kpi-card indigo">
+            <div class="kpi-icon">🚀</div>
+            <div class="kpi-label">Fastest Response</div>
+            <div class="kpi-value">3.49<span style="font-size:18px">s</span></div>
+            <div class="kpi-sub">Slowest: 224.8 days</div>
+        </div>
+    </div>
+
+    <!-- Daily Activity + Assignment Breakdown -->
+    <div class="chart-grid">
+        <div class="chart-card">
+            <div class="chart-title">
+                <span class="dot" style="background: #8b5cf6"></span>
+                Daily Activity — Conversation Volume Over Time
+            </div>
+            <div class="chart-subtitle">Daily conversations handled from Jul 2025 to Aug 2026</div>
+            <div class="chart-container">
+                <canvas id="dailyActivityChart"></canvas>
+            </div>
+        </div>
+        <div class="chart-card">
+            <div class="chart-title">
+                <span class="dot" style="background: #ec4899"></span>
+                Assignment Breakdown
+            </div>
+            <div class="chart-subtitle">Conversations by resolution type</div>
+            <div class="chart-container">
+                <canvas id="assignmentChart"></canvas>
+            </div>
+            <div class="stat-pills" style="margin-top: 20px;">
+                <div class="stat-pill">
+                    <span class="pill-dot" style="background: #10b981"></span>
+                    Resolved: <span class="pill-value">3,435</span>
+                </div>
+                <div class="stat-pill">
+                    <span class="pill-dot" style="background: #06b6d4"></span>
+                    Bot: <span class="pill-value">129</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Response Time Distribution + CSAT Distribution -->
+    <div class="chart-grid-2">
+        <div class="chart-card">
+            <div class="chart-title">
+                <span class="dot" style="background: #06b6d4"></span>
+                Response Time Distribution
+            </div>
+            <div class="chart-subtitle">3,970 total responses bucketed by speed</div>
+            <div class="chart-container">
+                <canvas id="responseDistChart"></canvas>
+            </div>
+        </div>
+        <div class="chart-card">
+            <div class="chart-title">
+                <span class="dot" style="background: #ec4899"></span>
+                CSAT Rating Distribution
+            </div>
+            <div class="chart-subtitle">30 total feedback responses</div>
+            <div style="margin-top: 16px;">
+                <div class="rating-bar-row">
+                    <div class="rating-label">⭐ 5</div>
+                    <div class="rating-bar-container">
+                        <div class="rating-bar-fill" style="width: 83.3%; background: linear-gradient(90deg, #10b981, #34d399);">83.3%</div>
+                    </div>
+                    <div class="rating-count">25</div>
+                </div>
+                <div class="rating-bar-row">
+                    <div class="rating-label">⭐ 4</div>
+                    <div class="rating-bar-container">
+                        <div class="rating-bar-fill" style="width: 3.3%; background: linear-gradient(90deg, #14b8a6, #2dd4bf); min-width: 30px;">1</div>
+                    </div>
+                    <div class="rating-count">1</div>
+                </div>
+                <div class="rating-bar-row">
+                    <div class="rating-label">⭐ 3</div>
+                    <div class="rating-bar-container">
+                        <div class="rating-bar-fill" style="width: 0%; background: linear-gradient(90deg, #f59e0b, #fbbf24); min-width: 30px;">0</div>
+                    </div>
+                    <div class="rating-count">0</div>
+                </div>
+                <div class="rating-bar-row">
+                    <div class="rating-label">⭐ 2</div>
+                    <div class="rating-bar-container">
+                        <div class="rating-bar-fill" style="width: 6.7%; background: linear-gradient(90deg, #f97316, #fb923c); min-width: 30px;">2</div>
+                    </div>
+                    <div class="rating-count">2</div>
+                </div>
+                <div class="rating-bar-row">
+                    <div class="rating-label">⭐ 1</div>
+                    <div class="rating-bar-container">
+                        <div class="rating-bar-fill" style="width: 6.7%; background: linear-gradient(90deg, #ef4444, #f87171); min-width: 30px;">2</div>
+                    </div>
+                    <div class="rating-count">2</div>
+                </div>
+            </div>
+            <div style="margin-top: 20px; display: flex; align-items: center; gap: 12px; padding: 16px; background: rgba(255,255,255,0.03); border-radius: 12px;">
+                <div class="csat-display">
+                    <span class="star">★</span>
+                    <span class="star">★</span>
+                    <span class="star">★</span>
+                    <span class="star">★</span>
+                    <span class="star empty">★</span>
+                </div>
+                <div>
+                    <div style="font-size: 24px; font-weight: 800; color: #fbbf24;">4.5</div>
+                    <div style="font-size: 12px; color: var(--text-muted);">Average CSAT</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Response Times Detail + Transfers -->
+    <div class="chart-grid-2">
+        <div class="chart-card">
+            <div class="chart-title">
+                <span class="dot" style="background: #6366f1"></span>
+                Response Time Details
+            </div>
+            <div class="chart-subtitle">Comprehensive response time metrics</div>
+            <div class="rt-grid">
+                <div class="rt-card">
+                    <div class="rt-label">⚡ Avg First Response</div>
+                    <div class="rt-value purple">16.9 hrs</div>
+                    <div class="rt-sub">60,939.03 seconds</div>
+                </div>
+                <div class="rt-card">
+                    <div class="rt-label">⚡ Avg Response Time</div>
+                    <div class="rt-label">⚡ Avg Response</div>
+                    <div class="rt-value blue">13.7 min</div>
+                    <div class="rt-sub">824.93 seconds</div>
+                </div>
+                <div class="rt-card">
+                    <div class="rt-label">🚀 Fastest First Response</div>
+                    <div class="rt-value green">3.49 sec</div>
+                    <div class="rt-sub">Excellent response time</div>
+                </div>
+                <div class="rt-card">
+                    <div class="rt-label">🐢 Slowest First Response</div>
+                    <div class="rt-value red">224.8 days</div>
+                    <div class="rt-sub">19,426,359 seconds</div>
+                </div>
+                <div class="rt-card" style="grid-column: 1 / -1;">
+                    <div class="rt-label">📊 Total Response Time</div>
+                    <div class="rt-value" style="color: #fbbf24;">45.7 days</div>
+                    <div class="rt-sub">3,946,796.16 seconds cumulative</div>
+                </div>
+            </div>
+        </div>
+        <div class="chart-card">
+            <div class="chart-title">
+                <span class="dot" style="background: #f97316"></span>
+                Transfer Activity
+            </div>
+            <div class="chart-subtitle">Conversations transferred in and out</div>
+            <div class="transfer-visual">
+                <div class="transfer-circle received">
+                    <div class="tc-num">73</div>
+                    <div class="tc-label">Received</div>
+                </div>
+                <div class="transfer-arrow">⇄</div>
+                <div class="transfer-circle made">
+                    <div class="tc-num">23</div>
+                    <div class="tc-label">Made</div>
+                </div>
+            </div>
+            <div style="display: flex; justify-content: space-around; padding: 16px 0; border-top: 1px solid rgba(255,255,255,0.08); margin-top: 8px;">
+                <div style="text-align: center;">
+                    <div style="font-size: 13px; color: var(--text-muted);">Net Transfers</div>
+                    <div style="font-size: 22px; font-weight: 800; color: #34d399; margin-top: 4px;">+50</div>
+                </div>
+                <div style="text-align: center;">
+                    <div style="font-size: 13px; color: var(--text-muted);">Transfer Rate</div>
+                    <div style="font-size: 22px; font-weight: 800; color: #fb923c; margin-top: 4px;">0.65%</div>
+                </div>
+                <div style="text-align: center;">
+                    <div style="font-size: 13px; color: var(--text-muted);">Self-Resolve</div>
+                    <div style="font-size: 22px; font-weight: 800; color: #60a5fa; margin-top: 4px;">99.4%</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Key Insights -->
+    <div class="chart-card" style="margin-bottom: 24px;">
+        <div class="chart-title">
+            <span class="dot" style="background: #f59e0b"></span>
+            Key Insights & Recommendations
+        </div>
+        <div class="chart-subtitle">AI-powered analysis of agent performance</div>
+        <div class="insights-grid" style="margin-top: 20px;">
+            <div class="insight-card green">
+                <div class="insight-icon">🏆</div>
+                <div class="insight-title">Resolution Feedback</div>
+                <div class="insight-text">You resolved 100.0% of the 3,564 conversations you handled. Maintain this excellent standard.</div>
+            </div>
+            <div class="insight-card pink">
+                <div class="insight-icon">😊</div>
+                <div class="insight-title">Customer Satisfaction</div>
+                <div class="insight-text">Your CSAT score is 4.5/5 with 83.3% 5-star ratings across 30 responses. Outstanding — consider sharing your top-performing reply templates.</div>
+            </div>
+            <div class="insight-card yellow">
+                <div class="insight-icon">⏱️</div>
+                <div class="insight-title">Response Time Opportunity</div>
+                <div class="insight-text">Average first response is 1015m 39s, but the slowest was 323,772m 39s. Review delayed cases and set up real-time alerts for outliers.</div>
+            </div>
+            <div class="insight-card cyan">
+                <div class="insight-icon">📋</div>
+                <div class="insight-title">Feedback Coverage</div>
+                <div class="insight-text">0.8% of conversations received feedback. Aim for 80%+ by triggering surveys immediately after resolution.</div>
+            </div>
+            <div class="insight-card orange">
+                <div class="insight-icon">📉</div>
+                <div class="insight-title">Decreasing Workload</div>
+                <div class="insight-text">Conversation volume decreased 42.9% from 2026-08-06 to 2026-08-11. A good window to focus on quality and training.</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ========== Chart Defaults ==========
+        Chart.defaults.color = '#a0a0c0';
+        Chart.defaults.borderColor = 'rgba(255, 255, 255, 0.08)';
+        Chart.defaults.font.family = "'Inter', sans-serif";
+
+        // ========== Daily Activity Data ==========
+        const dailyData = [
+            {date:"2025-07-15",conversations:11},{date:"2025-07-16",conversations:4},{date:"2025-07-17",conversations:19},{date:"2025-07-18",conversations:17},{date:"2025-07-20",conversations:5},{date:"2025-07-21",conversations:17},{date:"2025-07-22",conversations:35},{date:"2025-07-23",conversations:59},{date:"2025-07-24",conversations:23},{date:"2025-07-25",conversations:1},{date:"2025-07-27",conversations:5},{date:"2025-07-28",conversations:15},{date:"2025-07-29",conversations:17},{date:"2025-07-30",conversations:18},{date:"2025-07-31",conversations:11},{date:"2025-08-01",conversations:3},{date:"2025-08-03",conversations:1},{date:"2025-08-04",conversations:17},{date:"2025-08-05",conversations:12},{date:"2025-08-06",conversations:11},{date:"2025-08-07",conversations:27},{date:"2025-08-08",conversations:16},{date:"2025-08-10",conversations:8},{date:"2025-08-11",conversations:12},{date:"2025-08-12",conversations:16},{date:"2025-08-13",conversations:16},{date:"2025-08-14",conversations:4},{date:"2025-08-15",conversations:9},{date:"2025-08-17",conversations:5},{date:"2025-08-18",conversations:28},{date:"2025-08-19",conversations:24},{date:"2025-08-20",conversations:28},{date:"2025-08-21",conversations:15},{date:"2025-08-22",conversations:11},{date:"2025-08-24",conversations:1},{date:"2025-08-25",conversations:10},{date:"2025-08-26",conversations:28},{date:"2025-08-27",conversations:17},{date:"2025-08-29",conversations:11},{date:"2025-08-31",conversations:8},{date:"2025-09-01",conversations:10},{date:"2025-09-02",conversations:15},{date:"2025-09-03",conversations:38},{date:"2025-09-04",conversations:23},{date:"2025-09-05",conversations:12},{date:"2025-09-06",conversations:7},{date:"2025-09-08",conversations:9},{date:"2025-09-09",conversations:16},{date:"2025-09-10",conversations:15},{date:"2025-09-11",conversations:60},{date:"2025-09-12",conversations:5},{date:"2025-09-14",conversations:2},{date:"2025-09-15",conversations:21},{date:"2025-09-16",conversations:26},{date:"2025-09-18",conversations:7},{date:"2025-09-19",conversations:5},{date:"2025-09-22",conversations:7},{date:"2025-09-23",conversations:8},{date:"2025-09-24",conversations:4},{date:"2025-09-25",conversations:15},{date:"2025-09-26",conversations:3},{date:"2025-09-28",conversations:5},{date:"2025-09-29",conversations:3},{date:"2025-09-30",conversations:9},{date:"2025-10-01",conversations:6},{date:"2025-10-02",conversations:11},{date:"2025-10-03",conversations:48},{date:"2025-10-05",conversations:4},{date:"2025-10-06",conversations:17},{date:"2025-10-07",conversations:3},{date:"2025-10-08",conversations:4},{date:"2025-10-09",conversations:9},{date:"2025-10-10",conversations:4},{date:"2025-10-12",conversations:6},{date:"2025-10-13",conversations:11},{date:"2025-10-14",conversations:3},{date:"2025-10-15",conversations:8},{date:"2025-10-16",conversations:13},{date:"2025-10-17",conversations:5},{date:"2025-10-20",conversations:17},{date:"2025-10-21",conversations:15},{date:"2025-10-22",conversations:6},{date:"2025-10-23",conversations:17},{date:"2025-10-24",conversations:27},{date:"2025-10-25",conversations:15},{date:"2025-10-27",conversations:7},{date:"2025-10-28",conversations:2},{date:"2025-10-29",conversations:31},{date:"2025-10-30",conversations:20},{date:"2025-10-31",conversations:14},{date:"2025-11-02",conversations:1},{date:"2025-11-03",conversations:8},{date:"2025-11-04",conversations:12},{date:"2025-11-05",conversations:7},{date:"2025-11-06",conversations:2},{date:"2025-11-07",conversations:31},{date:"2025-11-09",conversations:8},{date:"2025-11-10",conversations:21},{date:"2025-11-11",conversations:31},{date:"2025-11-12",conversations:42},{date:"2025-11-13",conversations:23},{date:"2025-11-14",conversations:29},{date:"2025-11-16",conversations:7},{date:"2025-11-17",conversations:17},{date:"2025-11-18",conversations:21},{date:"2025-11-19",conversations:24},{date:"2025-11-20",conversations:19},{date:"2025-11-21",conversations:23},{date:"2025-11-23",conversations:2},{date:"2025-11-24",conversations:27},{date:"2025-11-25",conversations:32},{date:"2025-11-26",conversations:30},{date:"2025-11-27",conversations:31},{date:"2025-11-28",conversations:23},{date:"2025-11-30",conversations:9},{date:"2025-12-01",conversations:21},{date:"2025-12-02",conversations:20},{date:"2025-12-03",conversations:21},{date:"2025-12-04",conversations:16},{date:"2025-12-05",conversations:47},{date:"2025-12-06",conversations:16},{date:"2025-12-08",conversations:25},{date:"2025-12-09",conversations:22},{date:"2025-12-10",conversations:26},{date:"2025-12-11",conversations:22},{date:"2025-12-12",conversations:45},{date:"2025-12-13",conversations:8},{date:"2025-12-14",conversations:4},{date:"2025-12-15",conversations:28},{date:"2025-12-16",conversations:27},{date:"2025-12-17",conversations:13},{date:"2025-12-18",conversations:14},{date:"2025-12-19",conversations:26},{date:"2025-12-21",conversations:3},{date:"2025-12-22",conversations:14},{date:"2025-12-23",conversations:36},{date:"2025-12-24",conversations:11},{date:"2025-12-26",conversations:16},{date:"2025-12-28",conversations:3},{date:"2025-12-29",conversations:6},{date:"2025-12-30",conversations:18},{date:"2026-01-01",conversations:5},{date:"2026-01-02",conversations:19},{date:"2026-01-04",conversations:19},{date:"2026-01-05",conversations:18},{date:"2026-01-06",conversations:39},{date:"2026-01-07",conversations:31},{date:"2026-01-08",conversations:20},{date:"2026-01-09",conversations:20},{date:"2026-01-10",conversations:12},{date:"2026-01-12",conversations:21},{date:"2026-01-13",conversations:17},{date:"2026-01-14",conversations:42},{date:"2026-01-15",conversations:55},{date:"2026-01-16",conversations:23},{date:"2026-01-17",conversations:26},{date:"2026-01-18",conversations:9},{date:"2026-01-19",conversations:23},{date:"2026-01-20",conversations:39},{date:"2026-01-22",conversations:45},{date:"2026-01-23",conversations:22},{date:"2026-01-24",conversations:28},{date:"2026-01-26",conversations:25},{date:"2026-01-27",conversations:4},{date:"2026-01-28",conversations:20},{date:"2026-01-29",conversations:8},{date:"2026-01-30",conversations:13},{date:"2026-02-01",conversations:10},{date:"2026-02-02",conversations:7},{date:"2026-02-03",conversations:19},{date:"2026-02-04",conversations:22},{date:"2026-02-05",conversations:32},{date:"2026-02-06",conversations:13},{date:"2026-02-09",conversations:9},{date:"2026-02-10",conversations:20},{date:"2026-02-11",conversations:51},{date:"2026-02-12",conversations:31},{date:"2026-02-13",conversations:22},{date:"2026-02-19",conversations:37},{date:"2026-02-20",conversations:13},{date:"2026-02-21",conversations:15},{date:"2026-02-23",conversations:26},{date:"2026-02-24",conversations:18},{date:"2026-02-25",conversations:12},{date:"2026-02-26",conversations:29},{date:"2026-02-27",conversations:12},{date:"2026-03-01",conversations:1},{date:"2026-03-02",conversations:6},{date:"2026-03-03",conversations:31},{date:"2026-03-04",conversations:37},{date:"2026-03-05",conversations:24},{date:"2026-03-06",conversations:10},{date:"2026-03-09",conversations:23},{date:"2026-03-10",conversations:6},{date:"2026-03-11",conversations:14},{date:"2026-03-12",conversations:14},{date:"2026-03-13",conversations:10},{date:"2026-03-16",conversations:6},{date:"2026-03-17",conversations:14},{date:"2026-03-18",conversations:10},{date:"2026-03-19",conversations:7},{date:"2026-03-20",conversations:1},{date:"2026-03-23",conversations:1},{date:"2026-03-24",conversations:11},{date:"2026-03-25",conversations:5},{date:"2026-03-26",conversations:10},{date:"2026-03-27",conversations:45},{date:"2026-03-29",conversations:9},{date:"2026-03-30",conversations:14},{date:"2026-03-31",conversations:13},{date:"2026-04-01",conversations:20},{date:"2026-04-02",conversations:11},{date:"2026-04-03",conversations:20},{date:"2026-04-04",conversations:10},{date:"2026-04-06",conversations:13},{date:"2026-04-07",conversations:6},{date:"2026-04-08",conversations:1},{date:"2026-04-09",conversations:24},{date:"2026-04-10",conversations:10},{date:"2026-04-12",conversations:7},{date:"2026-04-13",conversations:2},{date:"2026-04-14",conversations:2},{date:"2026-04-15",conversations:4},{date:"2026-04-17",conversations:1},{date:"2026-04-19",conversations:6},{date:"2026-04-20",conversations:1},{date:"2026-04-21",conversations:13},{date:"2026-04-23",conversations:2},{date:"2026-04-27",conversations:7},{date:"2026-04-28",conversations:3},{date:"2026-04-29",conversations:1},{date:"2026-05-03",conversations:1},{date:"2026-05-04",conversations:3},{date:"2026-05-05",conversations:9},{date:"2026-05-07",conversations:7},{date:"2026-05-08",conversations:6},{date:"2026-05-10",conversations:1},{date:"2026-05-11",conversations:1},{date:"2026-05-12",conversations:9},{date:"2026-05-13",conversations:10},{date:"2026-05-14",conversations:4},{date:"2026-05-15",conversations:3},{date:"2026-05-17",conversations:3},{date:"2026-05-19",conversations:1},{date:"2026-05-20",conversations:1},{date:"2026-05-21",conversations:2},{date:"2026-05-22",conversations:2},{date:"2026-05-23",conversations:2},{date:"2026-05-27",conversations:1},{date:"2026-06-03",conversations:3},{date:"2026-06-04",conversations:7},{date:"2026-06-07",conversations:3},{date:"2026-06-10",conversations:1},{date:"2026-06-11",conversations:3},{date:"2026-06-14",conversations:1},{date:"2026-06-15",conversations:1},{date:"2026-06-16",conversations:2},{date:"2026-06-17",conversations:1},{date:"2026-06-18",conversations:3},{date:"2026-06-21",conversations:1},{date:"2026-06-23",conversations:3},{date:"2026-06-30",conversations:1},{date:"2026-07-13",conversations:1},{date:"2026-07-14",conversations:2},{date:"2026-07-17",conversations:1},{date:"2026-07-28",conversations:6},{date:"2026-07-30",conversations:2},{date:"2026-08-06",conversations:7},{date:"2026-08-11",conversations:4}
+        ];
+
+        const dailyLabels = dailyData.map(d => {
+            const date = new Date(d.date);
+            return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: '2-digit' });
+        });
+        const dailyValues = dailyData.map(d => d.conversations);
+
+        // ========== Daily Activity Chart ==========
+        const dailyCtx = document.getElementById('dailyActivityChart').getContext('2d');
+        const dailyGradient = dailyCtx.createLinearGradient(0, 0, 0, 300);
+        dailyGradient.addColorStop(0, 'rgba(139, 92, 246, 0.4)');
+        dailyGradient.addColorStop(1, 'rgba(139, 92, 246, 0.0)');
+
+        new Chart(dailyCtx, {
+            type: 'line',
+            data: {
+                labels: dailyLabels,
+                datasets: [{
+                    label: 'Conversations',
+                    data: dailyValues,
+                    borderColor: '#8b5cf6',
+                    backgroundColor: dailyGradient,
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 0,
+                    pointHoverRadius: 6,
+                    pointBackgroundColor: '#ec4899',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: 'rgba(26, 26, 62, 0.95)',
+                        borderColor: 'rgba(139, 92, 246, 0.3)',
+                        borderWidth: 1,
+                        padding: 12,
+                        cornerRadius: 12,
+                        titleColor: '#fff',
+                        bodyColor: '#a0a0c0',
+                        callbacks: {
+                            label: (ctx) => ` ${ctx.parsed.y} conversations`
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: { display: false },
+                        ticks: {
+                            maxTicksLimit: 12,
+                            maxRotation: 45,
+                            minRotation: 45,
+                            font: { size: 10 }
+                        }
+                    },
+                    y: {
+                        grid: { color: 'rgba(255,255,255,0.05)' },
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // ========== Assignment Breakdown Doughnut ==========
+        new Chart(document.getElementById('assignmentChart'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Resolved', 'Bot'],
+                datasets: [{
+                    data: [3435, 129],
+                    backgroundColor: ['#10b981', '#06b6d4'],
+                    borderColor: 'rgba(26, 26, 62, 1)',
+                    borderWidth: 3,
+                    hoverOffset: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '65%',
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: { padding: 16, usePointStyle: true, pointStyle: 'circle' }
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(26, 26, 62, 0.95)',
+                        cornerRadius: 12,
+                        padding: 12,
+                        callbacks: {
+                            label: (ctx) => ` ${ctx.parsed.toLocaleString()} conversations`
+                        }
+                    }
+                }
+            }
+        });
+
+        // ========== Response Time Distribution Chart ==========
+        new Chart(document.getElementById('responseDistChart'), {
+            type: 'bar',
+            data: {
+                labels: ['< 2s', '2-5s', '5-10s', '10-20s', '20-30s', '> 30s'],
+                datasets: [{
+                    label: 'Responses',
+                    data: [3333, 2, 1, 17, 19, 598],
+                    backgroundColor: ['#10b981', '#14b8a6', '#06b6d4', '#f59e0b', '#f97316', '#ef4444'],
+                    borderRadius: 8,
+                    barThickness: 40,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: 'rgba(26, 26, 62, 0.95)',
+                        cornerRadius: 12,
+                        padding: 12,
+                        callbacks: {
+                            label: (ctx) => {
+                                const total = 3970;
+                                const pct = (ctx.parsed.y / total * 100).toFixed(2);
+                                return ` ${ctx.parsed.y.toLocaleString()} responses (${pct}%)`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: { grid: { display: false } },
+                    y: {
+                        grid: { color: 'rgba(255,255,255,0.05)' },
+                        beginAtZero: true,
+                        type: 'logarithmic',
+                    }
+                }
+            }
+        });
+    </script>
+
+</body>
+</html>

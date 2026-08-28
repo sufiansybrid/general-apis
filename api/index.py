@@ -549,6 +549,15 @@ def marked3():
     return render_template("marked-3.html")
 
 
+@app.route("/overall-agent-dashboard")
+def OverallAgentDashboard():
+    return render_template("overall-agent-dashboard.html")
+
+@app.route("/agent-performance")
+def AgentPerformance():
+    return render_template("agent-performance.html")
+
+
 def fetch_ssgc_bill(customer_number: str) -> dict:
     """Helper function to fetch bill data from SSGC and return a structured dictionary."""
     url = "https://viewbill.ssgc.com.pk/web/"
