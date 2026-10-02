@@ -995,7 +995,17 @@ def get_ke_bill():
     if len(dfs) < 2:
         return jsonify({
             "error": "KE response did not contain the expected bill table.",
-            "tables_found": len(dfs)
+            "tables_found": len(dfs),
+            "table_shapes": [df.shape for df in dfs],
+            "table_columns": [df.columns.tolist() for df in dfs],
+            "table_previews": [df.head(3).to_dict() for df in dfs],
+            "response_preview": result[:1000],
+            "response_length": len(result),
+            "response_type": type(result).__name__,
+            "response_content_type": "text/html",  # Assuming the response is HTML
+            "response_status_code": status_code,
+            "response_headers": dict(response.headers) if 'response' in locals() else {},
+
         }), 502
 
     df = dfs[1]
