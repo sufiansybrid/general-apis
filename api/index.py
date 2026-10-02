@@ -553,6 +553,7 @@ def marked3():
 def OverallAgentDashboard():
     return render_template("overall-agent-dashboard.html")
 
+
 @app.route("/agent-performance")
 def AgentPerformance():
     return render_template("agent-performance.html")
@@ -563,43 +564,43 @@ def fetch_ssgc_bill(customer_number: str) -> dict:
     url = "https://viewbill.ssgc.com.pk/web/"
 
     cookies = {
-        '_gcl_au': '1.1.67700686.1786084287',
-        '_ga_H6YLY258B5': 'GS2.1.s1786084288$o1$g0$t1786084296$j52$l0$h0',
-        '_ga': 'GA1.3.1629238666.1786084289',
-        '__utma': '147246261.1629238666.1786084289.1786085306.1786085306.1',
-        '__utmz': '147246261.1786085306.1.1.utmcsr=google|utmccn=(organic)|utmcmd=organic|utmctr=(not%20provided)',
-        '_gid': 'GA1.3.916068457.1786350642',
-        'PHPSESSID': '9vhng51j7e11j5sbe2cidgd7pa',
-        '_gat': '1',
-        '_ga_1FE7NXRM1T': 'GS2.3.s1786523277$o9$g1$t1786523279$j58$l0$h0',
+        "_gcl_au": "1.1.67700686.1786084287",
+        "_ga_H6YLY258B5": "GS2.1.s1786084288$o1$g0$t1786084296$j52$l0$h0",
+        "_ga": "GA1.3.1629238666.1786084289",
+        "__utma": "147246261.1629238666.1786084289.1786085306.1786085306.1",
+        "__utmz": "147246261.1786085306.1.1.utmcsr=google|utmccn=(organic)|utmcmd=organic|utmctr=(not%20provided)",
+        "_gid": "GA1.3.916068457.1786350642",
+        "PHPSESSID": "9vhng51j7e11j5sbe2cidgd7pa",
+        "_gat": "1",
+        "_ga_1FE7NXRM1T": "GS2.3.s1786523277$o9$g1$t1786523279$j58$l0$h0",
     }
 
     headers = {
-        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
-        'Accept-Language': 'en-US,en;q=0.9,ur;q=0.8,en-GB;q=0.7,en-GB-oxendict;q=0.6',
-        'Cache-Control': 'max-age=0',
-        'Connection': 'keep-alive',
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Origin': 'https://viewbill.ssgc.com.pk',
-        'Referer': 'https://viewbill.ssgc.com.pk/web/',
-        'Sec-Fetch-Dest': 'document',
-        'Sec-Fetch-Mode': 'navigate',
-        'Sec-Fetch-Site': 'same-origin',
-        'Sec-Fetch-User': '?1',
-        'Upgrade-Insecure-Requests': '1',
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36',
-        'sec-ch-ua': '"Not=A?Brand";v="99", "Google Chrome";v="151", "Chromium";v="151"',
-        'sec-ch-ua-mobile': '?0',
-        'sec-ch-ua-platform': '"Windows"',
-        'sec-gpc': '1',
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+        "Accept-Language": "en-US,en;q=0.9,ur;q=0.8,en-GB;q=0.7,en-GB-oxendict;q=0.6",
+        "Cache-Control": "max-age=0",
+        "Connection": "keep-alive",
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Origin": "https://viewbill.ssgc.com.pk",
+        "Referer": "https://viewbill.ssgc.com.pk/web/",
+        "Sec-Fetch-Dest": "document",
+        "Sec-Fetch-Mode": "navigate",
+        "Sec-Fetch-Site": "same-origin",
+        "Sec-Fetch-User": "?1",
+        "Upgrade-Insecure-Requests": "1",
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+        "sec-ch-ua": '"Not=A?Brand";v="99", "Google Chrome";v="151", "Chromium";v="151"',
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua-platform": '"Windows"',
+        "sec-gpc": "1",
         # 'Cookie': '_gcl_au=1.1.67700686.1786084287; _ga_H6YLY258B5=GS2.1.s1786084288$o1$g0$t1786084296$j52$l0$h0; _ga=GA1.3.1629238666.1786084289; __utma=147246261.1629238666.1786084289.1786085306.1786085306.1; __utmz=147246261.1786085306.1.1.utmcsr=google|utmccn=(organic)|utmcmd=organic|utmctr=(not%20provided); _gid=GA1.3.916068457.1786350642; PHPSESSID=9vhng51j7e11j5sbe2cidgd7pa; _gat=1; _ga_1FE7NXRM1T=GS2.3.s1786523277$o9$g1$t1786523279$j58$l0$h0',
     }
 
     payload = {
         "b": customer_number,
-        'g-recaptcha-response': '0cAFcWeA4WEaeHou2q4NzzrD5FaYjeExWfjIQ6jRVoxHvf7KVgKXp_1Vqsubvn80Lr6HMzLAp4B1IwYumoORhamtZ0VuXmeYV_8Il3z06wHuM8vVM0HD5n-dhFzO72FXrFYJZLYYJeuz9rTfQ22n83uyIp4uk_-SdZ1RPH7_WPfYZ7C3D3NnhReKCHoiULh752_Mp9e1Qp2DzxLTtqvBOHLi5akgDSXgo4hyIifztlJ6GUvAy_Ks4-tbw8wz6QDuDqPt3D9waxqAV7QFnlFuqBRkM9mLH0G5bKEL_BJBfGgwv12NeWvy4tyf2-LJGBxv9Qh68k9Z21u7MlnhUAnbO67jjCPHW5ZWJkvEsrzm2DO8M3RyrC3vseJKdSl6ceTWmjSInJA_LnjyZveL_xbAaIa7Oq6bLNDcqL3Fctn6GHjBtro2ngoCSTzA1x-M3xYg86BDdUoRqaGwwaNRNKaD5b7eTxQ4546RpyF-pj09kOG7R1d-Lg53bkJ6hYVNItCCQheYcZs4UyeTTKeDKEkGrfMofOSwILtK3Mda43XNY3aMV3WBZtcxusYeptsjJE6PdV3MszZ48XiAwk-Bwt1FrJGwm8AVQGOTamP9cdflePcWSxCty0zQn48sglVg9kNmrK9tDdnzPqPdfj8taaeRy6lmnzp6XQlf6xIF9anOgeqxK25h1sUmeGnDXsuixOj6926KEgFt0MdvC6QPqxqMI0fQvTjqPvyCyEgNwwZxfEM9dzqaXkKHjLIjuzJ1iDuSZwhzIKtyypt5NdjYgZGWwHaJIunt3hm8QjfIb7BEqm1wHdaj1qfcmcQQnYbIWL0Ac9dNUpzMsqiFUA8Lb4RICUksMaIPUDZZiPNafemyTszdFQ2Wft4KUlvTjtmH4ZJjUEAL6_y2Cw3AorTByiRWlaib8pQMlqrGgmSKHVwr8KGZ5MXz-13lzD3HnwNsfOG7xgbZBkHIgD32qJBmcMsJIoCrJlhzPjOUEHzbM290n2LEKzeAaVIkp3qQyv6D2GF61dwv5w2ud38CxMdcvkCwy6_hXyMYJfOFui71Jw7hdRk6usom6JXozXbTdPtnDOtNxqzxP4uZD1Cvzq7dPFjqvTTplQkv6oNfE4ta8dlWxblIkMbRi1WMynPsTdd6UxVJCvPngSzZdvoRQAISq4QVZr78ZbsNupcEPjLT5FQQaQA6QPzzDYNtvY6lL1tNB-MLqIThCmZdCwDPQAWv5zhk7XEFzc7yjJIDhqzRVkxlqhK1rP6ONZkbyABhCLRq3p1LMFvUqwtJbJcFGSh5awFw93qztQYLmGGHNg45kHoiU7n4db66riFXwoh-iug9kDUX04Kv6JcOfiFDQ2UH2oijQG7aQmBrenwnqVQ4js4wtH2b28syCraU1J2lamzzH4Zpf8RRLJryWVwnDPxeTT4s5nTPGBb8amAPSuMRIrinj5-TR88tomvsBsytKXMLfPHs6hvQ7fxpSOtUP_F6lWcoiDvUHyF2X1WN80qnIWFT-EFrVIPWF0bGCabpCfR8fLnKKEiXWENCatFaX03Fkvallky3BGiFKatEWdEPjSLExlk84e0AD7Jf4xBYHYPj0lGwe3uNxz3hy-As7hLyksGrEcVIAGBdURTnY3hr35JDczBIMC55Lhv6bumxvxaq86I41WRw-6cc3HAN0h5ugyyZS-P7Y7GLDg-mhTDXHGJ-M68EkHf7GGI-KGYMFCdakww73BxGf3O7ONzlqifZHmwHD6e7EVrMEw4eXybQssHb1q-_sFfWvkUSsX9dgpT7dwZoo4YgW9YKXgRAnDCHYUoE8TJ8ETyGlpUrn1AkgBnUL5jOUntL2rTaN6UurIM8IQK49_M2BjQmIAFKumIopGDgBgavSxzUDErkCS7PMJq3KTAAjii6aKJv9C1j32xlKKEK3UfIxykkDkvdfej_ArbOeHoV6qJMSiju8b0XHyGoZbJUAU-cm8_t41w6QrSfKzgadfe3TBMny7QVuImvdDW_UznMfId8uJWCxd7zlR4qN48vkYzT4SYyZScbcEuHcgBMOetncSYtRvEHI-WjKKmat8kAQNgETMWPS2eH2cqUbGNCzFGGzUIb2M3z3_01yOOuaKXsm3XDRgl2B4WJWdggLg4j0GWVanMmRXEBJu6qm5Hk03x4OcrPu87BEiTgLN_JpfLzBHv3j392pyhgOB1HlNg1aTz5iCtffiMvMXLhihzg5wAxFQmzc3sww8bC-u8gQzq_SLLgtkLJvQCZNhvBGFkSlEAcQ1REZjGMrWhH0ilTGZ-LzUq7Bo8iQ',
-        '_wpnonce': '92ed8e1566',
-        '_wp_http_referer': '/web/',
+        "g-recaptcha-response": "0cAFcWeA4WEaeHou2q4NzzrD5FaYjeExWfjIQ6jRVoxHvf7KVgKXp_1Vqsubvn80Lr6HMzLAp4B1IwYumoORhamtZ0VuXmeYV_8Il3z06wHuM8vVM0HD5n-dhFzO72FXrFYJZLYYJeuz9rTfQ22n83uyIp4uk_-SdZ1RPH7_WPfYZ7C3D3NnhReKCHoiULh752_Mp9e1Qp2DzxLTtqvBOHLi5akgDSXgo4hyIifztlJ6GUvAy_Ks4-tbw8wz6QDuDqPt3D9waxqAV7QFnlFuqBRkM9mLH0G5bKEL_BJBfGgwv12NeWvy4tyf2-LJGBxv9Qh68k9Z21u7MlnhUAnbO67jjCPHW5ZWJkvEsrzm2DO8M3RyrC3vseJKdSl6ceTWmjSInJA_LnjyZveL_xbAaIa7Oq6bLNDcqL3Fctn6GHjBtro2ngoCSTzA1x-M3xYg86BDdUoRqaGwwaNRNKaD5b7eTxQ4546RpyF-pj09kOG7R1d-Lg53bkJ6hYVNItCCQheYcZs4UyeTTKeDKEkGrfMofOSwILtK3Mda43XNY3aMV3WBZtcxusYeptsjJE6PdV3MszZ48XiAwk-Bwt1FrJGwm8AVQGOTamP9cdflePcWSxCty0zQn48sglVg9kNmrK9tDdnzPqPdfj8taaeRy6lmnzp6XQlf6xIF9anOgeqxK25h1sUmeGnDXsuixOj6926KEgFt0MdvC6QPqxqMI0fQvTjqPvyCyEgNwwZxfEM9dzqaXkKHjLIjuzJ1iDuSZwhzIKtyypt5NdjYgZGWwHaJIunt3hm8QjfIb7BEqm1wHdaj1qfcmcQQnYbIWL0Ac9dNUpzMsqiFUA8Lb4RICUksMaIPUDZZiPNafemyTszdFQ2Wft4KUlvTjtmH4ZJjUEAL6_y2Cw3AorTByiRWlaib8pQMlqrGgmSKHVwr8KGZ5MXz-13lzD3HnwNsfOG7xgbZBkHIgD32qJBmcMsJIoCrJlhzPjOUEHzbM290n2LEKzeAaVIkp3qQyv6D2GF61dwv5w2ud38CxMdcvkCwy6_hXyMYJfOFui71Jw7hdRk6usom6JXozXbTdPtnDOtNxqzxP4uZD1Cvzq7dPFjqvTTplQkv6oNfE4ta8dlWxblIkMbRi1WMynPsTdd6UxVJCvPngSzZdvoRQAISq4QVZr78ZbsNupcEPjLT5FQQaQA6QPzzDYNtvY6lL1tNB-MLqIThCmZdCwDPQAWv5zhk7XEFzc7yjJIDhqzRVkxlqhK1rP6ONZkbyABhCLRq3p1LMFvUqwtJbJcFGSh5awFw93qztQYLmGGHNg45kHoiU7n4db66riFXwoh-iug9kDUX04Kv6JcOfiFDQ2UH2oijQG7aQmBrenwnqVQ4js4wtH2b28syCraU1J2lamzzH4Zpf8RRLJryWVwnDPxeTT4s5nTPGBb8amAPSuMRIrinj5-TR88tomvsBsytKXMLfPHs6hvQ7fxpSOtUP_F6lWcoiDvUHyF2X1WN80qnIWFT-EFrVIPWF0bGCabpCfR8fLnKKEiXWENCatFaX03Fkvallky3BGiFKatEWdEPjSLExlk84e0AD7Jf4xBYHYPj0lGwe3uNxz3hy-As7hLyksGrEcVIAGBdURTnY3hr35JDczBIMC55Lhv6bumxvxaq86I41WRw-6cc3HAN0h5ugyyZS-P7Y7GLDg-mhTDXHGJ-M68EkHf7GGI-KGYMFCdakww73BxGf3O7ONzlqifZHmwHD6e7EVrMEw4eXybQssHb1q-_sFfWvkUSsX9dgpT7dwZoo4YgW9YKXgRAnDCHYUoE8TJ8ETyGlpUrn1AkgBnUL5jOUntL2rTaN6UurIM8IQK49_M2BjQmIAFKumIopGDgBgavSxzUDErkCS7PMJq3KTAAjii6aKJv9C1j32xlKKEK3UfIxykkDkvdfej_ArbOeHoV6qJMSiju8b0XHyGoZbJUAU-cm8_t41w6QrSfKzgadfe3TBMny7QVuImvdDW_UznMfId8uJWCxd7zlR4qN48vkYzT4SYyZScbcEuHcgBMOetncSYtRvEHI-WjKKmat8kAQNgETMWPS2eH2cqUbGNCzFGGzUIb2M3z3_01yOOuaKXsm3XDRgl2B4WJWdggLg4j0GWVanMmRXEBJu6qm5Hk03x4OcrPu87BEiTgLN_JpfLzBHv3j392pyhgOB1HlNg1aTz5iCtffiMvMXLhihzg5wAxFQmzc3sww8bC-u8gQzq_SLLgtkLJvQCZNhvBGFkSlEAcQ1REZjGMrWhH0ilTGZ-LzUq7Bo8iQ",
+        "_wpnonce": "92ed8e1566",
+        "_wp_http_referer": "/web/",
     }
 
     try:
@@ -670,7 +671,16 @@ def get_gas_bill():
             404,
         )
 
-    return jsonify({"status": "success", "data": bill_details}), 200
+    return (
+        jsonify(
+            {
+                "status": "success",
+                "message": "Gas Bill details retrieved successfully.",
+                "data": bill_details,
+            }
+        ),
+        200,
+    )
 
 
 def to_num(val, default=0):
@@ -692,13 +702,15 @@ def transform_billing_json(raw_data: dict) -> dict:
     for i in range(1, 13):
         month_key = f"billinG_MONTH_{i}"
         if month_key in inner and inner[month_key]:
-            billing_history.append({
-                "month": inner.get(month_key),
-                "amountBilled": to_num(inner.get(f"amounT_BILLED_{i}")),
-                "amountPaid": to_num(inner.get(f"amounT_PAID_{i}")),
-                "paymentDate": inner.get(f"paymenT_DATE_{i}")
-            })
-    
+            billing_history.append(
+                {
+                    "month": inner.get(month_key),
+                    "amountBilled": to_num(inner.get(f"amounT_BILLED_{i}")),
+                    "amountPaid": to_num(inner.get(f"amounT_PAID_{i}")),
+                    "paymentDate": inner.get(f"paymenT_DATE_{i}"),
+                }
+            )
+
     # Reverse to keep chronological order (Oldest -> Recent)
     billing_history.reverse()
 
@@ -716,14 +728,14 @@ def transform_billing_json(raw_data: dict) -> dict:
                     "townName": inner.get("towN_NAME"),
                     "townCode": inner.get("towN_CODE"),
                     "townAbbreviation": inner.get("towN_ABBRI"),
-                    "zoneName": inner.get("zonE_NAME")
+                    "zoneName": inner.get("zonE_NAME"),
                 },
                 "propertyDetails": {
                     "plotType": inner.get("ploT_TYPE"),
                     "plotSizeSqFt": to_num(inner.get("ploT_SIZE")),
                     "flatSizeSqFt": to_num(inner.get("flaT_SIZE")),
-                    "additionalStories": to_num(inner.get("additionaL_STORY"))
-                }
+                    "additionalStories": to_num(inner.get("additionaL_STORY")),
+                },
             },
             "billDetails": {
                 "billPeriod": inner.get("bilL_PERIOD"),
@@ -731,7 +743,7 @@ def transform_billing_json(raw_data: dict) -> dict:
                 "dueDate": inner.get("duE_DT"),
                 "barcode": inner.get("baR_CODE"),
                 "noticeMessage": inner.get("messeagE_rebate"),
-                "contactInfo": inner.get("towN_MSG")
+                "contactInfo": inner.get("towN_MSG"),
             },
             "charges": {
                 "currentCharges": {
@@ -739,21 +751,21 @@ def transform_billing_json(raw_data: dict) -> dict:
                     "sewerage": to_num(inner.get("seweragE_CURRENT")),
                     "conservancy": to_num(inner.get("conservancY_CURRENT")),
                     "fire": to_num(inner.get("firE_CURRENT")),
-                    "waterSurcharge": to_num(inner.get("wateR_SURCHARGE"))
+                    "waterSurcharge": to_num(inner.get("wateR_SURCHARGE")),
                 },
                 "arrears": {
                     "water": to_num(inner.get("wateR_ARREARS")),
                     "sewerage": to_num(inner.get("seweragE_ARREARS")),
                     "conservancy": to_num(inner.get("conservancY_ARREARS")),
                     "fire": to_num(inner.get("fire_ARREARS")),
-                    "total": to_num(inner.get("outstandinG_ARREARS"))
+                    "total": to_num(inner.get("outstandinG_ARREARS")),
                 },
                 "totals": {
                     "waterTotal": to_num(inner.get("totaL_WATER")),
                     "sewerageTotal": to_num(inner.get("totaL_SEWERAGE")),
                     "conservancyTotal": to_num(inner.get("totaL_CONSERVANCY")),
                     "fireTotal": to_num(inner.get("totaL_FIRE")),
-                    "bankCharges": to_num(inner.get("banK_CHARGES"))
+                    "bankCharges": to_num(inner.get("banK_CHARGES")),
                 },
                 "rebates": {
                     "water": to_num(inner.get("waterRebate")),
@@ -761,15 +773,15 @@ def transform_billing_json(raw_data: dict) -> dict:
                     "conservancy": to_num(inner.get("conservancyRebate")),
                     "fire": to_num(inner.get("fireRebate")),
                     "total": to_num(inner.get("totalRebate")),
-                    "percentage": to_num(inner.get("rebatePercentage"))
+                    "percentage": to_num(inner.get("rebatePercentage")),
                 },
                 "paymentSummary": {
                     "payableByDueDate": to_num(inner.get("payablE_DUE_DATE")),
-                    "payableAfterDueDate": to_num(inner.get("payablE_AFTER_DATE"))
-                }
+                    "payableAfterDueDate": to_num(inner.get("payablE_AFTER_DATE")),
+                },
             },
-            "billingHistory": billing_history
-        }
+            "billingHistory": billing_history,
+        },
     }
 
 
@@ -778,41 +790,47 @@ def fetch_water_bill(consumer_id: str):
 
     # Headers matching your curl setup
     HEADERS = {
-        'Accept': '*/*',
-        'Accept-Language': 'en-US,en;q=0.9,ur;q=0.8,en-GB;q=0.7',
-        'Connection': 'keep-alive',
-        'Content-Type': 'application/json',
-        'Origin': 'https://www.kwsc.gos.pk',
-        'Sec-Fetch-Dest': 'empty',
-        'Sec-Fetch-Mode': 'cors',
-        'Sec-Fetch-Site': 'same-origin',
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36',
-        'sec-ch-ua': '"Not=A?Brand";v="99", "Google Chrome";v="151", "Chromium";v="151"',
-        'sec-ch-ua-mobile': '?0',
-        'sec-ch-ua-platform': '"Windows"',
-        'sec-gpc': '1',
+        "Accept": "*/*",
+        "Accept-Language": "en-US,en;q=0.9,ur;q=0.8,en-GB;q=0.7",
+        "Connection": "keep-alive",
+        "Content-Type": "application/json",
+        "Origin": "https://www.kwsc.gos.pk",
+        "Sec-Fetch-Dest": "empty",
+        "Sec-Fetch-Mode": "cors",
+        "Sec-Fetch-Site": "same-origin",
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+        "sec-ch-ua": '"Not=A?Brand";v="99", "Google Chrome";v="151", "Chromium";v="151"',
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua-platform": '"Windows"',
+        "sec-gpc": "1",
     }
 
     COOKIES = {
-        'cookie-consent': 'declined',
+        "cookie-consent": "declined",
     }
 
-    HEADERS['Referer'] = f'https://www.kwsc.gos.pk/bill/view?consumerId={consumer_id}'
+    HEADERS["Referer"] = f"https://www.kwsc.gos.pk/bill/view?consumerId={consumer_id}"
 
     try:
         response = requests.post(
-            'https://www.kwsc.gos.pk/api/bill/get-bill',
+            "https://www.kwsc.gos.pk/api/bill/get-bill",
             headers=HEADERS,
             cookies=COOKIES,
-            json={'consumerId': consumer_id},
-            timeout=10
+            json={"consumerId": consumer_id},
+            timeout=10,
         )
         response.raise_for_status()
         raw_json = response.json()
     except requests.exceptions.HTTPError as exc:
-        return {"error": "Upstream KW&SC API returned an error.", "details": str(exc)}, exc.response.status_code
+        return {
+            "error": "Upstream KW&SC API returned an error.",
+            "details": str(exc),
+        }, exc.response.status_code
     except requests.exceptions.RequestException as exc:
-        return {"error": "Failed to connect to upstream server.", "details": str(exc)}, 500
+        return {
+            "error": "Failed to connect to upstream server.",
+            "details": str(exc),
+        }, 500
 
     if not raw_json.get("data"):
         return {"error": "Bill record not found for this Consumer ID."}, 404
@@ -820,13 +838,14 @@ def fetch_water_bill(consumer_id: str):
     return transform_billing_json(raw_json), 200
 
 
-@app.route('/api/view-water-bill', methods=['GET', 'POST'])
+@app.route("/api/view-water-bill", methods=["GET", "POST"])
 def get_water_bill():
     """GET endpoint: /api/view-water-bill/ \n
-    Accepts consumer_id as a query parameter or JSON body and fetches water bill details."""
+    Accepts consumer_id as a query parameter or JSON body and fetches water bill details.
+    """
 
     consumer_id = None
-    
+
     if request.is_json:
         data = request.get_json()
         consumer_id = data.get("consumer_id")
@@ -834,83 +853,85 @@ def get_water_bill():
         consumer_id = request.form.get("consumer_id")
     else:
         consumer_id = request.args.get("consumer_id")
-        
+
     result, status_code = fetch_water_bill(consumer_id)
     return jsonify(result), status_code
 
 
 def fetch_ke_bill(account_number):
     """Utility to query the upstream KE API."""
-    
+
     COOKIES = {
-        '_gid': 'GA1.3.1883196109.1786542815',
-        'wp-wpml_current_language': 'en',
-        'ASP.NET_SessionId': 'yxvfwpxlgqkbpf3kbakh5tsn',
-        'BNIS_vid': '6KPy3kbWSYWJyN2fK6XxIymP3viCmwDePUknd0o4ZFOvFtrjrjJD9VXXJxfQgLIzXKJeF9xS1bW4+GojLVjFeIqV1gxzKdKS0ayBzQ2HXJjd46AwfhbB8rbSAa9sXNWNFBVnDu30bdwGAzozMeHnekxWU3LM1+K1k+VCdtHqP6t53k/00RmlXjpjtPiuFfpjiwfYxfNswLYNNEUjD6DS3Xsc6c0aIS024EHW6o/r0RA=',
-        '_ga_J1MES32KE0': 'GS2.1.s1786542811$o1$g1$t1786542932$j42$l0$h0',
-        '_ga': 'GA1.3.543227447.1786542811',
-        '__utma': '138832625.543227447.1786542811.1786542939.1786542939.1',
-        '__utmc': '138832625',
-        '__utmz': '138832625.1786542939.1.1.utmcsr=ke.com.pk|utmccn=(referral)|utmcmd=referral|utmcct=/',
-        'x-bni-ja': '151966141',
-        'wp-settings-5': 'editor%3Dtinymce%26libraryContent%3Dbrowse%26posts_list_mode%3Dlist%26advImgDetails%3Dshow',
-        'wp-settings-6': 'editor%3Dtinymce%26libraryContent%3Dbrowse',
-        'wp-settings-time-6': '1758694708',
-        'wp-settings-time-8': '1765435100',
-        'wp-settings-8': 'editor%3Dhtml',
-        'wp-settings-time-5': '1776233017',
-        'BNIS_x-bni-jas': 'vAY265Wyu+j+9m5Nq4gLRvP0VnWg1qic109uZQN5FKc+Ov7weALliJg8UvakJ0XLmXi8R2wjVeSpPEkZgoFtuthS6vvnaeQ5jrVL5v6FtBoz8Y3A66DAOA==',
-        'BNIS___utm_is1': 'PWSHSw03XAxhEA252tjc8nQ4pI/lAUsh2ltVgBlAs2tPDjdntShzc5EQDOs2568eol4igkJGKhSBEslRjEUWB10Y7QEejlxKx1KwH4vRxxfDo8p6mVa0eA==',
-        'BNIS___utm_is2': 'J5wshXGUC1hHBiWUwUyqt3JhpeOuUj8tp0usjNVYFJuarSkmbKGSWBOiTXLO/dtPrbWHs09duiY=',
-        'BNIS___utm_is3': '0YF8tWJK6obyu9hqdh2ZJqgsdRn7T0Zw3+1Zoo7m2Yu1iehwNymAO3dwuskvNsDT4PYlx9Hx49JNEyItEdqtqaB7FS+Hq1AZUDpevL6mtBB+SmsfbGaPCQ==',
-        '__utmb': '138832625.3.10.1786542939',
+        "wp-settings-5": "editor%3Dtinymce%26libraryContent%3Dbrowse%26posts_list_mode%3Dlist%26advImgDetails%3Dshow",
+        "wp-settings-6": "editor%3Dtinymce%26libraryContent%3Dbrowse",
+        "wp-settings-time-6": "1758694708",
+        "wp-settings-time-8": "1765435100",
+        "wp-settings-8": "editor%3Dhtml",
+        "wp-settings-time-5": "1776233017",
+        "_ga_Z5C4KT5HDS": "GS2.1.s1788949689$o2$g1$t1788950835$j60$l0$h0",
+        "_ga_1WRX312K8M": "GS2.1.s1788949734$o2$g1$t1788950835$j60$l0$h0",
+        "ASP.NET_SessionId": "3eteljdxnnkkyap4euf2uiw1",
+        "BNIS_vid": "cCwFcxvfviCKot4NH5acoW0K9RcCX5PvnHPd7ti14IAidbhSASIc6q37lFmMLwxFaOKucgpofEWT+5j6O54PyJkdp/NH91SEzKsBSsCVp+a5psL/thsHftsV+Pe6zJIq5H1ej09/qdatNM0zkOUyqgttcOJcZ/JMJ93SuT0sTf+exOaddE2O+/YO3yRMG6GXDhfxfAm40FcNpmxG7MIqKjdL1hRZBAkt1Wv6v/BWiHE=",
+        "_ga": "GA1.3.543227447.1786542811",
+        "_gid": "GA1.3.1881009845.1790937552",
+        "__utma": "138832625.543227447.1786542811.1786542939.1790937556.2",
+        "__utmc": "138832625",
+        "__utmz": "138832625.1790937556.2.2.utmcsr=ke.com.pk|utmccn=(referral)|utmcmd=referral|utmcct=/",
+        "__utmt": "1",
+        "_ga_J1MES32KE0": "GS2.1.s1790937551$o4$g0$t1790937556$j55$l0$h0",
+        "x-bni-ja": "-453620306",
+        "BNIS_x-bni-jas": "Zb5io4VlrjRGfvpGqPuGuCuDCuJ0OJ5vh8bptioht8UUSMqUwfrrcKLDiMpDRP4q0RnAEpwEv+SjQoYh0qy4t4xPo5P3UYMYAffYPpLVGkXkSZASIAFbxQ==",
+        "__utmb": "138832625.2.10.1790937556",
+        "BNIS___utm_is1": "+w5BnRdbzgLenoQqW1UK4hCvkUs5B19gWgBYIVY6FelTwHRWabzk5G8GDW+IPDBNG+D/1XPJe6WgVSo2xBLXHQ8FiFh3LEPnsJir8BPhz4xmYPRi/IlpUQ==",
+        "BNIS___utm_is2": "jBzq/9g3HUZgsw5EDmmx5NyOZFz5rV9an1CALtmgZwS1waHiwVk5q9aS0wDaGHOFgt8QOJLg4UI=",
+        "BNIS___utm_is3": "iaguNR9PXPW0xhtjsKH95DEvwcoouK51RkSZRxvQjRJNWsuaXus/9iSPLGeSL9TqDKf93PkflXPHKj8UGAU1is3sQAsNUIITPzVPmtmf/x6YpmMjpSHU0w==",
+        "wp-wpml_current_language": "en",
     }
 
     HEADERS = {
-        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
-        'Accept-Language': 'en-US,en;q=0.9,ur;q=0.8,en-GB;q=0.7,en-GB-oxendict;q=0.6',
-        'Cache-Control': 'max-age=0',
-        'Connection': 'keep-alive',
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Origin': 'https://staging.ke.com.pk:24555',
-        'Referer': 'https://staging.ke.com.pk:24555/ReBrand/DuplicateBill.aspx',
-        'Sec-Fetch-Dest': 'iframe',
-        'Sec-Fetch-Mode': 'navigate',
-        'Sec-Fetch-Site': 'same-origin',
-        'Sec-Fetch-User': '?1',
-        'Upgrade-Insecure-Requests': '1',
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36',
-        'sec-ch-ua': '"Not=A?Brand";v="99", "Google Chrome";v="151", "Chromium";v="151"',
-        'sec-ch-ua-mobile': '?0',
-        'sec-ch-ua-platform': '"Windows"',
-        'sec-gpc': '1',
-        # 'Cookie': '_gid=GA1.3.1883196109.1786542815; wp-wpml_current_language=en; ASP.NET_SessionId=yxvfwpxlgqkbpf3kbakh5tsn; BNIS_vid=6KPy3kbWSYWJyN2fK6XxIymP3viCmwDePUknd0o4ZFOvFtrjrjJD9VXXJxfQgLIzXKJeF9xS1bW4+GojLVjFeIqV1gxzKdKS0ayBzQ2HXJjd46AwfhbB8rbSAa9sXNWNFBVnDu30bdwGAzozMeHnekxWU3LM1+K1k+VCdtHqP6t53k/00RmlXjpjtPiuFfpjiwfYxfNswLYNNEUjD6DS3Xsc6c0aIS024EHW6o/r0RA=; _ga_J1MES32KE0=GS2.1.s1786542811$o1$g1$t1786542932$j42$l0$h0; _ga=GA1.3.543227447.1786542811; __utma=138832625.543227447.1786542811.1786542939.1786542939.1; __utmc=138832625; __utmz=138832625.1786542939.1.1.utmcsr=ke.com.pk|utmccn=(referral)|utmcmd=referral|utmcct=/; x-bni-ja=151966141; wp-settings-5=editor%3Dtinymce%26libraryContent%3Dbrowse%26posts_list_mode%3Dlist%26advImgDetails%3Dshow; wp-settings-6=editor%3Dtinymce%26libraryContent%3Dbrowse; wp-settings-time-6=1758694708; wp-settings-time-8=1765435100; wp-settings-8=editor%3Dhtml; wp-settings-time-5=1776233017; BNIS_x-bni-jas=vAY265Wyu+j+9m5Nq4gLRvP0VnWg1qic109uZQN5FKc+Ov7weALliJg8UvakJ0XLmXi8R2wjVeSpPEkZgoFtuthS6vvnaeQ5jrVL5v6FtBoz8Y3A66DAOA==; BNIS___utm_is1=PWSHSw03XAxhEA252tjc8nQ4pI/lAUsh2ltVgBlAs2tPDjdntShzc5EQDOs2568eol4igkJGKhSBEslRjEUWB10Y7QEejlxKx1KwH4vRxxfDo8p6mVa0eA==; BNIS___utm_is2=J5wshXGUC1hHBiWUwUyqt3JhpeOuUj8tp0usjNVYFJuarSkmbKGSWBOiTXLO/dtPrbWHs09duiY=; BNIS___utm_is3=0YF8tWJK6obyu9hqdh2ZJqgsdRn7T0Zw3+1Zoo7m2Yu1iehwNymAO3dwuskvNsDT4PYlx9Hx49JNEyItEdqtqaB7FS+Hq1AZUDpevL6mtBB+SmsfbGaPCQ==; __utmb=138832625.3.10.1786542939',
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+        "Accept-Language": "en-US,en;q=0.9,ur;q=0.8,en-GB;q=0.7,en-GB-oxendict;q=0.6",
+        "Cache-Control": "max-age=0",
+        "Connection": "keep-alive",
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Origin": "https://staging.ke.com.pk:24555",
+        "Referer": "https://staging.ke.com.pk:24555/ReBrand/DuplicateBill.aspx",
+        "Sec-Fetch-Dest": "iframe",
+        "Sec-Fetch-Mode": "navigate",
+        "Sec-Fetch-Site": "same-origin",
+        "Sec-Fetch-User": "?1",
+        "Upgrade-Insecure-Requests": "1",
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36",
+        "sec-ch-ua": '"Chromium";v="154", "Google Chrome";v="154", "Not A(Brand";v="99"',
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua-platform": '"Windows"',
+        "sec-gpc": "1",
+        # 'Cookie': 'wp-settings-5=editor%3Dtinymce%26libraryContent%3Dbrowse%26posts_list_mode%3Dlist%26advImgDetails%3Dshow; wp-settings-6=editor%3Dtinymce%26libraryContent%3Dbrowse; wp-settings-time-6=1758694708; wp-settings-time-8=1765435100; wp-settings-8=editor%3Dhtml; wp-settings-time-5=1776233017; _ga_Z5C4KT5HDS=GS2.1.s1788949689$o2$g1$t1788950835$j60$l0$h0; _ga_1WRX312K8M=GS2.1.s1788949734$o2$g1$t1788950835$j60$l0$h0; ASP.NET_SessionId=3eteljdxnnkkyap4euf2uiw1; BNIS_vid=cCwFcxvfviCKot4NH5acoW0K9RcCX5PvnHPd7ti14IAidbhSASIc6q37lFmMLwxFaOKucgpofEWT+5j6O54PyJkdp/NH91SEzKsBSsCVp+a5psL/thsHftsV+Pe6zJIq5H1ej09/qdatNM0zkOUyqgttcOJcZ/JMJ93SuT0sTf+exOaddE2O+/YO3yRMG6GXDhfxfAm40FcNpmxG7MIqKjdL1hRZBAkt1Wv6v/BWiHE=; _ga=GA1.3.543227447.1786542811; _gid=GA1.3.1881009845.1790937552; __utma=138832625.543227447.1786542811.1786542939.1790937556.2; __utmc=138832625; __utmz=138832625.1790937556.2.2.utmcsr=ke.com.pk|utmccn=(referral)|utmcmd=referral|utmcct=/; __utmt=1; _ga_J1MES32KE0=GS2.1.s1790937551$o4$g0$t1790937556$j55$l0$h0; x-bni-ja=-453620306; BNIS_x-bni-jas=Zb5io4VlrjRGfvpGqPuGuCuDCuJ0OJ5vh8bptioht8UUSMqUwfrrcKLDiMpDRP4q0RnAEpwEv+SjQoYh0qy4t4xPo5P3UYMYAffYPpLVGkXkSZASIAFbxQ==; __utmb=138832625.2.10.1790937556; BNIS___utm_is1=+w5BnRdbzgLenoQqW1UK4hCvkUs5B19gWgBYIVY6FelTwHRWabzk5G8GDW+IPDBNG+D/1XPJe6WgVSo2xBLXHQ8FiFh3LEPnsJir8BPhz4xmYPRi/IlpUQ==; BNIS___utm_is2=jBzq/9g3HUZgsw5EDmmx5NyOZFz5rV9an1CALtmgZwS1waHiwVk5q9aS0wDaGHOFgt8QOJLg4UI=; BNIS___utm_is3=iaguNR9PXPW0xhtjsKH95DEvwcoouK51RkSZRxvQjRJNWsuaXus/9iSPLGeSL9TqDKf93PkflXPHKj8UGAU1is3sQAsNUIITPzVPmtmf/x6YpmMjpSHU0w==; wp-wpml_current_language=en',
     }
 
     data = {
-        '__EVENTTARGET': 'btnViewBill',
-        '__EVENTARGUMENT': '',
-        '__VIEWSTATE': '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',
-        '__VIEWSTATEGENERATOR': 'C3B80535',
-        '__VIEWSTATEENCRYPTED': '',
-        '__EVENTVALIDATION': '8nNpVJt1kaKmjBDGMbyqLI9t930lvN4OaFrEqs17/HaRGd+sW5Zu7HOnfXHq5pymrImigO+qL9K8f+DHpWktefZeYFmjQG8TU4McIdX6oWM5OJWREDONDH/vdG2ptlnsxeFNvP+DmwddyV7iUamncy3cgVacOFANLRmD/Iy0vNnndJpFaL8dTTEZg4/nei/eTZyBD5qOQcB488aAtC/xDLiRRK6WuB4ya+GS7gkwsfPcj1imAj4D+lLsvCrdAo/8zx+KmUCz1d1+DWogh3jaHMDKJ7ZpylTUQHgEuYW6ms7Ys4/ZqiHTjGkGczfRhajILGI00R0lQHZPksuVMMFbIpFLSawFEdWhn0py0D2XQGREfsQ8Co/d6I0p91tGaIgOCX/8gAoKAc54z5L/gYQgl43ebAmGbY67k8t1z+7qEyaUwSGg3eTlgSgVN5L7/P9Dam9/zCbjBkX1t1B9w+LjbQ==',
-        'txtAccNo': '0400024067937',
-        'txtAccNo': account_number,
-        'txtConNo': '',
-        'txtEmailAdd': '',
-        'txtMobNo': '',
-        'txtimgcode': '0qk8773',
-        'hdCaptcha': '0qk8773',
-        '__ncforminfo': 'ELt89TDPNggOLveL7HGN8XMj1sRhErNn-4RagIVXpIWBF1x7e32vmmi0yZMpTCdf1w3Mw75Uz6C71_uU6HkUr4PsHXqdKZBMtWdFltkm3SD_yqEX2RJMvojwqIaVHJfYcPppwLuE--yMR9RFMnL9uJg1-O3t2jpbbqBHCEMOT7OVj7Pa8J0SNRUDwFVG9QCba2qXaqGmLmGfxrYrVGDgeg==',
+        "__EVENTTARGET": "btnViewBill",
+        "__EVENTARGUMENT": "",
+        "__VIEWSTATE": "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",
+        "__VIEWSTATEGENERATOR": "C3B80535",
+        "__VIEWSTATEENCRYPTED": "",
+        "__EVENTVALIDATION": "9dsG5HHxRhfPlb7zIm0CkgGNcsGaU9/OkX7AK0Fykni64G/nIi8FHHCQHeNWRNpn7j3fP243SAgRZm0vJ7CU8BvrPXf7ORQ9AOVbMU8emJPO08+Lv+VI9wMAndVDNDc4wuyajUW49ZIzhQhJX+i/UsiKG+mN+1ID8eMccR17Hymv8516WdUX8fO6fUSz5RGnC+5zZeViR0qD5icZgtgg2JorW/hmdtiwnEJGrKb0YTkQ+5123XcQJlAICXgJmpQ30L1nLpLjjgNiD7hQJmrVl0SUoGreBXWLryrDzBl85fns1E6qWK+xV3Il1ifZPKJ3L0QDcbMqEJYFExKyPE0eQXcOQLQyTAPFHFG2tiCrGLXKgTQa0fhhjimAJaBmDMS+wA7THJ6SudSxdo79pU016PnAiRKekXJssLHkAElZy0nxzbv+svwpCo8MNpSRIpnLhSmS8e03jAHIet5yB6WJ2g==",
+        "txtAccNo": account_number,
+        "txtConNo": "",
+        "txtEmailAdd": "",
+        "txtMobNo": "",
+        "txtimgcode": "",
+        "hdCaptcha": "",
+        "__ncforminfo": "2Gyy7W7v7RBxMsyNUkSlhwVu-m1E7gEFVrNXsja7ZUXMnRVv6u8BYl8rabinzMlWazxcZQ3mQiR0oew_sDR8nnzEAlnaDr_6K4t-8yN8fMTNnm6uPudIfFUps0I9QD4X5OMb2j3nTZsc3R5Nc2jGMGPmWXHn0j89XoZWX2SDRB1q9QICXLpNU7w_j5gtotMJiaUiBUPBx9z_YyLlQv4Viw==",
     }
 
     try:
         response = requests.post(
-            'https://staging.ke.com.pk:24555/ReBrand/DuplicateBill.aspx',
+            "https://staging.ke.com.pk:24555/ReBrand/DuplicateBill.aspx",
             headers=HEADERS,
             cookies=COOKIES,
             data=data,
-            timeout=10
+            timeout=10,
         )
         response.raise_for_status()
         raw_html = response.text
@@ -919,12 +940,17 @@ def fetch_ke_bill(account_number):
         print("KE URL:", response.url)
         print("KE content-type:", response.headers.get("Content-Type"))
         print("KE response length:", len(raw_html))
-        print("KE response preview:", raw_html[:1000])
-        
+
     except requests.exceptions.HTTPError as exc:
-        return {"error": "Upstream KE API returned an error.", "details": str(exc)}, exc.response.status_code
+        return {
+            "error": "Upstream KE API returned an error.",
+            "details": str(exc),
+        }, exc.response.status_code
     except requests.exceptions.RequestException as exc:
-        return {"error": "Failed to connect to upstream server.", "details": str(exc)}, 500
+        return {
+            "error": "Failed to connect to upstream server.",
+            "details": str(exc),
+        }, 500
 
     if not raw_html:
         return {"error": "Bill record not found for this Account Number."}, 404
@@ -932,7 +958,7 @@ def fetch_ke_bill(account_number):
     return raw_html, 200
 
 
-@app.route('/api/view-ke-bill', methods=['GET', 'POST'])
+@app.route("/api/view-ke-bill", methods=["GET", "POST"])
 def get_ke_bill():
     """GET endpoint: /api/view-ke-bill"""
 
@@ -947,9 +973,7 @@ def get_ke_bill():
         account_number = request.args.get("account_number")
 
     if not account_number:
-        return jsonify({
-            "error": "account_number is required"
-        }), 400
+        return jsonify({"error": "account_number is required"}), 400
 
     result, status_code = fetch_ke_bill(account_number)
 
@@ -958,66 +982,84 @@ def get_ke_bill():
         if isinstance(result, dict):
             return jsonify(result), status_code
 
-        return jsonify({
-            "error": "Failed to retrieve bill.",
-            "details": str(result)
-        }), status_code
+        return (
+            jsonify({"error": "Failed to retrieve bill.", "details": str(result)}),
+            status_code,
+        )
 
     # Make sure we actually received HTML
     if not isinstance(result, str) or not result.strip():
-        return jsonify({
-            "error": "KE returned an empty response."
-        }), 502
+        return (
+            jsonify(
+                {
+                    "error": "KE returned an empty response, please visit the KE website directly."
+                }
+            ),
+            502,
+        )
 
     try:
         dfs = pd.read_html(io.StringIO(result))
     except ValueError as exc:
-        return jsonify({
-            "error": "No HTML tables were found in the KE response.",
-            "details": str(exc)
-        }), 502
+        return (
+            jsonify(
+                {
+                    "error": "No HTML tables were found in the KE HTML response.",
+                    "details": str(exc),
+                }
+            ),
+            502,
+        )
 
     if not dfs:
-        return jsonify({
-            "error": "No tables found in KE response."
-        }), 502
+        return jsonify({"error": "No tables found in KE HTML response."}), 502
 
     print("Tables found:", len(dfs))
 
     for i, table in enumerate(dfs):
         print(
-            f"Table {i}: "
-            f"shape={table.shape}, "
-            f"columns={table.columns.tolist()}"
+            f"Table {i}: " f"shape={table.shape}, " f"columns={table.columns.tolist()}"
         )
-    
+
     # Prevent IndexError
     if len(dfs) < 2:
-        return jsonify({
-            "error": "KE response did not contain the expected bill table.",
-            "tables_found": len(dfs),
-            "table_shapes": [df.shape for df in dfs],
-            "table_columns": [df.columns.tolist() for df in dfs],
-            "table_previews": [df.head(3).to_dict() for df in dfs],
-            "response_length": len(result),
-            "response_type": type(result).__name__,
-            "response_content_type": "text/html",  # Assuming the response is HTML
-            "response_status_code": status_code,
-            "response_headers": dict(response.headers) if 'response' in locals() else {}
-        }), 502
+        return (
+            jsonify(
+                {
+                    "error": "KE HTML response did not contain the expected bill in the second table eg: (at index 1 in the list of tables - [dfs]).",
+                    "tables_found": len(dfs),
+                    "table_shapes": [df.shape for df in dfs],
+                    "table_columns": [df.columns.tolist() for df in dfs],
+                    "table_previews": [df.head(3).to_dict() for df in dfs],
+                    "response_length": len(result),
+                    "response_type": type(result).__name__,
+                    "response_status_code": status_code,
+                    "response_headers": (
+                        dict(response.headers) if "response" in locals() else {}
+                    ),
+                }
+            ),
+            502,
+        )
 
     df = dfs[1]
 
     # Keep columns that DO NOT start with 'Unnamed'
-    df = df.loc[:, ~df.columns.astype(str).str.startswith('Unnamed')]
+    df = df.loc[:, ~df.columns.astype(str).str.startswith("Unnamed")]
 
     # Remove completely empty columns
-    df = df.dropna(how='all', axis=1)
+    df = df.dropna(how="all", axis=1)
 
     json_output = df.to_dict(orient="records")
 
-    return jsonify(json_output), status_code
+    json_output = {
+        "message": "Karachi Electric Bill details retrieved successfully.",
+        "status": "success",
+        "account_number": account_number,
+        "bill_details": json_output,
+    }
 
+    return jsonify(json_output), status_code
 
 
 # ===========================
