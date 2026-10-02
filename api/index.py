@@ -1003,8 +1003,7 @@ def get_ke_bill():
             "response_type": type(result).__name__,
             "response_content_type": "text/html",  # Assuming the response is HTML
             "response_status_code": status_code,
-            "response_headers": dict(response.headers) if 'response' in locals() else {},
-
+            "response_headers": dict(response.headers) if 'response' in locals() else {}
         }), 502
 
     df = dfs[1]
