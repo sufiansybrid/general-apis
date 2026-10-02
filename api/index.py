@@ -999,7 +999,6 @@ def get_ke_bill():
             "table_shapes": [df.shape for df in dfs],
             "table_columns": [df.columns.tolist() for df in dfs],
             "table_previews": [df.head(3).to_dict() for df in dfs],
-            "response_preview": result[:1000],
             "response_length": len(result),
             "response_type": type(result).__name__,
             "response_content_type": "text/html",  # Assuming the response is HTML
