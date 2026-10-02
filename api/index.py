@@ -914,6 +914,13 @@ def fetch_ke_bill(account_number):
         )
         response.raise_for_status()
         raw_html = response.text
+
+        print("KE status:", response.status_code)
+        print("KE URL:", response.url)
+        print("KE content-type:", response.headers.get("Content-Type"))
+        print("KE response length:", len(raw_html))
+        print("KE response preview:", raw_html[:1000])
+        
     except requests.exceptions.HTTPError as exc:
         return {"error": "Upstream KE API returned an error.", "details": str(exc)}, exc.response.status_code
     except requests.exceptions.RequestException as exc:
@@ -927,34 +934,82 @@ def fetch_ke_bill(account_number):
 
 @app.route('/api/view-ke-bill', methods=['GET', 'POST'])
 def get_ke_bill():
-    """GET endpoint: /api/view-ke-bill/ """
+    """GET endpoint: /api/view-ke-bill"""
 
     account_number = None
-    
+
     if request.is_json:
-        data = request.get_json()
+        data = request.get_json(silent=True) or {}
         account_number = data.get("account_number")
     elif request.method == "POST":
         account_number = request.form.get("account_number")
     else:
         account_number = request.args.get("account_number")
-        
+
+    if not account_number:
+        return jsonify({
+            "error": "account_number is required"
+        }), 400
+
     result, status_code = fetch_ke_bill(account_number)
 
-    # Wrap response.text in io.StringIO
-    # Extract tables
-    dfs = pd.read_html(io.StringIO(result))
+    # fetch_ke_bill() returned an error
+    if status_code != 200:
+        if isinstance(result, dict):
+            return jsonify(result), status_code
+
+        return jsonify({
+            "error": "Failed to retrieve bill.",
+            "details": str(result)
+        }), status_code
+
+    # Make sure we actually received HTML
+    if not isinstance(result, str) or not result.strip():
+        return jsonify({
+            "error": "KE returned an empty response."
+        }), 502
+
+    try:
+        dfs = pd.read_html(io.StringIO(result))
+    except ValueError as exc:
+        return jsonify({
+            "error": "No HTML tables were found in the KE response.",
+            "details": str(exc)
+        }), 502
+
+    if not dfs:
+        return jsonify({
+            "error": "No tables found in KE response."
+        }), 502
+
+    print("Tables found:", len(dfs))
+
+    for i, table in enumerate(dfs):
+        print(
+            f"Table {i}: "
+            f"shape={table.shape}, "
+            f"columns={table.columns.tolist()}"
+        )
+    
+    # Prevent IndexError
+    if len(dfs) < 2:
+        return jsonify({
+            "error": "KE response did not contain the expected bill table.",
+            "tables_found": len(dfs)
+        }), 502
+
     df = dfs[1]
 
     # Keep columns that DO NOT start with 'Unnamed'
-    df = df.loc[:, ~df.columns.str.startswith('Unnamed')]
+    df = df.loc[:, ~df.columns.astype(str).str.startswith('Unnamed')]
 
-    # Clean up empty columns (like Download buttons & Payment images)
+    # Remove completely empty columns
     df = df.dropna(how='all', axis=1)
 
-    # Convert to JSON records for your Flask app
     json_output = df.to_dict(orient="records")
+
     return jsonify(json_output), status_code
+
 
 
 # ===========================
