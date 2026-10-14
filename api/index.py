@@ -142,6 +142,11 @@ def psw_home():
     return render_template("psw_home.html")
 
 
+@app.route("/support_index")
+def support_index():
+    return render_template("support_index.html")
+
+
 @app.route("/ffc_home")
 def ffc_home():
     return render_template("ffc_index.html")
